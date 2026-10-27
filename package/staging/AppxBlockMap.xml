@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>`n<BlockMap xmlns="http://schemas.microsoft.com/appx/2013/blockmap">`n  <FileList>
+    <File Name='app.manifest' Size='418' CompressedSize='418'>
+      <Block Offset='0' Length='418' Hash='A8F6765E56090DA7A2C0458FD78F88715F82D16800E371E903BC67702DA3A428' />
+    </File>
+    <File Name='Package.appxmanifest' Size='2527' CompressedSize='2527'>
+      <Block Offset='0' Length='2527' Hash='170E1A243C9FCAA5BEBF8476F554C1DA7630E71BCD4D22F9099ADBE3553DB048' />
+    </File>
+    <File Name='WinPulseStudio.deps.json' Size='490' CompressedSize='490'>
+      <Block Offset='0' Length='490' Hash='F06DCD56C0F7346A865940222983C0936707925C6ADC97D17E4829B6ADBE599F' />
+    </File>
+    <File Name='WinPulseStudio.dll' Size='79872' CompressedSize='79872'>
+      <Block Offset='0' Length='79872' Hash='0449FAD862991FB414349EF3A143EE67358BD31DC67D681E16BF0D19E154F22D' />
+    </File>
+    <File Name='WinPulseStudio.exe' Size='168960' CompressedSize='168960'>
+      <Block Offset='0' Length='168960' Hash='A08CBD024477EEACCF573732D5F0E82F50175EA400CC95D3816850441F47A5E3' />
+    </File>
+    <File Name='WinPulseStudio.pdb' Size='23180' CompressedSize='23180'>
+      <Block Offset='0' Length='23180' Hash='7D251ADEB9F9D3E5B001E33EE17CBDB222BF60B340C599A639B31C4E436E18CA' />
+    </File>
+    <File Name='WinPulseStudio.runtimeconfig.json' Size='519' CompressedSize='519'>
+      <Block Offset='0' Length='519' Hash='96BC2946DFF8790400D652EC7F8DE7BB043E954980D59470C112788B68A1FBD3' />
+    </File>
+    <File Name='Assets/ASSETS_README.md' Size='2016' CompressedSize='2016'>
+      <Block Offset='0' Length='2016' Hash='D21E2248607C5521F3AA135912EA8C943AE180CD148DB304F9296CAEC18506B1' />
+    </File>
+    <File Name='Assets/SplashScreen.png' Size='6084' CompressedSize='6084'>
+      <Block Offset='0' Length='6084' Hash='626DD92F9C32B16DE98D31FD5587553CD37C969CC094D1B4627442BB09A61004' />
+    </File>
+    <File Name='Assets/Square150x150Logo.png' Size='1491' CompressedSize='1491'>
+      <Block Offset='0' Length='1491' Hash='A3143836311DBC4334A7CD5364A652260D48B3898A9EEC7F09A5189C18DDA206' />
+    </File>
+    <File Name='Assets/Square310x310Logo.png' Size='3400' CompressedSize='3400'>
+      <Block Offset='0' Length='3400' Hash='18AAF4E829B39DBE2291F21659F11E493FD5ED508E1AED408A6801ED231BF6CC' />
+    </File>
+    <File Name='Assets/Square44x44Logo.png' Size='545' CompressedSize='545'>
+      <Block Offset='0' Length='545' Hash='33C7D2F48055533AB775C9884CF47F93ADC2707EBE31F2350524A334F65F6ABD' />
+    </File>
+    <File Name='Assets/StoreLogo.png' Size='626' CompressedSize='626'>
+      <Block Offset='0' Length='626' Hash='A8A8F0A7AA4BCF72EEDFAB08445BDC5E231CD12B90C4CBE6B2A5E527DFB9F8CF' />
+    </File>
+    <File Name='Assets/Wide310x150Logo.png' Size='2695' CompressedSize='2695'>
+      <Block Offset='0' Length='2695' Hash='719177DC31FBC70F6BF668A0A1EF7AE2A239DCECAC7D976956DC36855F297647' />
+    </File>
+  </FileList>
+</BlockMap>

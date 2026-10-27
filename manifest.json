@@ -1,0 +1,42 @@
+{
+  "appTitle": "Microsoft WinPulse Control Studio",
+  "version": "1.0.0",
+  "totalScripts": 100,
+  "presets": [
+    {
+      "id": "preset-ai-inference",
+      "name": "AI & Local LLM Inference Turbo",
+      "icon": "Sparkles",
+      "description": "Prepares your workstation for local LLM token generation & PyTorch: frees standby RAM, unlocks Ultimate Power, extends GPU TDR timeout, enables HAGS, tunes Ollama Flash Attention, and optimizes WSL2.",
+      "scriptIds": ["001", "011", "021", "022", "023"]
+    },
+    {
+      "id": "preset-dev-compile",
+      "name": "Maximum Build & Compile Speed",
+      "icon": "Zap",
+      "description": "Accelerates Visual Studio, .NET, Rust Cargo, and Node builds: configures Defender exclusions, NTFS small-file turbo, pauses Search Indexer, exempts compilers from EcoQoS throttling, and tunes Git.",
+      "scriptIds": ["001", "003", "004", "005", "007", "018", "031", "032", "036"]
+    },
+    {
+      "id": "preset-daily-focus",
+      "name": "Deep Focus & Developer Ergonomics",
+      "icon": "Target",
+      "description": "Sets up a distraction-free daily coding environment: mutes toast notifications, enables Snappy UI, configures Explorer extensions & hidden files, enables Win+V clipboard history, and blocks Start Menu Bing ads.",
+      "scriptIds": ["002", "061", "062", "063", "064", "065", "082"]
+    },
+    {
+      "id": "preset-battery-travel",
+      "name": "On-The-Go Ultra Battery Endurance",
+      "icon": "BatteryCharging",
+      "description": "Maximizes laptop unplugged runtime: caps DC CPU turbo boost, activates Ultra-Endurance Battery profile, stops OneDrive & P2P update uploads, and audits wake-armed devices.",
+      "scriptIds": ["012", "013", "017", "020", "059", "078"]
+    },
+    {
+      "id": "preset-clean-privacy",
+      "name": "Deep Storage Clean & Privacy Shield",
+      "icon": "ShieldCheck",
+      "description": "Creates a System Restore Point, purges temp/shader/browser/IDE caches, minimizes Windows telemetry, and disables Activity History.",
+      "scriptIds": ["091", "035", "038", "071", "073", "076", "081", "082", "088"]
+    }
+  ]
+}

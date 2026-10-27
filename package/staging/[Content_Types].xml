@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>`n<Types xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10">
+  <Extension Extension='.manifest' ContentType='application/xml' />
+  <Extension Extension='.appxmanifest' ContentType='application/octet-stream' />
+  <Extension Extension='.json' ContentType='application/json' />
+  <Extension Extension='.dll' ContentType='application/octet-stream' />
+  <Extension Extension='.exe' ContentType='application/octet-stream' />
+  <Extension Extension='.pdb' ContentType='application/octet-stream' />
+  <Extension Extension='.json' ContentType='application/json' />
+  <Extension Extension='.md' ContentType='application/octet-stream' />
+  <Extension Extension='.png' ContentType='image/png' />
+  <Extension Extension='.png' ContentType='image/png' />
+  <Extension Extension='.png' ContentType='image/png' />
+  <Extension Extension='.png' ContentType='image/png' />
+  <Extension Extension='.png' ContentType='image/png' />
+  <Extension Extension='.png' ContentType='image/png' />
+</Types>

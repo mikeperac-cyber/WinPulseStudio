@@ -1,0 +1,11 @@
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\src\WinPulseStudio\App.baml
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\src\WinPulseStudio\MainWindow.baml
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\src\WinPulseStudio\App.g.cs
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\src\WinPulseStudio\MainWindow.g.cs
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\WinPulseStudio_Content.g.cs
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\WinPulseStudio_MarkupCompile.cache
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\WinPulseStudio.g.resources
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\WinPulseStudio.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\WinPulseStudio.AssemblyInfoInputs.cache
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\WinPulseStudio.AssemblyInfo.cs
+C:\Users\MIKE\Documents\pwsh\obj\Release\net8.0-windows\WinPulseStudio.csproj.CoreCompileInputs.cache

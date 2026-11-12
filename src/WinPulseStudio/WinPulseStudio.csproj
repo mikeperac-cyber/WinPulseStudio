@@ -10,7 +10,7 @@
     <AssemblyName>WinPulseStudio</AssemblyName>
     <RootNamespace>WinPulseStudio</RootNamespace>
     <Version>1.2.0</Version>
-    <Title>Microsoft WinPulse Control Studio</Title>
+    <Title>WinPulse Control Studio</Title>
     <Description>Desktop Control Center for Windows Developers &amp; AI Workstations with 100 Built-In PowerShell Scripts</Description>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
   </PropertyGroup>

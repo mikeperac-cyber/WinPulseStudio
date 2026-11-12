@@ -6,7 +6,7 @@ A native Windows `.NET 10` WPF Desktop Application designed to control, optimize
 
 ## Key Features
 
-- **100 Built-In PowerShell Scripts (`.ps1`)**: Organized across 10 specialized categories (`scripts/01-speed-performance` through `scripts/10-diagnostics-recovery`), each with `CmdletBinding(SupportsShouldProcess = $true)`, `Set-StrictMode -Version Latest`, and `-DryRun` simulation support.
+- **100 Built-In PowerShell Scripts (`.ps1`)**: Organized across 10 specialized categories (`scripts/01-speed-performance` through `scripts/10-diagnostics-recovery`), each with `CmdletBinding(SupportsShouldProcess = $true)`, `Set-StrictMode -Version Latest`, `-DryRun` simulation support, `#Requires -Version 7.0`, an `.EXAMPLE` help block, and a structured `trap` that reports failures cleanly.
 - **Guided Home for everyday use**: Pick a plain-language goal (faster AI, faster builds, battery life, cleanup & privacy, or "something feels wrong"). WinPulse shows a step-by-step plan, explains what each step changes, requires every step to be previewed before Apply is enabled, and asks for explicit confirmation — with an optional one-click System Restore point.
 - **Staged-trust Safety Lock (Default ON)**:
   - The desktop app boots with **Safety Lock: ON**. Live changes are blocked everywhere; AST verification and `-DryRun` previews are always allowed.
@@ -55,7 +55,7 @@ dotnet run --project .\src\WinPulseStudio\WinPulseStudio.csproj -c Release
 ```
 
 ### 2. Statically Verify All 100 Scripts (Zero Execution)
-To parse every script's Abstract Syntax Tree (`[System.Management.Automation.Language.Parser]::ParseFile`), verify `[CmdletBinding()]` and `-DryRun` parameters, and resolve all 926+ cmdlet invocations without running any script:
+To parse every script's Abstract Syntax Tree (`[System.Management.Automation.Language.Parser]::ParseFile`), verify `[CmdletBinding()]` and `-DryRun` parameters, and resolve all 1,026 cmdlet invocations without running any script:
 ```powershell
 pwsh -NoProfile -File .\tests\Validate-AllScripts.ps1
 ```
@@ -64,14 +64,34 @@ pwsh -NoProfile -File .\tests\Validate-AllScripts.ps1
 ```powershell
 pwsh -File .\Build-MSIX.ps1
 ```
-This publishes a self-contained `win-x64` layout, copies `scripts/`, `tests/`, `Package.appxmanifest`, `app.manifest`, and `Assets/` into `package\staging`, and packages `package\output\WinPulseStudio_1.2.0.0_x64.msix`. Pass `-SkipSigning` to skip the local self-signed certificate. Microsoft Store submission still requires a Store-issued certificate and Partner Center onboarding.
+This publishes a self-contained `win-x64` layout, copies `scripts/`, `tests/`, `commands/`, `Package.appxmanifest`, `app.manifest`, and `Assets/` into `package\staging`, and packages `package\output\WinPulseStudio_1.2.0.0_x64.msix`. The package is signed with the local `CN=WinPulse Studio` certificate (timestamped via DigiCert), and the public certificate is exported to `package\output\WinPulseStudio.cer`. Pass `-SkipSigning` to skip signing.
 
-### 4. Run the Automated Tests
+### 4. Install and Verify the MSIX End to End
+```powershell
+pwsh -File .\Install-MSIX.ps1
+```
+This installs the package, gives it a real package identity, runs the installed app with `--verify-headless` (100 scripts, 5 presets, 56 command entries, `pwsh` present), and removes it again unless `-Keep` is passed. When the self-signed root is not trusted on the machine, it automatically falls back to Developer Mode registration (`Add-AppxPackage -Register`) so the test still exercises the real install path. To enable the fully signed install path, import the certificate once from an elevated shell:
+```powershell
+Import-Certificate -FilePath .\package\output\WinPulseStudio.cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople
+```
+
+### 5. Check Store Readiness
+```powershell
+pwsh -File .\Test-StoreReadiness.ps1              # strict: blocks submission gaps
+pwsh -File .\Test-StoreReadiness.ps1 -AllowSelfSigned   # local pre-flight
+```
+The gate checks placeholder URLs, version agreement, the 100-script catalog, command-reference counts, and the MSIX signature (trusted + timestamped). See `STORE_SUBMISSION_CHECKLIST.md` for the human/Partner Center steps.
+
+### 6. Run the Automated Tests
 ```powershell
 dotnet test .\WinPulseStudio.slnx -c Release
 ```
 
+> **Error handling:** every built-in script installs a script-scope `trap` after `$ErrorActionPreference = 'Stop'`, so a terminating error prints `[ERROR] Script failed: <message>` and exits with code 1 instead of dumping a raw stack trace. The app records that as a clean failure in History.
+
 > **History vs. change journal:** the History screen logs every verify, preview, applied run, and revert with its output. It is a run log, not a full system-change journal. Per-script undo switches are listed in the catalog and exposed by the **Revert Change** button in Advanced Mode.
+
+> **Admin flag audit:** `requiresAdmin` was live-verified from a non-elevated shell for the power-plan scripts (`#012`, `#014`, `#019`). `powercfg /setacvalueindex`, `/setdcvalueindex`, and `/setactive` on `SCHEME_CURRENT` all succeed without elevation, so those entries correctly remain `requiresAdmin: false`.
 
 ---
 

@@ -22,6 +22,12 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+# Fail fast with a structured error instead of a raw PowerShell dump, so the
+# calling app can record exactly what went wrong.
+trap {
+    Write-Output ("[ERROR] Script failed: " + $_.Exception.Message)
+    exit 1
+}
 
 Write-Output "=== [074] Empty All Recycle Bins & Inspect VSS Shadow Storage ==="
 if ($DryRun -or -not $PSCmdlet.ShouldProcess("All Drives Recycle Bin", "Clear-RecycleBin -Force")) {

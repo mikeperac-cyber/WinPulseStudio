@@ -22,6 +22,12 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+# Fail fast with a structured error instead of a raw PowerShell dump, so the
+# calling app can record exactly what went wrong.
+trap {
+    Write-Output ("[ERROR] Script failed: " + $_.Exception.Message)
+    exit 1
+}
 
 Write-Output "=== [043] Repair WSL2 / Hyper-V Host Network Service (HNS) ==="
 $vAdapters = Get-NetAdapter | Where-Object { $_.InterfaceDescription -match 'Hyper-V|WSL' }

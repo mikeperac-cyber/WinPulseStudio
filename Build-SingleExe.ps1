@@ -74,10 +74,22 @@ if (-not $SkipSigning) {
     }
 
     Write-Host '==> Signing exe ...' -ForegroundColor Cyan
-    & $signTool.FullName sign /fd SHA256 /sha1 $cert.Thumbprint $publishedExe
+    # Timestamp the signature so it stays valid after the certificate expires.
+    # Fall back to an untime-stamped signature if the server is unreachable.
+    & $signTool.FullName sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /sha1 $cert.Thumbprint $publishedExe
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host '    Timestamp server unreachable; signing without a timestamp.' -ForegroundColor Yellow
+        & $signTool.FullName sign /fd SHA256 /sha1 $cert.Thumbprint $publishedExe
+    }
     if ($LASTEXITCODE -ne 0) {
         throw "Signing failed with exit code $LASTEXITCODE."
     }
+
+    # Export the public certificate next to the exe so users can inspect or
+    # trust it (needed to install the self-signed MSIX, for example).
+    $cerPath = Join-Path $outDirFull 'WinPulseStudio.cer'
+    Export-Certificate -Cert $cert -FilePath $cerPath -Type CERT | Out-Null
+    Write-Host "    Certificate exported: $cerPath" -ForegroundColor Gray
 }
 
 $sizeMb = [math]::Round((Get-Item $publishedExe).Length / 1MB, 1)

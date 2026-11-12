@@ -23,6 +23,12 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+# Fail fast with a structured error instead of a raw PowerShell dump, so the
+# calling app can record exactly what went wrong.
+trap {
+    Write-Output ("[ERROR] Script failed: " + $_.Exception.Message)
+    exit 1
+}
 
 Write-Output "=== [065] Toggle Windows 11 Full Classic Right-Click Context Menu ==="
 $clsidPath = "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32"

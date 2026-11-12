@@ -93,8 +93,20 @@ if (-not $SkipSigning) {
     }
 
     Write-Host "==> Signing MSIX..." -ForegroundColor Cyan
-    & $signTool.FullName sign /fd SHA256 /sha1 $cert.Thumbprint $msix
+    # Timestamp the signature so it stays valid after the certificate expires.
+    # Fall back to an untime-stamped signature if the server is unreachable.
+    & $signTool.FullName sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /sha1 $cert.Thumbprint $msix
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "    Timestamp server unreachable; signing without a timestamp." -ForegroundColor Yellow
+        & $signTool.FullName sign /fd SHA256 /sha1 $cert.Thumbprint $msix
+    }
     if ($LASTEXITCODE -ne 0) { throw "Signing failed with exit code $LASTEXITCODE." }
+
+    # Export the public certificate next to the package so testers can trust it
+    # (Import-Certificate into TrustedPeople) before installing.
+    $cerPath = Join-Path $output "WinPulseStudio.cer"
+    Export-Certificate -Cert $cert -FilePath $cerPath -Type CERT | Out-Null
+    Write-Host "    Certificate exported: $cerPath" -ForegroundColor Gray
 
     # Verification against a trusted root is intentionally left to the operator:
     # a self-signed certificate is not trusted until it is installed in the

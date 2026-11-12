@@ -22,6 +22,12 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+# Fail fast with a structured error instead of a raw PowerShell dump, so the
+# calling app can record exactly what went wrong.
+trap {
+    Write-Output ("[ERROR] Script failed: " + $_.Exception.Message)
+    exit 1
+}
 
 Write-Output "=== [089] Virtualization-Based Security (VBS / Memory Integrity) Inspector ==="
 $dg = Get-CimInstance -Namespace root\Microsoft\Windows\DeviceGuard -ClassName Win32_DeviceGuard -ErrorAction SilentlyContinue

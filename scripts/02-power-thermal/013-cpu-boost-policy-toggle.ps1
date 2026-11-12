@@ -24,6 +24,12 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+# Fail fast with a structured error instead of a raw PowerShell dump, so the
+# calling app can record exactly what went wrong.
+trap {
+    Write-Output ("[ERROR] Script failed: " + $_.Exception.Message)
+    exit 1
+}
 
 Write-Output "=== [013] CPU Turbo Boost Thermal & Fan Controller ==="
 $boostGuid = "be337238-0d82-4146-a960-4f3749d470c7"

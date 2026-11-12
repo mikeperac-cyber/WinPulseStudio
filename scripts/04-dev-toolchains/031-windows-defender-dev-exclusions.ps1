@@ -28,6 +28,12 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+# Fail fast with a structured error instead of a raw PowerShell dump, so the
+# calling app can record exactly what went wrong.
+trap {
+    Write-Output ("[ERROR] Script failed: " + $_.Exception.Message)
+    exit 1
+}
 
 Write-Output "=== [031] Defender Real-Time Build & Compiler Exclusions ==="
 $devProcesses = @('dotnet.exe', 'msbuild.exe', 'VBCSCompiler.exe', 'devenv.exe', 'code.exe', 'node.exe', 'cargo.exe', 'rustc.exe', 'git.exe')

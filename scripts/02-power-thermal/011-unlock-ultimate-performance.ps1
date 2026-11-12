@@ -22,6 +22,12 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+# Fail fast with a structured error instead of a raw PowerShell dump, so the
+# calling app can record exactly what went wrong.
+trap {
+    Write-Output ("[ERROR] Script failed: " + $_.Exception.Message)
+    exit 1
+}
 
 Write-Output "=== [011] Unlock & Activate Ultimate Performance Plan ==="
 $ultimateGuid = "e9a42b02-d5df-448d-aa00-03f14749eb61"

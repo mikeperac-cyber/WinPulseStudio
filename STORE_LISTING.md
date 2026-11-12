@@ -44,6 +44,13 @@
 #   4. Validation results
 #   5. Revert/rollback interface
 #
-# Privacy Policy URL: https://aka.ms/winpulsetstudio/privacy
-# Support URL: https://aka.ms/winpulsetstudio/support
-# Website URL: https://aka.ms/winpulsetstudio
+# Privacy Policy URL: https://example.com/winpulse/privacy
+#   TODO(store): replace with a real, publicly reachable HTTPS page before submitting.
+# Support URL: https://example.com/winpulse/support
+#   TODO(store): replace with a real support page or mailto: address.
+# Website URL: https://example.com/winpulse
+#   TODO(store): replace with the product website.
+#
+# Run `pwsh -File .\Test-StoreReadiness.ps1` — it fails while any of the above
+# example.com placeholders remain, and while the MSIX is signed by the local
+# self-signed certificate instead of a trusted Store certificate.

@@ -189,7 +189,7 @@
 
                     <StackPanel Grid.Row="4" Orientation="Horizontal">
                         <Button x:Name="BtnCopyCommand" Content="📋 Copy command" Click="BtnCopyCommand_Click" Style="{StaticResource AccentButtonStyle}" Margin="0,0,8,0" IsEnabled="False"/>
-                        <Button Content="❓ Copy 'Get-Help' tip" Click="BtnCopyHelpTip_Click" Style="{StaticResource FluentButtonStyle}"/>
+                        <Button Content="❓ Copy help tip" Click="BtnCopyHelpTip_Click" Style="{StaticResource FluentButtonStyle}"/>
                     </StackPanel>
                 </Grid>
             </Border>

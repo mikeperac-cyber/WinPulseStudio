@@ -12,10 +12,17 @@ public partial class CommandsView : UserControl
     private List<CommandItem> _allCommands = [];
     private CommandItem? _selectedCommand;
 
+    // WPF fires ComboBox.SelectionChanged while the XAML is still being parsed
+    // (the first item has IsSelected="True"), before LstCommands and
+    // TxtEmptyCommands exist. Suppress filter events until the tree is built.
+    private bool _suppressFilterEvents;
+
     public CommandsView(SessionContext session, INavigator navigator)
     {
         _session = session;
+        _suppressFilterEvents = true;
         InitializeComponent();
+        _suppressFilterEvents = false;
         LoadCommands();
     }
 
@@ -53,9 +60,7 @@ public partial class CommandsView : UserControl
 
         var visible = filtered.ToList();
         LstCommands.ItemsSource = visible;
-        TxtEmptyCommands.Visibility = visible.Count == 0 && _allCommands.Count > 0
-            ? Visibility.Visible
-            : Visibility.Collapsed;
+        TxtEmptyCommands.Visibility = visible.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
         if (LstCommands.Items.Count > 0)
         {
@@ -68,12 +73,21 @@ public partial class CommandsView : UserControl
         }
     }
 
-    private void TxtCommandSearch_TextChanged(object sender, TextChangedEventArgs e) => ApplyFilters();
+    private void TxtCommandSearch_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_suppressFilterEvents) return;
+        ApplyFilters();
+    }
 
-    private void CmbShell_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFilters();
+    private void CmbShell_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_suppressFilterEvents) return;
+        ApplyFilters();
+    }
 
     private void LstCommands_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (_suppressFilterEvents) return;
         if (LstCommands.SelectedItem is CommandItem command)
         {
             _selectedCommand = command;
@@ -112,23 +126,39 @@ public partial class CommandsView : UserControl
 
     private void BtnCopyCommand_Click(object sender, RoutedEventArgs e)
     {
-        if (_selectedCommand != null && !string.IsNullOrEmpty(_selectedCommand.Command))
+        if (_selectedCommand == null || string.IsNullOrEmpty(_selectedCommand.Command))
+        {
+            return;
+        }
+
+        try
         {
             Clipboard.SetText(_selectedCommand.Command);
             _session.SetStatus($"Copied '{_selectedCommand.Title}' command to clipboard. Paste it into PowerShell, winget, or cmd.");
+        }
+        catch (Exception ex)
+        {
+            _session.SetStatus($"Could not copy to clipboard: {ex.Message}");
         }
     }
 
     private void BtnCopyHelpTip_Click(object sender, RoutedEventArgs e)
     {
-        if (_selectedCommand is { Shell: "PowerShell" } powerShellCommand)
+        string text = _selectedCommand?.Shell switch
         {
-            Clipboard.SetText($"Get-Help {powerShellCommand.Title.Split(' ')[0]} -Examples");
-            _session.SetStatus("Copied a Get-Help command — paste it into PowerShell to read the full manual page.");
-            return;
-        }
+            "PowerShell" => $"Get-Help {_selectedCommand.Title.Split(' ')[0]} -Examples",
+            "cmd" => "help",
+            _ => "winget --help"
+        };
 
-        Clipboard.SetText("winget --help");
-        _session.SetStatus("Copied 'winget --help' — paste it into a terminal to see everything winget can do.");
+        try
+        {
+            Clipboard.SetText(text);
+            _session.SetStatus($"Copied '{text}' to the clipboard.");
+        }
+        catch (Exception ex)
+        {
+            _session.SetStatus($"Could not copy to clipboard: {ex.Message}");
+        }
     }
 }

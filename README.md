@@ -42,7 +42,7 @@ pwsh -File .\Build-SingleExe.ps1
 ```
 Then simply download/copy `dist\WinPulseStudio.exe` and double-click to run. On first launch the bundled scripts and catalog manifest are unpacked automatically.
 
-The exe is unsigned unless you run the build with a local certificate. Windows SmartScreen may warn on first run; see `CODE_SIGNING.md`.
+The exe is signed with the local `CN=WinPulse Studio` certificate by default (pass `-SkipSigning` to skip). Windows SmartScreen may still warn on first run because the certificate is self-signed; see `CODE_SIGNING.md`.
 
 ### 1. Launch the Desktop Application
 Double-click `Launch-WinPulseStudio.cmd` or run:

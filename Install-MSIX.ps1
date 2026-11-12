@@ -35,7 +35,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $root = $PSScriptRoot
-$msix = Join-Path $root 'package\output\WinPulseStudio_1.2.0.0_x64.msix'
+$appxVersion = ([xml](Get-Content (Join-Path $root 'Package.appxmanifest') -Raw)).Package.Identity.Version
+$msix = Join-Path $root "package\output\WinPulseStudio_${appxVersion}_x64.msix"
 $stagingManifest = Join-Path $root 'package\staging\AppxManifest.xml'
 $packageName = 'WinPulse.Studio'
 
@@ -58,6 +59,10 @@ try {
     Write-Host '    Installed the signed MSIX (certificate is trusted on this machine).' -ForegroundColor Gray
 } catch {
     if ($_.Exception.Message -match '0x800B0109') {
+        $devMode = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock' -ErrorAction SilentlyContinue).AllowDevelopmentWithoutDevLicense
+        if (-not $devMode) {
+            throw "The self-signed root is not trusted and Developer Mode is off. Enable Developer Mode (Settings > System > For developers) or import package\output\WinPulseStudio.cer into LocalMachine\TrustedPeople from an elevated shell."
+        }
         Write-Host '    Signed install blocked: the self-signed root is not trusted.' -ForegroundColor Yellow
         Write-Host '    Falling back to Developer Mode registration from the staging layout.' -ForegroundColor Yellow
         Add-AppxPackage -Register $stagingManifest -ErrorAction Stop

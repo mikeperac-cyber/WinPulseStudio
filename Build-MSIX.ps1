@@ -27,7 +27,8 @@ $root = $PSScriptRoot
 $project = Join-Path $root "src\WinPulseStudio\WinPulseStudio.csproj"
 $staging = Join-Path $root "package\staging"
 $output = Join-Path $root "package\output"
-$msix = Join-Path $output "WinPulseStudio_1.2.0.0_x64.msix"
+$appxVersion = ([xml](Get-Content (Join-Path $root 'Package.appxmanifest') -Raw)).Package.Identity.Version
+$msix = Join-Path $output "WinPulseStudio_${appxVersion}_x64.msix"
 
 if (-not (Test-Path $project)) { throw "Project not found: $project" }
 

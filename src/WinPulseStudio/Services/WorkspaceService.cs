@@ -96,10 +96,10 @@ public sealed class WorkspaceService
 
             return manifest;
         }
-        catch (JsonException)
+        catch (Exception)
         {
-            // A malformed catalog must not crash the UI. The empty catalog lets
-            // the caller show a clear error instead of failing startup.
+            // A malformed or unreadable catalog must not crash the UI. The empty
+            // catalog lets the caller show a clear error instead of failing startup.
             return new ManifestRoot();
         }
     }
@@ -247,8 +247,9 @@ public sealed class WorkspaceService
             var root = JsonSerializer.Deserialize<CommandReferenceRoot>(json) ?? new CommandReferenceRoot();
             return root.Commands;
         }
-        catch (JsonException)
+        catch (Exception)
         {
+            // A missing, locked, or malformed catalog must not crash the view.
             return [];
         }
     }

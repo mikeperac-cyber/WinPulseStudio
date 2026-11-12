@@ -8,6 +8,7 @@ namespace WinPulseStudio.Services;
 public sealed class HistoryService
 {
     private const int MaxRecords = 500;
+    private static readonly JsonSerializerOptions IndentedJsonOptions = new() { WriteIndented = true };
     private readonly object _sync = new();
     private List<RunRecord> _records = [];
 
@@ -57,7 +58,6 @@ public sealed class HistoryService
                 _records = _records
                     .OrderByDescending(r => r.Timestamp)
                     .Take(MaxRecords)
-                    .OrderBy(r => r.Timestamp)
                     .ToList();
             }
             SaveUnsafe();
@@ -77,8 +77,10 @@ public sealed class HistoryService
     {
         try
         {
-            var json = JsonSerializer.Serialize(_records, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(HistoryPath, json, Encoding.UTF8);
+            var json = JsonSerializer.Serialize(_records, IndentedJsonOptions);
+            var tempPath = HistoryPath + ".tmp";
+            File.WriteAllText(tempPath, json, Encoding.UTF8);
+            File.Move(tempPath, HistoryPath, overwrite: true);
         }
         catch
         {

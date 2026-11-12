@@ -7,6 +7,7 @@ namespace WinPulseStudio.Services;
 
 public sealed class CollectionService
 {
+    private static readonly JsonSerializerOptions IndentedJsonOptions = new() { WriteIndented = true };
     private readonly object _sync = new();
     private List<CustomCollection> _collections = [];
 
@@ -76,8 +77,10 @@ public sealed class CollectionService
     {
         try
         {
-            var json = JsonSerializer.Serialize(_collections, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(CollectionsPath, json, Encoding.UTF8);
+            var json = JsonSerializer.Serialize(_collections, IndentedJsonOptions);
+            var tempPath = CollectionsPath + ".tmp";
+            File.WriteAllText(tempPath, json, Encoding.UTF8);
+            File.Move(tempPath, CollectionsPath, overwrite: true);
         }
         catch
         {

@@ -44,4 +44,29 @@ public sealed class HistoryAndCollectionTests
         collections.Remove(collection.Id);
         Assert.Empty(new CollectionService(dir).GetAll());
     }
+
+    [Fact]
+    public void HistoryService_TrimAndAtomicSave_LeavesNoTempFilesAndKeepsNewest500()
+    {
+        var dir = TempDir("history-atomic");
+        try
+        {
+            var svc = new HistoryService(dir);
+            var baseTime = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            for (int i = 0; i < 550; i++)
+            {
+                svc.Add(new RunRecord { ScriptId = i.ToString("D3"), Timestamp = baseTime.AddSeconds(i) });
+            }
+
+            var all = svc.GetAll();
+            Assert.Equal(500, all.Count);
+            Assert.Equal("549", all[0].ScriptId);
+            Assert.Equal("050", all[^1].ScriptId);
+            Assert.Empty(Directory.GetFiles(dir, "*.tmp"));
+        }
+        finally
+        {
+            if (Directory.Exists(dir)) Directory.Delete(dir, recursive: true);
+        }
+    }
 }

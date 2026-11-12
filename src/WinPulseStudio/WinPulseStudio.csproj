@@ -38,6 +38,10 @@
              CopyToPublishDirectory="PreserveNewest"
              Link="tests\Validate-AllScripts.ps1"
              TargetPath="tests\Validate-AllScripts.ps1" />
+    <Content Include="..\..\commands\commands.json"
+             CopyToPublishDirectory="PreserveNewest"
+             Link="commands\commands.json"
+             TargetPath="commands\commands.json" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,198 @@
+<UserControl x:Class="WinPulseStudio.Views.CommandsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgPrimaryBrush}"
+             Foreground="{StaticResource TextPrimaryBrush}"
+             FontFamily="Segoe UI Variable Text, Segoe UI">
+    <Grid Margin="22,18,22,18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Command Reference" FontSize="24" FontWeight="Bold" Foreground="#F8FAFC"/>
+            <TextBlock Text="The everyday PowerShell, winget, and cmd commands, explained in plain language. Nothing runs from here — browse, learn, and copy."
+                       FontSize="12.5"
+                       Foreground="#94A3B8"
+                       Margin="0,4,0,14"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Background="{StaticResource BgInputBrush}"
+                    BorderBrush="{StaticResource BorderSubtleBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="10,6">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="🔍" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox x:Name="TxtCommandSearch"
+                             Grid.Column="1"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Foreground="{StaticResource TextPrimaryBrush}"
+                             CaretBrush="#38BDF8"
+                             FontSize="13"
+                             VerticalContentAlignment="Center"
+                             TextChanged="TxtCommandSearch_TextChanged"
+                             ToolTip="Search by name, shell, command text, or what it does"/>
+                </Grid>
+            </Border>
+
+            <ComboBox x:Name="CmbShell" Grid.Column="1" Width="150" Margin="8,0,0,0" SelectionChanged="CmbShell_SelectionChanged" VerticalContentAlignment="Center">
+                <ComboBoxItem Content="All shells" IsSelected="True"/>
+                <ComboBoxItem Content="PowerShell"/>
+                <ComboBoxItem Content="winget"/>
+                <ComboBoxItem Content="cmd"/>
+            </ComboBox>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.35*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="0,0,12,0">
+                <Border Background="{StaticResource BgSecondaryBrush}"
+                        BorderBrush="{StaticResource BorderSubtleBrush}"
+                        BorderThickness="1"
+                        CornerRadius="9">
+                    <ListBox x:Name="LstCommands"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             SelectionChanged="LstCommands_SelectionChanged"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Margin" Value="6,4"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="Bd" Background="#111827" BorderBrush="#334155" BorderThickness="1" CornerRadius="8" Padding="12,8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Background="#0F172A" BorderBrush="#38BDF8" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding ShellGlyph}" FontSize="13" HorizontalAlignment="Center"/>
+                                                    </Border>
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding Title}" FontSize="12.5" FontWeight="SemiBold" Foreground="#F8FAFC" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Text="{Binding ListSubtitle}" FontFamily="Cascadia Mono, Consolas" FontSize="10.5" Foreground="#64748B" TextTrimming="CharacterEllipsis"/>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                                        <Border Background="#0F172A" CornerRadius="4" Padding="7,2">
+                                                            <TextBlock Text="{Binding AdminBadgeText}" FontSize="10" FontWeight="SemiBold" Foreground="#94A3B8"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Bd" Property="Background" Value="#1E293B"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Bd" Property="Background" Value="#172554"/>
+                                                    <Setter TargetName="Bd" Property="BorderBrush" Value="#38BDF8"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Border>
+
+                <TextBlock x:Name="TxtEmptyCommands"
+                           Text="No commands matched your search."
+                           FontSize="12.5"
+                           Foreground="#64748B"
+                           TextWrapping="Wrap"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="30"/>
+            </Grid>
+
+            <Border Grid.Column="1"
+                    Background="{StaticResource BgSecondaryBrush}"
+                    BorderBrush="{StaticResource BorderSubtleBrush}"
+                    BorderThickness="1"
+                    CornerRadius="9"
+                    Padding="16,14">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock x:Name="TxtDetailTitle" Text="Select a command" FontSize="16" FontWeight="Bold" Foreground="#F8FAFC" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="TxtDetailMeta" Text="What it does and how to use it appears here." FontSize="11.5" Foreground="#38BDF8" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="TxtDetailDescription" Text="" FontSize="12" Foreground="#CBD5E1" Margin="0,8,0,0" TextWrapping="Wrap"/>
+
+                    <Grid Grid.Row="3" Margin="0,10,0,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="THE COMMAND" FontSize="9.5" FontWeight="Bold" Foreground="#94A3B8" Margin="2,0,0,4"/>
+                        <Border Grid.Row="1" Background="#050811" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="7">
+                            <TextBox x:Name="TxtDetailCommand"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="#6EE7B7"
+                                     FontFamily="Cascadia Mono, Consolas"
+                                     FontSize="11.5"
+                                     Padding="10"
+                                     IsReadOnly="True"
+                                     TextWrapping="NoWrap"
+                                     VerticalScrollBarVisibility="Auto"
+                                     HorizontalScrollBarVisibility="Auto"/>
+                        </Border>
+
+                        <TextBlock x:Name="TxtExampleLabel" Grid.Row="2" Text="EXAMPLE" FontSize="9.5" FontWeight="Bold" Foreground="#94A3B8" Margin="2,10,0,4"/>
+                        <Border x:Name="ExampleBorder" Grid.Row="3" Background="#050811" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="7">
+                            <TextBox x:Name="TxtDetailExample"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="#93C5FD"
+                                     FontFamily="Cascadia Mono, Consolas"
+                                     FontSize="11"
+                                     Padding="10"
+                                     IsReadOnly="True"
+                                     TextWrapping="NoWrap"
+                                     VerticalScrollBarVisibility="Auto"
+                                     HorizontalScrollBarVisibility="Auto"/>
+                        </Border>
+                    </Grid>
+
+                    <StackPanel Grid.Row="4" Orientation="Horizontal">
+                        <Button x:Name="BtnCopyCommand" Content="📋 Copy command" Click="BtnCopyCommand_Click" Style="{StaticResource AccentButtonStyle}" Margin="0,0,8,0" IsEnabled="False"/>
+                        <Button Content="❓ Copy 'Get-Help' tip" Click="BtnCopyHelpTip_Click" Style="{StaticResource FluentButtonStyle}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -21,6 +21,7 @@ A native Windows `.NET 10` WPF Desktop Application designed to control, optimize
   3. **Deep Focus & Developer Ergonomics** (`#002`, `#061`, `#062`, `#063`, `#064`, `#065`, `#082`)
   4. **On-The-Go Ultra Battery Endurance** (`#012`, `#013`, `#017`, `#020`, `#059`, `#078`)
   5. **Deep Storage Clean & Privacy Shield** (`#091`, `#035`, `#038`, `#071`, `#073`, `#076`, `#081`, `#082`, `#088`)
+- **Command Reference**: A dedicated **Commands** screen explains the everyday **PowerShell**, **winget**, and **cmd** commands in plain language — what each one does, whether it needs Administrator, how risky it is, and a ready-to-copy example. Nothing executes from this screen; it is a learn-and-copy cheat sheet (`commands/commands.json`).
 - **Advanced Mode**: The full 3-column catalog with search, filters, favorites, presets, the built-in PowerShell source editor, structured **Results** and **Raw Log** tabs, and static AST verification.
 
 ---

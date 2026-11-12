@@ -15,6 +15,7 @@ public partial class App : Application
                 var ws = new WorkspaceService();
                 var manifest = ws.LoadManifest();
                 int existingFiles = manifest.Scripts.Count(s => File.Exists(s.FullPath) && ws.ReadScriptSource(s).Length > 100);
+                int commandCount = ws.LoadCommands().Count;
                 bool pwshAvailable = WorkspaceService.IsPowerShellAvailable();
 
                 // Also instantiate MainWindow to verify XAML parsing & UI initialization
@@ -24,8 +25,8 @@ public partial class App : Application
                 win.Show();
                 win.Close();
 
-                Console.WriteLine($"[WinPulseStudio UI + Headless Self-Test] Loaded {manifest.Scripts.Count} scripts, {manifest.Presets.Count} presets, {existingFiles}/100 .ps1 files, pwsh={(pwshAvailable ? "available" : "MISSING")}, and verified MainWindow XAML.");
-                Shutdown(existingFiles == 100 && manifest.Scripts.Count == 100 && pwshAvailable ? 0 : 1);
+                Console.WriteLine($"[WinPulseStudio UI + Headless Self-Test] Loaded {manifest.Scripts.Count} scripts, {manifest.Presets.Count} presets, {existingFiles}/100 .ps1 files, {commandCount} command reference entries, pwsh={(pwshAvailable ? "available" : "MISSING")}, and verified MainWindow XAML.");
+                Shutdown(existingFiles == 100 && manifest.Scripts.Count == 100 && commandCount > 0 && pwshAvailable ? 0 : 1);
             }
             catch (Exception ex)
             {

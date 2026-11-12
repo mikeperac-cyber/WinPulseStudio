@@ -28,6 +28,7 @@
 #   - 5 smart workload presets (AI Inference, Dev Compile, Daily Focus,
 #     Battery Travel, Clean Privacy)
 #   - Static script validation before execution
+#   - Built-in plain-English command reference (PowerShell, winget, cmd)
 #   - Per-script undo switches and a run-history log
 #   - Safety Lock default ON (requires unlock before execution)
 #   - MSIX build script included; Store signing/onboarding required

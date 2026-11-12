@@ -29,6 +29,7 @@ public partial class MainWindow : Window, INavigator
     private readonly SessionContext _session = new();
     private readonly DispatcherTimer _telemetryTimer = new();
     private AdvancedView? _advancedView;
+    private CommandsView? _commandsView;
     private HistoryView? _historyView;
     private Button? _activeNavButton;
 
@@ -87,6 +88,14 @@ public partial class MainWindow : Window, INavigator
         _session.SetStatus("Advanced Mode • Full 100-script catalog, presets, filters and source editor.");
     }
 
+    public void ShowCommands()
+    {
+        _commandsView ??= new CommandsView(_session, this);
+        ContentHost.Content = _commandsView;
+        SetActiveNav(BtnNavCommands);
+        _session.SetStatus("Commands • Everyday PowerShell, winget, and cmd commands explained in plain language. Nothing runs from here.");
+    }
+
     public void ShowHistory()
     {
         _historyView ??= new HistoryView(_session, this);
@@ -106,7 +115,7 @@ public partial class MainWindow : Window, INavigator
     private void SetActiveNav(Button? active)
     {
         _activeNavButton = active;
-        foreach (var button in new[] { BtnNavHome, BtnNavAdvanced, BtnNavHistory })
+        foreach (var button in new[] { BtnNavHome, BtnNavAdvanced, BtnNavCommands, BtnNavHistory })
         {
             bool isActive = ReferenceEquals(button, active);
             button.Background = isActive ? NavActiveBgBrush : TransparentBrush;
@@ -117,6 +126,8 @@ public partial class MainWindow : Window, INavigator
     private void BtnNavHome_Click(object sender, RoutedEventArgs e) => ShowHome();
 
     private void BtnNavAdvanced_Click(object sender, RoutedEventArgs e) => ShowAdvanced();
+
+    private void BtnNavCommands_Click(object sender, RoutedEventArgs e) => ShowCommands();
 
     private void BtnNavHistory_Click(object sender, RoutedEventArgs e) => ShowHistory();
 

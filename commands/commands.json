@@ -1,0 +1,566 @@
+{
+  "version": "1.2.0",
+  "totalCommands": 56,
+  "commands": [
+    {
+      "id": "ps-001",
+      "shell": "PowerShell",
+      "title": "Get-Help",
+      "command": "Get-Help Get-Process -Examples",
+      "description": "Shows the built-in manual page for any PowerShell command. Add -Examples to see ready-to-use samples. This is the fastest way to learn what a command does before running it.",
+      "example": "Get-Help Copy-Item -Examples",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-002",
+      "shell": "PowerShell",
+      "title": "Get-Command",
+      "command": "Get-Command *network*",
+      "description": "Searches every command installed on your PC. Use it when you know roughly what you want (something with 'network' in the name) but not the exact command.",
+      "example": "Get-Command *firewall* -CommandType Cmdlet",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-003",
+      "shell": "PowerShell",
+      "title": "Get-Process",
+      "command": "Get-Process | Sort-Object CPU -Descending | Select-Object -First 10",
+      "description": "Lists running programs. This version sorts them by how much CPU time they have used and shows the top 10, so you can spot what is heavy on your PC.",
+      "example": "Get-Process -Name chrome",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-004",
+      "shell": "PowerShell",
+      "title": "Stop-Process",
+      "command": "Stop-Process -Name notepad",
+      "description": "Force-closes a program by name. Anything unsaved in that program is lost, so close it normally first when possible.",
+      "example": "Stop-Process -Name notepad -WhatIf",
+      "requiresAdmin": false,
+      "safety": "Closes programs"
+    },
+    {
+      "id": "ps-005",
+      "shell": "PowerShell",
+      "title": "Get-Service",
+      "command": "Get-Service | Where-Object Status -eq 'Running'",
+      "description": "Lists Windows services (background system components) and shows which ones are running. Reading is safe; it does not change anything.",
+      "example": "Get-Service -Name Spooler",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-006",
+      "shell": "PowerShell",
+      "title": "Restart-Service",
+      "command": "Restart-Service -Name Spooler",
+      "description": "Stops and starts a Windows service. Commonly used to fix the print spooler. Anything that depends on the service is briefly interrupted.",
+      "example": "Restart-Service -Name Spooler -WhatIf",
+      "requiresAdmin": true,
+      "safety": "Makes changes"
+    },
+    {
+      "id": "ps-007",
+      "shell": "PowerShell",
+      "title": "Get-ChildItem",
+      "command": "Get-ChildItem $env:USERPROFILE\\Downloads",
+      "description": "Lists files and folders in a location - PowerShell's version of 'dir'. Supports wildcards like *.log to find specific file types.",
+      "example": "Get-ChildItem C:\\Logs -Filter *.log -Recurse",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-008",
+      "shell": "PowerShell",
+      "title": "Set-Location",
+      "command": "Set-Location C:\\Projects",
+      "description": "Changes the folder you are currently working in - PowerShell's version of 'cd'. The prompt updates to show the new location.",
+      "example": "Set-Location ..",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-009",
+      "shell": "PowerShell",
+      "title": "Copy-Item",
+      "command": "Copy-Item report.txt D:\\Backup\\",
+      "description": "Copies a file or whole folder to another location. Add -Recurse to copy a folder with everything inside it.",
+      "example": "Copy-Item C:\\Photos D:\\Backup -Recurse",
+      "requiresAdmin": false,
+      "safety": "Writes files"
+    },
+    {
+      "id": "ps-010",
+      "shell": "PowerShell",
+      "title": "Move-Item",
+      "command": "Move-Item old-file.txt C:\\Archive\\",
+      "description": "Moves a file or folder to a new location. The item no longer exists at the old location afterwards, unlike Copy-Item.",
+      "example": "Move-Item draft.txt C:\\Archive\\final.txt",
+      "requiresAdmin": false,
+      "safety": "Moves files"
+    },
+    {
+      "id": "ps-011",
+      "shell": "PowerShell",
+      "title": "Remove-Item",
+      "command": "Remove-Item temp-file.txt",
+      "description": "Deletes a file or folder. Deleted items do not go to the Recycle Bin. Add -WhatIf first to preview exactly what would be deleted.",
+      "example": "Remove-Item C:\\Temp\\*.tmp -WhatIf",
+      "requiresAdmin": false,
+      "safety": "Deletes files"
+    },
+    {
+      "id": "ps-012",
+      "shell": "PowerShell",
+      "title": "Get-Content",
+      "command": "Get-Content .\\app.log -Tail 50",
+      "description": "Shows the contents of a text file. With -Tail 50 it shows only the last 50 lines, which is ideal for watching the end of a log file.",
+      "example": "Get-Content C:\\Windows\\WindowsUpdate.log -Tail 20",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-013",
+      "shell": "PowerShell",
+      "title": "Get-ComputerInfo",
+      "command": "Get-ComputerInfo",
+      "description": "Shows a full inventory of your PC: Windows version, CPU, RAM, BIOS, network adapters, and more. A quick way to answer 'what exactly am I running?'.",
+      "example": "Get-ComputerInfo | Select-Object WindowsVersion, CsTotalPhysicalMemory",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-014",
+      "shell": "PowerShell",
+      "title": "Get-Volume",
+      "command": "Get-Volume",
+      "description": "Lists your disk drives and partitions with their sizes and free space. Useful for checking whether a drive is nearly full.",
+      "example": "Get-Volume | Sort-Object SizeRemaining",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-015",
+      "shell": "PowerShell",
+      "title": "Test-Connection",
+      "command": "Test-Connection google.com -Count 4",
+      "description": "Checks whether your PC can reach another computer on the internet, and how long the round trip takes. The first tool for 'is my internet working?'.",
+      "example": "Test-Connection 8.8.8.8 -Count 2",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-016",
+      "shell": "PowerShell",
+      "title": "Get-NetIPAddress",
+      "command": "Get-NetIPAddress | Where-Object AddressFamily -eq 'IPv4'",
+      "description": "Shows the IP addresses assigned to your PC's network adapters. Handy when you need your local IP for file sharing or printer setup.",
+      "example": "Get-NetIPAddress -InterfaceAlias 'Wi-Fi'",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-017",
+      "shell": "PowerShell",
+      "title": "Measure-Command",
+      "command": "Measure-Command { Get-ChildItem C:\\ -Recurse }",
+      "description": "Times how long a command takes to finish. Great for comparing 'before and after' performance when you tune something.",
+      "example": "Measure-Command { winget search vscode }",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-018",
+      "shell": "PowerShell",
+      "title": "Get-ExecutionPolicy",
+      "command": "Get-ExecutionPolicy -List",
+      "description": "Shows which script-running rules apply to your PC for each scope. Read this before wondering why a .ps1 script will not run.",
+      "example": "Get-ExecutionPolicy",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-019",
+      "shell": "PowerShell",
+      "title": "Get-Member",
+      "command": "Get-Process | Get-Member",
+      "description": "Shows all the properties and methods an object has. Use it to discover what else you can read or do with whatever a command gives you.",
+      "example": "'hello' | Get-Member",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "ps-020",
+      "shell": "PowerShell",
+      "title": "Where-Object / Select-Object",
+      "command": "Get-Process | Where-Object WorkingSet -gt 500MB | Select-Object Name, WorkingSet",
+      "description": "The two most useful pipeline commands: Where-Object filters items down, and Select-Object picks which columns to show. Together they turn a wall of output into a short answer.",
+      "example": "Get-Service | Where-Object Status -eq 'Stopped' | Select-Object DisplayName",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "wg-001",
+      "shell": "winget",
+      "title": "winget --version",
+      "command": "winget --version",
+      "description": "Shows which version of Windows Package Manager you have. Winget is the built-in Windows tool for installing and updating apps from the command line.",
+      "example": "winget --version",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "wg-002",
+      "shell": "winget",
+      "title": "winget search",
+      "command": "winget search vscode",
+      "description": "Searches the winget catalog for an app by name and shows the exact ID, version, and source you would need to install it.",
+      "example": "winget search '7-zip'",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "wg-003",
+      "shell": "winget",
+      "title": "winget show",
+      "command": "winget show Microsoft.VisualStudioCode",
+      "description": "Shows full details about an app before you install it: description, homepage, license, installer size, and the exact version that would be installed.",
+      "example": "winget show 7zip.7zip",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "wg-004",
+      "shell": "winget",
+      "title": "winget install",
+      "command": "winget install Microsoft.VisualStudioCode",
+      "description": "Downloads and installs an app from the winget catalog, found via 'winget search'. Add --silent to skip the installer's questions.",
+      "example": "winget install 7zip.7zip --silent",
+      "requiresAdmin": false,
+      "safety": "Installs software"
+    },
+    {
+      "id": "wg-005",
+      "shell": "winget",
+      "title": "winget uninstall",
+      "command": "winget uninstall Microsoft.VisualStudioCode",
+      "description": "Removes an installed app. Find the exact name or ID to use with 'winget list' first.",
+      "example": "winget uninstall '7-Zip 24.08 (x64)'",
+      "requiresAdmin": false,
+      "safety": "Removes software"
+    },
+    {
+      "id": "wg-006",
+      "shell": "winget",
+      "title": "winget upgrade",
+      "command": "winget upgrade",
+      "description": "Lists every installed app that has a newer version available. Running it with no app name changes nothing - it is a read-only check for updates.",
+      "example": "winget upgrade",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "wg-007",
+      "shell": "winget",
+      "title": "winget upgrade --all",
+      "command": "winget upgrade --all",
+      "description": "Updates every app that has an available update, one after another. This is the one-command way to keep all your software current.",
+      "example": "winget upgrade --all --silent",
+      "requiresAdmin": false,
+      "safety": "Updates software"
+    },
+    {
+      "id": "wg-008",
+      "shell": "winget",
+      "title": "winget list",
+      "command": "winget list",
+      "description": "Lists all the software winget can see on your PC, including apps installed outside the Store. Add a name to filter to one app.",
+      "example": "winget list python",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "wg-009",
+      "shell": "winget",
+      "title": "winget source list",
+      "command": "winget source list",
+      "description": "Shows which app catalogs winget searches (Microsoft's community repo, msstore, and any you added). Read-only.",
+      "example": "winget source list",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "wg-010",
+      "shell": "winget",
+      "title": "winget source update",
+      "command": "winget source update",
+      "description": "Refreshes winget's local copy of the app catalog so searches and upgrades see the latest versions. Fixes stale search results.",
+      "example": "winget source update",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "wg-011",
+      "shell": "winget",
+      "title": "winget info",
+      "command": "winget info",
+      "description": "Shows winget's version, configuration, and which Windows version it is running on. Useful when troubleshooting winget itself.",
+      "example": "winget info",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "wg-012",
+      "shell": "winget",
+      "title": "winget --help",
+      "command": "winget --help",
+      "description": "Shows the full list of winget commands and options with short descriptions. Add --help after any subcommand for its details.",
+      "example": "winget install --help",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-001",
+      "shell": "cmd",
+      "title": "dir",
+      "command": "dir",
+      "description": "Lists the files and folders in the current folder. 'dir /s file.txt' searches all subfolders for a file.",
+      "example": "dir C:\\Users /b",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-002",
+      "shell": "cmd",
+      "title": "cd",
+      "command": "cd C:\\Projects",
+      "description": "Changes the current folder. 'cd ..' goes up one level. 'cd' alone shows where you currently are.",
+      "example": "cd %USERPROFILE%\\Desktop",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-003",
+      "shell": "cmd",
+      "title": "cls",
+      "command": "cls",
+      "description": "Clears everything from the Command Prompt window so you start with a clean screen. Nothing is deleted.",
+      "example": "cls",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-004",
+      "shell": "cmd",
+      "title": "copy",
+      "command": "copy report.txt D:\\Backup\\",
+      "description": "Copies one or more files to another location. Use 'xcopy' or 'robocopy' for whole folder trees.",
+      "example": "copy *.txt D:\\Backup\\",
+      "requiresAdmin": false,
+      "safety": "Writes files"
+    },
+    {
+      "id": "cm-005",
+      "shell": "cmd",
+      "title": "move",
+      "command": "move old-file.txt C:\\Archive\\",
+      "description": "Moves a file to a new location. Unlike copy, the file no longer exists at the original spot afterwards.",
+      "example": "move draft.doc C:\\Archive\\",
+      "requiresAdmin": false,
+      "safety": "Moves files"
+    },
+    {
+      "id": "cm-006",
+      "shell": "cmd",
+      "title": "del",
+      "command": "del temp-file.txt",
+      "description": "Deletes files. Deleted files do not go to the Recycle Bin. Run 'del /p file.txt' to be asked for confirmation first.",
+      "example": "del /p old-notes.txt",
+      "requiresAdmin": false,
+      "safety": "Deletes files"
+    },
+    {
+      "id": "cm-007",
+      "shell": "cmd",
+      "title": "mkdir",
+      "command": "mkdir NewFolder",
+      "description": "Creates a new folder inside the current one. Nested paths like mkdir A\\B\\C create all missing levels at once.",
+      "example": "mkdir Projects\\2026",
+      "requiresAdmin": false,
+      "safety": "Writes files"
+    },
+    {
+      "id": "cm-008",
+      "shell": "cmd",
+      "title": "rmdir",
+      "command": "rmdir EmptyFolder",
+      "description": "Removes an empty folder. Add /s to remove a folder and everything inside it - double-check the path first.",
+      "example": "rmdir /s OldProject",
+      "requiresAdmin": false,
+      "safety": "Deletes folders"
+    },
+    {
+      "id": "cm-009",
+      "shell": "cmd",
+      "title": "type",
+      "command": "type notes.txt",
+      "description": "Prints the contents of a text file to the screen. For very long files, 'more file.txt' shows it one page at a time.",
+      "example": "more app.log",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-010",
+      "shell": "cmd",
+      "title": "ipconfig",
+      "command": "ipconfig",
+      "description": "Shows your PC's network configuration: IP address, subnet, and gateway for every adapter. The starting point for most network troubleshooting.",
+      "example": "ipconfig /all",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-011",
+      "shell": "cmd",
+      "title": "ipconfig /flushdns",
+      "command": "ipconfig /flushdns",
+      "description": "Clears the cached list of website names and addresses. Fixes 'site works for everyone else but not me' problems after a DNS change.",
+      "example": "ipconfig /flushdns",
+      "requiresAdmin": true,
+      "safety": "Makes changes"
+    },
+    {
+      "id": "cm-012",
+      "shell": "cmd",
+      "title": "ping",
+      "command": "ping google.com",
+      "description": "Sends four small packets to a server and reports whether they come back and how fast. The classic 'is the internet up?' test.",
+      "example": "ping 8.8.8.8 -n 10",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-013",
+      "shell": "cmd",
+      "title": "tracert",
+      "command": "tracert google.com",
+      "description": "Shows each hop your traffic takes between your PC and a server, with timings. Reveals where a slow or broken connection actually is.",
+      "example": "tracert github.com",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-014",
+      "shell": "cmd",
+      "title": "netstat",
+      "command": "netstat -ano",
+      "description": "Lists active network connections and which program (by process ID) owns each one. Pair with 'tasklist' to match IDs to names.",
+      "example": "netstat -ano | findstr 443",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-015",
+      "shell": "cmd",
+      "title": "tasklist",
+      "command": "tasklist",
+      "description": "Lists all running programs with their memory use and process IDs (PIDs). The read-only companion to taskkill.",
+      "example": "tasklist | findstr chrome",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-016",
+      "shell": "cmd",
+      "title": "taskkill",
+      "command": "taskkill /IM notepad.exe",
+      "description": "Force-closes a program by image name or by PID (/PID 1234). Unsaved work in that program is lost. Add /F when it refuses to close.",
+      "example": "taskkill /PID 4242 /F",
+      "requiresAdmin": false,
+      "safety": "Closes programs"
+    },
+    {
+      "id": "cm-017",
+      "shell": "cmd",
+      "title": "systeminfo",
+      "command": "systeminfo",
+      "description": "Prints a detailed report about your PC: Windows version, install date, uptime, RAM, network cards, and pending hotfixes.",
+      "example": "systeminfo | findstr /B \"OS\"",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-018",
+      "shell": "cmd",
+      "title": "whoami",
+      "command": "whoami",
+      "description": "Shows the user account you are currently running as. 'whoami /priv' additionally lists your account's special rights.",
+      "example": "whoami /priv",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-019",
+      "shell": "cmd",
+      "title": "hostname",
+      "command": "hostname",
+      "description": "Prints your PC's network name - the name other devices see when you share files or connect remotely.",
+      "example": "hostname",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-020",
+      "shell": "cmd",
+      "title": "sfc /scannow",
+      "command": "sfc /scannow",
+      "description": "System File Checker: scans Windows' own system files and automatically repairs any that are corrupted. Can take 10+ minutes.",
+      "example": "sfc /scannow",
+      "requiresAdmin": true,
+      "safety": "Repairs system files"
+    },
+    {
+      "id": "cm-021",
+      "shell": "cmd",
+      "title": "shutdown",
+      "command": "shutdown /r /t 0",
+      "description": "Restarts the PC immediately (/r = restart, /t 0 = no delay). Use /s to shut down, or /a to cancel a pending restart.",
+      "example": "shutdown /r /t 60",
+      "requiresAdmin": false,
+      "safety": "Restarts the PC"
+    },
+    {
+      "id": "cm-022",
+      "shell": "cmd",
+      "title": "set",
+      "command": "set",
+      "description": "Lists all environment variables - the hidden settings every program reads, like PATH and TEMP. 'set PATH' filters to just one.",
+      "example": "set PATH",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-023",
+      "shell": "cmd",
+      "title": "where",
+      "command": "where python",
+      "description": "Shows the full path of a program that would run if you typed its name. Perfect for 'which version am I actually launching?' questions.",
+      "example": "where pwsh",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    },
+    {
+      "id": "cm-024",
+      "shell": "cmd",
+      "title": "tree",
+      "command": "tree /F",
+      "description": "Draws a visual map of folders and (with /F) files beneath the current folder. A quick way to see a project's structure.",
+      "example": "tree C:\\Projects /F",
+      "requiresAdmin": false,
+      "safety": "Read-only"
+    }
+  ]
+}

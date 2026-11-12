@@ -136,6 +136,19 @@
                         </StackPanel>
                     </Button>
 
+                    <Button x:Name="BtnNavCommands"
+                            Click="BtnNavCommands_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="0,0,0,8"
+                            Padding="8,10"
+                            Background="Transparent"
+                            BorderBrush="Transparent">
+                        <StackPanel>
+                            <TextBlock Text="📖" FontSize="19" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Commands" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Button>
+
                     <Button x:Name="BtnNavHistory"
                             Click="BtnNavHistory_Click"
                             Style="{StaticResource FluentButtonStyle}"

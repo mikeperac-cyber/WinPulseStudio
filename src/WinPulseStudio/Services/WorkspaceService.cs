@@ -14,6 +14,7 @@ public sealed class WorkspaceService
     public string UserDataRoot { get; }
     public string UserScriptsRoot => Path.Combine(UserDataRoot, "scripts");
     public string ManifestPath => Path.Combine(WorkspaceRoot, "scripts", "manifest.json");
+    public string CommandsManifestPath => Path.Combine(WorkspaceRoot, "commands", "commands.json");
     public string ValidatorScriptPath => Path.Combine(WorkspaceRoot, "tests", "Validate-AllScripts.ps1");
     public string FavoritesPath => Path.Combine(UserDataRoot, "favorites.json");
     public bool PowerShellAvailable => IsPowerShellAvailable();
@@ -226,6 +227,30 @@ public sealed class WorkspaceService
 
         _powerShellAvailable = false;
         return false;
+    }
+
+    /// <summary>
+    /// Loads the built-in command reference (basic PowerShell, winget, and cmd
+    /// commands with plain-English explanations). Returns an empty list when the
+    /// file is missing or malformed so the UI degrades gracefully.
+    /// </summary>
+    public List<CommandItem> LoadCommands()
+    {
+        if (!File.Exists(CommandsManifestPath))
+        {
+            return [];
+        }
+
+        try
+        {
+            var json = File.ReadAllText(CommandsManifestPath, Encoding.UTF8);
+            var root = JsonSerializer.Deserialize<CommandReferenceRoot>(json) ?? new CommandReferenceRoot();
+            return root.Commands;
+        }
+        catch (JsonException)
+        {
+            return [];
+        }
     }
 
     public static bool IsRunningAsAdministrator()

@@ -5,6 +5,7 @@ using Xunit;
 
 namespace WinPulseStudio.Tests;
 
+[Collection("WpfUi")]
 public sealed class CommandsViewInitializationTests
 {
     [Fact]
@@ -19,8 +20,11 @@ public sealed class CommandsViewInitializationTests
                 // App loads App.xaml resources (brushes/styles used by the view).
                 // The generated App class only loads them in Main(), so call
                 // InitializeComponent explicitly in this test host.
-                var app = new App();
-                app.InitializeComponent();
+                if (System.Windows.Application.Current == null)
+                {
+                    var app = new App();
+                    app.InitializeComponent();
+                }
                 var session = new SessionContext();
                 _ = new CommandsView(session, null!);
             }

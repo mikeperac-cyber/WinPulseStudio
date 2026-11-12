@@ -97,6 +97,7 @@ public partial class MainWindow : Window, INavigator
     public void ShowHome()
     {
         _homeView ??= new HomeView(_session, this);
+        _homeView.RefreshCollections();
         ContentHost.Content = _homeView;
         SetActiveNav(BtnNavHome);
         _session.SetStatus("Home • Choose a goal to see exactly what will change before anything runs.");

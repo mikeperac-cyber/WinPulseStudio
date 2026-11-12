@@ -62,6 +62,13 @@ public partial class HomeView : UserControl
         _scriptsById = session.Scripts.ToDictionary(s => s.Id, StringComparer.OrdinalIgnoreCase);
 
         LstGoals.ItemsSource = BuildGoals();
+        RefreshCollections();
+    }
+
+    public int CollectionCount => LstCollections.Items.Count;
+
+    public void RefreshCollections()
+    {
         var collections = BuildCollections();
         LstCollections.ItemsSource = collections;
         TxtEmptyCollections.Visibility = collections.Count == 0 ? Visibility.Visible : Visibility.Collapsed;

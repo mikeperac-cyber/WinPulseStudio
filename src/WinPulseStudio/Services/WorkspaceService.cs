@@ -11,13 +11,35 @@ namespace WinPulseStudio.Services;
 public sealed class WorkspaceService
 {
     public string WorkspaceRoot { get; }
+    public string UserDataRoot { get; }
+    public string UserScriptsRoot => Path.Combine(UserDataRoot, "scripts");
     public string ManifestPath => Path.Combine(WorkspaceRoot, "scripts", "manifest.json");
     public string ValidatorScriptPath => Path.Combine(WorkspaceRoot, "tests", "Validate-AllScripts.ps1");
-    public string FavoritesPath => Path.Combine(WorkspaceRoot, ".winpulse-favorites.json");
+    public string FavoritesPath => Path.Combine(UserDataRoot, "favorites.json");
+    public bool PowerShellAvailable => IsPowerShellAvailable();
+
+    private static bool? _powerShellAvailable;
 
     public WorkspaceService()
+        : this(workspaceRoot: null, userDataRoot: null)
     {
-        WorkspaceRoot = DiscoverWorkspaceRoot();
+    }
+
+    public WorkspaceService(string? workspaceRoot, string? userDataRoot)
+    {
+        WorkspaceRoot = workspaceRoot ?? DiscoverWorkspaceRoot();
+        UserDataRoot = userDataRoot ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "WinPulseStudio");
+
+        try
+        {
+            Directory.CreateDirectory(UserDataRoot);
+        }
+        catch
+        {
+            // The app can still browse; persistence is best-effort.
+        }
     }
 
     private static string DiscoverWorkspaceRoot()
@@ -42,8 +64,11 @@ public sealed class WorkspaceService
             }
         }
 
-        const string fallback = @"c:\Users\MIKE\Documents\pwsh";
-        return Directory.Exists(fallback) ? fallback : Directory.GetCurrentDirectory();
+        // No workspace folder found (e.g. a published install without bundled
+        // scripts). Fall back to the current directory so the app still boots
+        // and can surface a clear catalog error instead of hardcoding a
+        // machine-specific path.
+        return Directory.GetCurrentDirectory();
     }
 
     public ManifestRoot LoadManifest()
@@ -53,18 +78,29 @@ public sealed class WorkspaceService
             return new ManifestRoot();
         }
 
-        var json = File.ReadAllText(ManifestPath, Encoding.UTF8);
-        var manifest = JsonSerializer.Deserialize<ManifestRoot>(json) ?? new ManifestRoot();
-        var favIds = LoadFavoriteIds();
-
-        foreach (var script in manifest.Scripts)
+        try
         {
-            var normalizedRel = script.RelativePath.Replace('/', Path.DirectorySeparatorChar);
-            script.FullPath = Path.Combine(WorkspaceRoot, normalizedRel);
-            script.IsFavorite = favIds.Contains(script.Id);
-        }
+            var json = File.ReadAllText(ManifestPath, Encoding.UTF8);
+            var manifest = JsonSerializer.Deserialize<ManifestRoot>(json) ?? new ManifestRoot();
+            var favIds = LoadFavoriteIds();
 
-        return manifest;
+            foreach (var script in manifest.Scripts)
+            {
+                var normalizedRel = script.RelativePath.Replace('/', Path.DirectorySeparatorChar);
+                script.BundledPath = Path.Combine(WorkspaceRoot, normalizedRel);
+                var userOverride = Path.Combine(UserScriptsRoot, normalizedRel);
+                script.FullPath = File.Exists(userOverride) ? userOverride : script.BundledPath;
+                script.IsFavorite = favIds.Contains(script.Id);
+            }
+
+            return manifest;
+        }
+        catch (JsonException)
+        {
+            // A malformed catalog must not crash the UI. The empty catalog lets
+            // the caller show a clear error instead of failing startup.
+            return new ManifestRoot();
+        }
     }
 
     public HashSet<string> LoadFavoriteIds()
@@ -80,43 +116,116 @@ public sealed class WorkspaceService
                     return new HashSet<string>(list, StringComparer.OrdinalIgnoreCase);
                 }
             }
+
+            // Migrate the old workspace-root favorites file once, so upgrades do
+            // not silently lose pinned scripts.
+            var legacyPath = Path.Combine(WorkspaceRoot, ".winpulse-favorites.json");
+            if (File.Exists(legacyPath))
+            {
+                var legacyJson = File.ReadAllText(legacyPath, Encoding.UTF8);
+                var legacyList = JsonSerializer.Deserialize<List<string>>(legacyJson);
+                if (legacyList != null)
+                {
+                    Directory.CreateDirectory(UserDataRoot);
+                    File.WriteAllText(FavoritesPath, legacyJson, Encoding.UTF8);
+                    return new HashSet<string>(legacyList, StringComparer.OrdinalIgnoreCase);
+                }
+            }
         }
         catch
         {
-            // Ignore malformed favorites file
+            // Ignore malformed/unreadable favorites file.
         }
-        return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "001", "011", "021", "023", "031", "061", "091" };
+
+        return new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "001", "011", "021", "023", "031", "061", "091"
+        };
     }
 
-    public void SaveFavorites(IEnumerable<ScriptItem> scripts)
+    public bool SaveFavorites(IEnumerable<ScriptItem> scripts)
     {
         try
         {
             var favs = scripts.Where(s => s.IsFavorite).Select(s => s.Id).OrderBy(x => x).ToList();
             var json = JsonSerializer.Serialize(favs, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(FavoritesPath, json, Encoding.UTF8);
+            Directory.CreateDirectory(UserDataRoot);
+            var tempPath = FavoritesPath + ".tmp";
+            File.WriteAllText(tempPath, json, Encoding.UTF8);
+            File.Move(tempPath, FavoritesPath, true);
+            return true;
         }
         catch
         {
-            // Ignore write errors
+            return false;
         }
     }
 
     public string ReadScriptSource(ScriptItem script)
     {
-        if (File.Exists(script.FullPath))
+        var path = File.Exists(script.FullPath) ? script.FullPath : script.BundledPath;
+        if (File.Exists(path))
         {
-            return File.ReadAllText(script.FullPath, Encoding.UTF8);
+            return File.ReadAllText(path, Encoding.UTF8);
         }
-        return $"# Script file not found at: {script.FullPath}";
+        return $"# Script file not found at: {path}";
     }
 
-    public void SaveScriptSource(ScriptItem script, string newContent)
+    /// <summary>
+    /// Saves an edited script to a user-writable override under LocalAppData.
+    /// The bundled script is never overwritten, which keeps MSIX installs and
+    /// single-file extraction directories working.
+    /// </summary>
+    public bool SaveScriptSource(ScriptItem script, string newContent)
     {
-        if (!string.IsNullOrWhiteSpace(script.FullPath))
+        if (string.IsNullOrWhiteSpace(script.RelativePath))
         {
-            File.WriteAllText(script.FullPath, newContent, Encoding.UTF8);
+            return false;
         }
+
+        try
+        {
+            var normalizedRel = script.RelativePath.Replace('/', Path.DirectorySeparatorChar);
+            var userPath = Path.Combine(UserScriptsRoot, normalizedRel);
+            Directory.CreateDirectory(Path.GetDirectoryName(userPath)!);
+            var tempPath = userPath + ".tmp";
+            File.WriteAllText(tempPath, newContent, Encoding.UTF8);
+            File.Move(tempPath, userPath, true);
+            script.FullPath = userPath;
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public static bool IsPowerShellAvailable()
+    {
+        if (_powerShellAvailable.HasValue)
+        {
+            return _powerShellAvailable.Value;
+        }
+
+        var pathValue = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        foreach (var dir in pathValue.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            try
+            {
+                if (File.Exists(Path.Combine(dir, "pwsh.exe")) || File.Exists(Path.Combine(dir, "pwsh")))
+                {
+                    _powerShellAvailable = true;
+                    return true;
+                }
+            }
+            catch
+            {
+                // Ignore inaccessible PATH entries.
+            }
+        }
+
+        _powerShellAvailable = false;
+        return false;
     }
 
     public static bool IsRunningAsAdministrator()
@@ -166,23 +275,26 @@ public sealed class WorkspaceService
         }
         catch
         {
-            // Fallback
+            // Fallback below.
         }
         return (0, 0, 0);
     }
 
     /// <summary>
-    /// Statically validates a single script or all 100 scripts using PowerShell's AST Parser
+    /// Statically validates a single script using PowerShell's AST Parser
     /// WITHOUT executing any optimization script.
     /// </summary>
-    public async Task<(bool Success, string Output)> ValidateSingleScriptAstAsync(ScriptItem script)
+    public async Task<RunOutcome> ValidateSingleScriptAstAsync(ScriptItem script)
     {
-        if (!File.Exists(script.FullPath))
+        var path = File.Exists(script.FullPath) ? script.FullPath : script.BundledPath;
+        if (!File.Exists(path))
         {
-            return (false, $"[FAIL] File not found: {script.FullPath}");
+            return new RunOutcome(false, 1, $"[FAIL] File not found: {path}", TimeSpan.Zero, RunMode.Verify);
         }
 
-        string escapedPath = script.FullPath.Replace("'", "''");
+        string escapedPath = path.Replace("'", "''");
+        string escapedName = script.Name.Replace("'", "''");
+        string escapedId = script.Id.Replace("'", "''");
         string psAstCommand = $@"
 $tokens = $null
 $errors = $null
@@ -193,7 +305,7 @@ if ($errors.Count -gt 0) {{
 }}
 $cmds = @($ast.FindAll({{ param($n) $n -is [System.Management.Automation.Language.CommandAst] }}, $true))
 $params = @($ast.ParamBlock.Parameters | ForEach-Object {{ $_.Name.VariablePath.UserPath }})
-Write-Output ""[STATIC AST VERIFIED] #{script.Id} ({script.Name})""
+Write-Output ""[STATIC AST VERIFIED] #{escapedId} ({escapedName})""
 Write-Output ""  File       : {escapedPath}""
 Write-Output ""  Tokens     : $($tokens.Count) tokens parsed with 0 syntax errors""
 Write-Output ""  Parameters : -$($params -join ', -')""
@@ -204,65 +316,163 @@ Write-Output ""  Safety     : Non-execution static verification succeeded.""
         return await RunPwshCommandInternalAsync(psAstCommand);
     }
 
-    public async Task<(bool Success, string Output)> ValidateAll100ScriptsAstAsync()
+    public async Task<RunOutcome> ValidateAll100ScriptsAstAsync()
     {
         if (!File.Exists(ValidatorScriptPath))
         {
-            return (false, $"Validator script missing at {ValidatorScriptPath}");
+            return new RunOutcome(false, 1, $"Validator script missing at {ValidatorScriptPath}", TimeSpan.Zero, RunMode.Verify);
+        }
+
+        if (!PowerShellAvailable)
+        {
+            return new RunOutcome(
+                false,
+                -1,
+                "[ERROR] PowerShell 7 (pwsh) was not found on PATH. Install PowerShell 7 and restart the app.",
+                TimeSpan.Zero,
+                RunMode.Verify);
         }
 
         string args = $"-NoProfile -ExecutionPolicy Bypass -File \"{ValidatorScriptPath}\"";
-        return await RunProcessCaptureAsync("pwsh", args);
+        return await RunProcessCaptureAsync(
+            "pwsh",
+            args,
+            onLineReceived: null,
+            modeOverride: RunMode.Verify,
+            timeout: TimeSpan.FromMinutes(10));
     }
 
-    public async Task<(bool Success, string Output)> ExecuteScriptAsync(
+    /// <summary>
+    /// Executes a script with or without -DryRun. Live execution is refused while the
+    /// Safety Lock is on; instead the script is statically inspected. Preview (dry-run)
+    /// is always allowed because -DryRun never changes the system.
+    /// </summary>
+    public async Task<RunOutcome> ExecuteScriptAsync(
         ScriptItem script,
         bool dryRun,
         bool safetyLockEnabled,
         Action<string>? onLineReceived = null)
     {
-        if (safetyLockEnabled)
+        if (!PowerShellAvailable)
+        {
+            var missing = BuildPowerShellMissingOutcome(RunMode.Verify);
+            onLineReceived?.Invoke(missing.Output);
+            return missing;
+        }
+
+        if (!dryRun && safetyLockEnabled)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"======================================================================");
+            sb.AppendLine("======================================================================");
             sb.AppendLine($" [SAFETY LOCK ACTIVE] #{script.Id} - {script.Name}");
-            sb.AppendLine($"======================================================================");
-            sb.AppendLine($"Mode           : Static Non-Execution Inspection (Safety Lock is ON)");
+            sb.AppendLine("======================================================================");
+            sb.AppendLine("Mode           : Static Non-Execution Inspection (Safety Lock is ON)");
             sb.AppendLine($"Script Path    : {script.FullPath}");
             sb.AppendLine($"Category       : {script.Category} / {script.Subcategory}");
             sb.AppendLine($"Impact         : {script.Impact} | Requires Admin: {script.RequiresAdmin} | Reversible: {script.Reversible}");
-            sb.AppendLine($"Summary        : {script.Description}");
+            sb.AppendLine($"Summary        : {script.SummaryText}");
             sb.AppendLine();
             var astRes = await ValidateSingleScriptAstAsync(script);
             sb.AppendLine(astRes.Output.TrimEnd());
             sb.AppendLine();
-            sb.AppendLine($"[TIP] Toggle 'Safety Lock: UNLOCKED' in the top bar if you want to execute this script live or with -DryRun.");
+            sb.AppendLine("[TIP] Safety Lock is ON: live changes are blocked. Use Preview (-DryRun) to simulate,");
+            sb.AppendLine("      or turn the Safety Lock off in the top bar when you are ready to apply changes.");
             var text = sb.ToString();
             onLineReceived?.Invoke(text);
-            return (astRes.Success, text);
+            return new RunOutcome(astRes.Success, astRes.Success ? 0 : 1, text, astRes.Duration, RunMode.Verify);
         }
 
         string dryFlag = dryRun ? " -DryRun" : string.Empty;
         string args = $"-NoProfile -ExecutionPolicy Bypass -File \"{script.FullPath}\"{dryFlag}";
-        return await RunProcessCaptureAsync("pwsh", args, onLineReceived);
+        return await RunProcessCaptureAsync(
+            "pwsh",
+            args,
+            onLineReceived,
+            timeout: dryRun ? TimeSpan.FromMinutes(5) : TimeSpan.FromMinutes(30));
     }
 
-    private static async Task<(bool Success, string Output)> RunPwshCommandInternalAsync(string command)
-    {
-        string bytesB64 = Convert.ToBase64String(Encoding.Unicode.GetBytes(command));
-        string args = $"-NoProfile -NonInteractive -EncodedCommand {bytesB64}";
-        return await RunProcessCaptureAsync("pwsh", args);
-    }
-
-    private static async Task<(bool Success, string Output)> RunProcessCaptureAsync(
-        string fileName,
-        string arguments,
+    /// <summary>
+    /// Runs a script with one of its built-in undo switches (for example -Revert or
+    /// -RestoreNotifications). This is a live change; the caller must have the Safety
+    /// Lock off, and this method re-checks it as defense in depth.
+    /// </summary>
+    public async Task<RunOutcome> ExecuteScriptWithSwitchAsync(
+        ScriptItem script,
+        string switchName,
+        bool safetyLockEnabled,
         Action<string>? onLineReceived = null)
     {
-        var sb = new StringBuilder();
-        try
+        if (!PowerShellAvailable)
         {
-            var psi = new ProcessStartInfo
+            var missing = BuildPowerShellMissingOutcome(RunMode.Live);
+            onLineReceived?.Invoke(missing.Output);
+            return missing;
+        }
+
+        if (safetyLockEnabled)
+        {
+            var blocked = new RunOutcome(
+                false,
+                -1,
+                $"[ERROR] Safety Lock is ON. Unlock it in the top bar before reverting #{script.Id} -{switchName}.",
+                TimeSpan.Zero,
+                RunMode.Live);
+            onLineReceived?.Invoke(blocked.Output);
+            return blocked;
+        }
+
+        string args = $"-NoProfile -ExecutionPolicy Bypass -File \"{script.FullPath}\" -{switchName}";
+        return await RunProcessCaptureAsync("pwsh", args, onLineReceived, timeout: TimeSpan.FromMinutes(30));
+    }
+
+    private static RunOutcome BuildPowerShellMissingOutcome(RunMode mode)
+    {
+        return new RunOutcome(
+            false,
+            -1,
+            "[ERROR] PowerShell 7 (pwsh) was not found on PATH. Install PowerShell 7 and restart the app.",
+            TimeSpan.Zero,
+            mode);
+    }
+
+    private async Task<RunOutcome> RunPwshCommandInternalAsync(string command)
+    {
+        if (!PowerShellAvailable)
+        {
+            return BuildPowerShellMissingOutcome(RunMode.Verify);
+        }
+
+        string bytesB64 = Convert.ToBase64String(Encoding.Unicode.GetBytes(command));
+        string args = $"-NoProfile -NonInteractive -EncodedCommand {bytesB64}";
+        return await RunProcessCaptureAsync(
+            "pwsh",
+            args,
+            modeOverride: RunMode.Verify,
+            timeout: TimeSpan.FromMinutes(2));
+    }
+
+    private static async Task<RunOutcome> RunProcessCaptureAsync(
+        string fileName,
+        string arguments,
+        Action<string>? onLineReceived = null,
+        RunMode? modeOverride = null,
+        TimeSpan? timeout = null)
+    {
+        var sb = new StringBuilder();
+        var stopwatch = Stopwatch.StartNew();
+        var mode = modeOverride ?? (arguments.Contains("-DryRun", StringComparison.OrdinalIgnoreCase)
+            ? RunMode.DryRun
+            : RunMode.Live);
+
+        using var timeoutCts = new CancellationTokenSource();
+        if (timeout.HasValue)
+        {
+            timeoutCts.CancelAfter(timeout.Value);
+        }
+
+        using var proc = new Process
+        {
+            StartInfo = new ProcessStartInfo
             {
                 FileName = fileName,
                 Arguments = arguments,
@@ -272,40 +482,85 @@ Write-Output ""  Safety     : Non-execution static verification succeeded.""
                 CreateNoWindow = true,
                 StandardOutputEncoding = Encoding.UTF8,
                 StandardErrorEncoding = Encoding.UTF8
-            };
+            }
+        };
 
-            using var proc = new Process { StartInfo = psi };
+        void Append(string line)
+        {
+            lock (sb)
+            {
+                sb.AppendLine(line);
+            }
+
+            try
+            {
+                onLineReceived?.Invoke(line);
+            }
+            catch
+            {
+                // A UI callback must not tear down the reader thread.
+            }
+        }
+
+        try
+        {
             proc.OutputDataReceived += (_, e) =>
             {
                 if (e.Data != null)
                 {
-                    sb.AppendLine(e.Data);
-                    onLineReceived?.Invoke(e.Data);
+                    Append(e.Data);
                 }
             };
             proc.ErrorDataReceived += (_, e) =>
             {
                 if (e.Data != null)
                 {
-                    string errLine = $"[STDERR] {e.Data}";
-                    sb.AppendLine(errLine);
-                    onLineReceived?.Invoke(errLine);
+                    Append($"[STDERR] {e.Data}");
                 }
             };
 
             proc.Start();
             proc.BeginOutputReadLine();
             proc.BeginErrorReadLine();
-            await proc.WaitForExitAsync();
+            await proc.WaitForExitAsync(timeoutCts.Token);
+            stopwatch.Stop();
 
-            return (proc.ExitCode == 0, sb.ToString());
+            lock (sb)
+            {
+                return new RunOutcome(proc.ExitCode == 0, proc.ExitCode, sb.ToString(), stopwatch.Elapsed, mode);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            stopwatch.Stop();
+            try
+            {
+                if (!proc.HasExited)
+                {
+                    proc.Kill(entireProcessTree: true);
+                }
+            }
+            catch
+            {
+                // Process may have exited between the check and the kill.
+            }
+
+            string msg = $"[ERROR] {fileName} exceeded the {(timeout ?? TimeSpan.Zero).TotalMinutes:0} minute timeout and was terminated.";
+            Append(msg);
+            lock (sb)
+            {
+                return new RunOutcome(false, -1, sb.ToString(), stopwatch.Elapsed, mode);
+            }
         }
         catch (Exception ex)
         {
+            stopwatch.Stop();
             string msg = $"[ERROR] Failed to invoke {fileName}: {ex.Message}";
-            sb.AppendLine(msg);
-            onLineReceived?.Invoke(msg);
-            return (false, sb.ToString());
+            Append(msg);
+            lock (sb)
+            {
+                return new RunOutcome(false, -1, sb.ToString(), stopwatch.Elapsed, mode);
+            }
         }
     }
 }

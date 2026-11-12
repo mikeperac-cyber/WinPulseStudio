@@ -3,7 +3,18 @@
     NVMe SysMain (Superfetch) Optimizer (#003)
 .DESCRIPTION
     Detects SSD/NVMe drives and configures SysMain service startup and PrefetchParameters to avoid background I/O thrashing.
+.EXAMPLE
+    .\003-disable-sysmain-superfetch.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\003-disable-sysmain-superfetch.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -42,4 +53,4 @@ if ($EnableSysMain) {
         Stop-Service -Name "SysMain" -Force -ErrorAction SilentlyContinue
     }
     Write-Output "SysMain stopped and set to Manual for low-jitter NVMe I/O."
-}
+}

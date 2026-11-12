@@ -3,7 +3,18 @@
     Live External TCP Connection & Process Radar (#056)
 .DESCRIPTION
     Lists all Established non-loopback TCP connections grouped by process name.
+.EXAMPLE
+    .\056-network-connection-radar.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\056-network-connection-radar.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -28,4 +39,4 @@ $report = foreach ($c in $conns) {
 }
 
 $report | Sort-Object ProcessName | Format-Table -AutoSize | Out-String | Write-Output
-Write-Output ("Total Active External Connections: {0}" -f @($report).Count)
+Write-Output ("Total Active External Connections: {0}" -f @($report).Count)

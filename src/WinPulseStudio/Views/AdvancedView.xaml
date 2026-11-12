@@ -1,0 +1,666 @@
+<UserControl x:Class="WinPulseStudio.Views.AdvancedView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgPrimaryBrush}"
+             Foreground="{StaticResource TextPrimaryBrush}"
+             FontFamily="Segoe UI Variable Text, Segoe UI">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="540"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT SIDEBAR: CATEGORIES & SMART PRESETS -->
+        <Border Grid.Column="0"
+                Background="{StaticResource BgSecondaryBrush}"
+                BorderBrush="{StaticResource BorderSubtleBrush}"
+                BorderThickness="0,0,1,0"
+                Padding="12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="205"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="SCRIPT CATEGORIES (100)"
+                           FontSize="11"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           Margin="4,2,0,8"/>
+
+                <ListBox x:Name="LstCategories"
+                         Grid.Row="1"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Foreground="{StaticResource TextPrimaryBrush}"
+                         SelectionChanged="LstCategories_SelectionChanged"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="10,7"/>
+                            <Setter Property="Margin" Value="0,2"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Bd"
+                                                Background="Transparent"
+                                                CornerRadius="6"
+                                                Padding="{TemplateBinding Padding}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding DisplayLabel}"
+                                                           FontSize="12.5"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#E2E8F0"
+                                                           VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <Border Grid.Column="1"
+                                                        Background="#1E293B"
+                                                        CornerRadius="10"
+                                                        Padding="7,2"
+                                                        Margin="6,0,0,0">
+                                                    <TextBlock Text="{Binding Count}"
+                                                               FontSize="10.5"
+                                                               FontWeight="Bold"
+                                                               Foreground="#38BDF8"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="#1E293B"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="#0369A1"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+
+                <StackPanel Grid.Row="2" Margin="4,12,0,6">
+                    <TextBlock Text="SMART WORKLOAD PRESETS"
+                               FontSize="11"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBlock Text="Select a profile to filter &amp; preview in batch"
+                               FontSize="10.5"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               Margin="0,1,0,0"/>
+                </StackPanel>
+
+                <ListBox x:Name="LstPresets"
+                         Grid.Row="3"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         SelectionChanged="LstPresets_SelectionChanged"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="0,3"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="PresetBd"
+                                                Background="#1E293B"
+                                                BorderBrush="#334155"
+                                                BorderThickness="1"
+                                                CornerRadius="7"
+                                                Padding="10,7">
+                                            <StackPanel>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding Name}"
+                                                               FontSize="12"
+                                                               FontWeight="Bold"
+                                                               Foreground="#F8FAFC"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding CountLabel}"
+                                                               FontSize="10"
+                                                               FontWeight="Bold"
+                                                               Foreground="#38BDF8"
+                                                               VerticalAlignment="Center"/>
+                                                </Grid>
+                                                <TextBlock Text="{Binding Description}"
+                                                           FontSize="10.5"
+                                                           Foreground="#94A3B8"
+                                                           TextWrapping="Wrap"
+                                                           MaxHeight="30"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="PresetBd" Property="BorderBrush" Value="#38BDF8"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="PresetBd" Property="Background" Value="#1E1B4B"/>
+                                                <Setter TargetName="PresetBd" Property="BorderBrush" Value="#818CF8"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+
+                <StackPanel Grid.Row="4" Margin="0,8,0,0">
+                    <Button x:Name="BtnBatchPreset"
+                            Content="⚡ Preview / Simulate Preset"
+                            Click="BtnBatchPreset_Click"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Padding="10,7"
+                            ToolTip="Runs -DryRun simulation across all scripts in the selected preset"/>
+                    <Button x:Name="BtnVerifyAll"
+                            Content="✓ Verify All 100 Scripts (AST)"
+                            Click="BtnVerifyAll_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Padding="10,7"
+                            Margin="0,6,0,0"
+                            ToolTip="Parse and validate all 100 PowerShell scripts using the PowerShell AST Parser without executing any script"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- CENTER PANEL: SEARCH, FILTERS & 100 SCRIPTS CATALOG -->
+        <Grid Grid.Column="1" Margin="14,12,10,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Search Bar -->
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Background="{StaticResource BgInputBrush}"
+                        BorderBrush="{StaticResource BorderSubtleBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="10,6">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="🔍" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBox x:Name="TxtSearch"
+                                 Grid.Column="1"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Foreground="{StaticResource TextPrimaryBrush}"
+                                 CaretBrush="#38BDF8"
+                                 FontSize="13.5"
+                                 VerticalContentAlignment="Center"
+                                 TextChanged="TxtSearch_TextChanged"
+                                 ToolTip="Search across all 100 scripts by ID (#001-#100), title, tags, description, or PowerShell cmdlet"/>
+                    </Grid>
+                </Border>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0">
+                    <Button Content="Save as Collection"
+                            Click="BtnSaveCollection_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            ToolTip="Save the current filtered selection as a reusable custom collection (shown on Home)"/>
+                    <Button Content="Reset Filters"
+                            Click="BtnResetFilters_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="8,0,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Filter Chips & Count Bar -->
+            <Grid Grid.Row="1" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <CheckBox x:Name="ChkHighImpact"
+                              Content="🔥 High Impact Only"
+                              Foreground="#E2E8F0"
+                              Margin="0,0,14,0"
+                              Checked="FilterCheckbox_Changed"
+                              Unchecked="FilterCheckbox_Changed"/>
+                    <CheckBox x:Name="ChkNoAdmin"
+                              Content="👤 User Mode (No Admin)"
+                              Foreground="#E2E8F0"
+                              Margin="0,0,14,0"
+                              Checked="FilterCheckbox_Changed"
+                              Unchecked="FilterCheckbox_Changed"/>
+                    <CheckBox x:Name="ChkSafeReadOnly"
+                              Content="🟢 Safe Read-Only Audits"
+                              Foreground="#E2E8F0"
+                              Margin="0,0,14,0"
+                              Checked="FilterCheckbox_Changed"
+                              Unchecked="FilterCheckbox_Changed"/>
+                    <CheckBox x:Name="ChkReversible"
+                              Content="↺ Reversible Tweaks"
+                              Foreground="#E2E8F0"
+                              Checked="FilterCheckbox_Changed"
+                              Unchecked="FilterCheckbox_Changed"/>
+                </WrapPanel>
+
+                <TextBlock x:Name="TxtResultCount"
+                           Grid.Column="1"
+                           Text="Showing 100 of 100 scripts"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           Foreground="#38BDF8"
+                           VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- Script Catalog ListBox -->
+            <ListBox x:Name="LstScripts"
+                     Grid.Row="2"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     SelectionChanged="LstScripts_SelectionChanged"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     VirtualizingPanel.IsVirtualizing="True"
+                     VirtualizingPanel.ScrollUnit="Pixel">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="0,0,4,8"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="CardBorder"
+                                            Background="{StaticResource BgCardBrush}"
+                                            BorderBrush="{StaticResource BorderSubtleBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="9"
+                                            Padding="14,11">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Row 0: ID Badge, Name, Star, Status Badges -->
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Border Background="#0F172A"
+                                                        BorderBrush="#38BDF8"
+                                                        BorderThickness="1"
+                                                        CornerRadius="5"
+                                                        Padding="7,2"
+                                                        Margin="0,0,10,0"
+                                                        VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding DisplayId}"
+                                                               FontFamily="Cascadia Mono, Consolas"
+                                                               FontSize="12"
+                                                               FontWeight="Bold"
+                                                               Foreground="#38BDF8"/>
+                                                </Border>
+
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}"
+                                                               FontSize="14"
+                                                               FontWeight="Bold"
+                                                               Foreground="#F8FAFC"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{Binding CategorySubLabel}"
+                                                               FontSize="11"
+                                                               Foreground="#94A3B8"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top">
+                                                    <Border Background="#0F172A" CornerRadius="4" Padding="7,2" Margin="0,0,6,0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding ImpactBadgeText}" FontSize="10.5" FontWeight="SemiBold" Foreground="#38BDF8"/>
+                                                    </Border>
+                                                    <Border Background="#0F172A" CornerRadius="4" Padding="7,2" Margin="0,0,6,0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding AdminBadgeText}" FontSize="10.5" FontWeight="SemiBold" Foreground="#FBBF24"/>
+                                                    </Border>
+                                                    <Button Content="{Binding StarGlyph}"
+                                                            Tag="{Binding}"
+                                                            Click="BtnToggleFavorite_Click"
+                                                            Style="{StaticResource FluentButtonStyle}"
+                                                            Padding="7,2"
+                                                            FontSize="13"
+                                                            Foreground="#FBBF24"
+                                                            ToolTip="Pin/Unpin Favorite Script"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <!-- Row 1: Description -->
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{Binding SummaryText}"
+                                                       FontSize="12"
+                                                       Foreground="#CBD5E1"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0,7,0,7"/>
+
+                                            <!-- Row 2: Tags & Verification Badge -->
+                                            <Grid Grid.Row="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding TagsFormatted}"
+                                                           FontFamily="Cascadia Mono, Consolas"
+                                                           FontSize="10.5"
+                                                           Foreground="#64748B"
+                                                           VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding ModeBadgeText}"
+                                                               FontSize="11"
+                                                               Foreground="#94A3B8"
+                                                               VerticalAlignment="Center"
+                                                               Margin="0,0,10,0"/>
+                                                    <Border Background="#064E3B" CornerRadius="4" Padding="6,2">
+                                                        <TextBlock Text="{Binding StatusText}"
+                                                                   FontSize="10.5"
+                                                                   FontWeight="Bold"
+                                                                   Foreground="#6EE7B7"/>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="CardBorder" Property="Background" Value="{StaticResource BgCardHoverBrush}"/>
+                                            <Setter TargetName="CardBorder" Property="BorderBrush" Value="#475569"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="CardBorder" Property="Background" Value="#172554"/>
+                                            <Setter TargetName="CardBorder" Property="BorderBrush" Value="#38BDF8"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Grid>
+
+        <!-- RIGHT PANEL: SCRIPT INSPECTOR, SOURCE EDITOR & RESULTS -->
+        <Border Grid.Column="2"
+                Background="{StaticResource BgSecondaryBrush}"
+                BorderBrush="{StaticResource BorderSubtleBrush}"
+                BorderThickness="1,0,0,0"
+                Padding="14,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1.05*"/>
+                    <RowDefinition Height="0.95*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Selected Script Inspector Header -->
+                <Border Grid.Row="0"
+                        Background="{StaticResource BgCardBrush}"
+                        BorderBrush="{StaticResource BorderSubtleBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12,10">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Background="#0284C7" CornerRadius="5" Padding="8,2" Margin="0,0,10,0" VerticalAlignment="Center">
+                                <TextBlock x:Name="TxtSelectedId" Text="#001" FontFamily="Cascadia Mono, Consolas" FontWeight="Bold" FontSize="12.5" Foreground="White"/>
+                            </Border>
+                            <TextBlock x:Name="TxtSelectedTitle"
+                                       Grid.Column="1"
+                                       Text="Select a script"
+                                       FontSize="14.5"
+                                       FontWeight="Bold"
+                                       Foreground="#F8FAFC"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock x:Name="TxtSelectedMeta"
+                                   Text="Category • Impact • Path"
+                                   FontSize="11"
+                                   Foreground="#38BDF8"
+                                   Margin="0,5,0,3"
+                                   TextTrimming="CharacterEllipsis"/>
+
+                        <TextBlock x:Name="TxtSelectedDesc"
+                                   Text="Description"
+                                   FontSize="11.5"
+                                   Foreground="#CBD5E1"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Script Action Buttons Bar -->
+                <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,4">
+                    <Button x:Name="BtnVerifySingle"
+                            Content="✓ Verify AST"
+                            Click="BtnVerifySingle_Click"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Margin="0,0,6,6"
+                            ToolTip="Parse this script's Abstract Syntax Tree without running it"/>
+
+                    <Button x:Name="BtnDryRunSingle"
+                            Content="🧪 Preview (-DryRun)"
+                            Click="BtnDryRunSingle_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="0,0,6,6"
+                            ToolTip="Simulate script execution with the -DryRun switch (always safe: no changes)"/>
+
+                    <Button x:Name="BtnExecuteSingle"
+                            Content="▶ Apply Script"
+                            Click="BtnExecuteSingle_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="0,0,6,6"
+                            ToolTip="Apply for real. While Safety Lock is ON this only runs static verification."/>
+
+                    <Button x:Name="BtnRevertScript"
+                            Content="↩ Revert Change"
+                            Click="BtnRevertScript_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="0,0,6,6"
+                            Visibility="Collapsed"
+                            ToolTip="Undo this change by running the script's built-in revert switch. Requires Safety Lock off."/>
+
+                    <Button Content="📋 Copy Code"                            Click="BtnCopyCode_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="0,0,6,6"/>
+
+                    <Button Content="💾 Save Edits"
+                            Click="BtnSaveCode_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="0,0,6,6"/>
+
+                    <Button Content="📂 Reveal File"
+                            Click="BtnRevealFile_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="0,0,0,6"/>
+                </WrapPanel>
+
+                <!-- Script Details (what changes / undo / prerequisites) -->
+                <StackPanel Grid.Row="2" Margin="0,0,0,4">
+                    <Expander x:Name="ExpWhatChanges" Header="What will this change?" Foreground="#E2E8F0" Visibility="Collapsed" Margin="0,2">
+                        <ItemsControl x:Name="LstChanges" Margin="18,4,6,4">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0,1">
+                                        <TextBlock Text="•" Foreground="#38BDF8" Margin="0,0,6,0"/>
+                                        <TextBlock Text="{Binding}" Foreground="#CBD5E1" FontSize="11.5" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Expander>
+                    <Expander x:Name="ExpHowToRevert" Header="How to undo" Foreground="#E2E8F0" Visibility="Collapsed" Margin="0,2">
+                        <TextBlock x:Name="TxtHowToRevert" Foreground="#CBD5E1" FontSize="11.5" TextWrapping="Wrap" Margin="18,4,6,4"/>
+                    </Expander>
+                    <Expander x:Name="ExpPrereq" Header="Before you start" Foreground="#E2E8F0" Visibility="Collapsed" Margin="0,2">
+                        <TextBlock x:Name="TxtPrereq" Foreground="#FCD34D" FontSize="11.5" TextWrapping="Wrap" Margin="18,4,6,4"/>
+                    </Expander>
+                </StackPanel>
+
+                <!-- PowerShell Source Code Editor -->
+                <Grid Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="POWERSHELL SOURCE CODE (.PS1)"
+                                   FontSize="10.5"
+                                   FontWeight="Bold"
+                                   Foreground="#94A3B8"/>
+                        <TextBlock x:Name="TxtScriptPathShort"
+                                   Grid.Column="1"
+                                   Text="scripts/..."
+                                   FontFamily="Cascadia Mono, Consolas"
+                                   FontSize="10.5"
+                                   Foreground="#64748B"/>
+                    </Grid>
+
+                    <Border Grid.Row="1"
+                            Background="#090D16"
+                            BorderBrush="{StaticResource BorderSubtleBrush}"
+                            BorderThickness="1"
+                            CornerRadius="7">
+                        <TextBox x:Name="TxtCodeEditor"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Foreground="#E2E8F0"
+                                 CaretBrush="#38BDF8"
+                                 FontFamily="Cascadia Mono, Consolas"
+                                 FontSize="12"
+                                 Padding="10"
+                                 AcceptsReturn="True"
+                                 AcceptsTab="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 TextWrapping="NoWrap"/>
+                    </Border>
+                </Grid>
+
+                <!-- Results / Raw Log Tabs -->
+                <TabControl Grid.Row="4" Margin="0,10,0,0" Style="{StaticResource DarkTabControlStyle}">
+                    <TabItem Header="Results">
+                        <Grid Margin="0,6,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border Background="#050811" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="7">
+                                <ListBox x:Name="LstResults"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="#E2E8F0"
+                                         FontFamily="Cascadia Mono, Consolas"
+                                         FontSize="11"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="4,2">
+                                                <TextBlock Text="{Binding TimestampText}" Foreground="#64748B" Margin="0,0,10,0"/>
+                                                <TextBlock Text="{Binding DisplayId}" Foreground="#38BDF8" FontWeight="Bold" Margin="0,0,10,0"/>
+                                                <TextBlock Text="{Binding ModeLabel}" Foreground="#94A3B8" Margin="0,0,10,0"/>
+                                                <TextBlock Text="{Binding StatusLabel}" Foreground="#6EE7B7" FontWeight="Bold" Margin="0,0,10,0"/>
+                                                <TextBlock Text="{Binding ScriptName}" Foreground="#E2E8F0" TextTrimming="CharacterEllipsis"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Border>
+                            <Border Grid.Row="1" Background="#090D16" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="7" Margin="0,6,0,0" Height="96">
+                                <TextBox Text="{Binding SelectedItem.OutputSnippet, ElementName=LstResults}"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="#6EE7B7"
+                                         FontFamily="Cascadia Mono, Consolas"
+                                         FontSize="10.5"
+                                         Padding="8"
+                                         IsReadOnly="True"
+                                         TextWrapping="NoWrap"
+                                         VerticalScrollBarVisibility="Auto"
+                                         HorizontalScrollBarVisibility="Auto"/>
+                            </Border>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Raw Log">
+                        <Grid Margin="0,6,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,6">
+                                <Button Content="Copy Log"
+                                        Click="BtnCopyConsole_Click"
+                                        Style="{StaticResource FluentButtonStyle}"
+                                        Padding="8,2"
+                                        Margin="0,0,6,0"
+                                        FontSize="11"/>
+                                <Button Content="Clear"
+                                        Click="BtnClearConsole_Click"
+                                        Style="{StaticResource FluentButtonStyle}"
+                                        Padding="8,2"
+                                        FontSize="11"/>
+                            </StackPanel>
+                            <Border Grid.Row="1"
+                                    Background="#050811"
+                                    BorderBrush="#1E293B"
+                                    BorderThickness="1"
+                                    CornerRadius="7">
+                                <TextBox x:Name="TxtConsole"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Foreground="#6EE7B7"
+                                         FontFamily="Cascadia Mono, Consolas"
+                                         FontSize="11.5"
+                                         Padding="10"
+                                         IsReadOnly="True"
+                                         VerticalScrollBarVisibility="Auto"
+                                         HorizontalScrollBarVisibility="Auto"
+                                         TextWrapping="Wrap"/>
+                            </Border>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

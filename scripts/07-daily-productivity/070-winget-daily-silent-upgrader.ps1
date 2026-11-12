@@ -3,7 +3,18 @@
     WinGet Outdated App Scanner & Silent Upgrader (#070)
 .DESCRIPTION
     Lists available package upgrades via winget and optionally upgrades all packages silently.
+.EXAMPLE
+    .\070-winget-daily-silent-upgrader.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\070-winget-daily-silent-upgrader.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -26,4 +37,4 @@ if ($DryRun -or -not $UpgradeAll -or -not $PSCmdlet.ShouldProcess("WinGet Packag
     return
 }
 
-& winget.exe upgrade --all --silent --accept-package-agreements --accept-source-agreements
+& winget.exe upgrade --all --silent --accept-package-agreements --accept-source-agreements

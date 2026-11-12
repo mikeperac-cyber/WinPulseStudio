@@ -3,7 +3,18 @@
     Repair WSL2 / Hyper-V Host Network Service (HNS) (#043)
 .DESCRIPTION
     Audits Host Network Service (hns) and virtual network adapters, restarting HNS if virtual NAT routing is wedged.
+.EXAMPLE
+    .\043-hyperv-vswitch-nat-fix.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\043-hyperv-vswitch-nat-fix.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -31,4 +42,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("Host Network Service (hns)", "Rest
 if ($hns) {
     Restart-Service -Name "hns" -Force
     Write-Output "Host Network Service (hns) restarted successfully."
-}
+}

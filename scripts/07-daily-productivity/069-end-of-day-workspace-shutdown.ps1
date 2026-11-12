@@ -3,7 +3,18 @@
     End-of-Day Uncommitted Git Audit & Workspace Wrap-Up (#069)
 .DESCRIPTION
     Scans repositories under Documents / source\repos and reports any uncommitted working tree changes.
+.EXAMPLE
+    .\069-end-of-day-workspace-shutdown.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\069-end-of-day-workspace-shutdown.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -30,4 +41,4 @@ foreach ($gd in $gitDirs) {
     } else {
         Write-Output ("[CLEAN ] {0} (branch: {1})" -f $repoPath, $branch)
     }
-}
+}

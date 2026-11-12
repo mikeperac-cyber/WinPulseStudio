@@ -3,7 +3,18 @@
     NVIDIA GPU Compute Power & Clock Tuner (#027)
 .DESCRIPTION
     Uses nvidia-smi to inspect GPU thermals, power draw, P-State, and configure compute modes.
+.EXAMPLE
+    .\027-nvidia-cuda-persistence-power.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\027-nvidia-cuda-persistence-power.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -28,4 +39,4 @@ if ($DryRun -or $PowerLimitWatts -le 0 -or -not $PSCmdlet.ShouldProcess("NVIDIA 
 }
 
 & nvidia-smi -pl $PowerLimitWatts
-Write-Output "Applied NVIDIA GPU power limit: ${PowerLimitWatts}W"
+Write-Output "Applied NVIDIA GPU power limit: ${PowerLimitWatts}W"

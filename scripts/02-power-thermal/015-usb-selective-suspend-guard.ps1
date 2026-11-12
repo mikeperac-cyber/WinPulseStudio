@@ -3,7 +3,18 @@
     USB Selective Suspend Guard for Dev Hardware (#015)
 .DESCRIPTION
     Disables USB selective suspend setting (2a737441-1930-4402-8d77-b2bebba308a3 / 48e6b7a6-50f5-4782-a5d4-53bb8f07e226) on AC power.
+.EXAMPLE
+    .\015-usb-selective-suspend-guard.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\015-usb-selective-suspend-guard.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -23,4 +34,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("USB Selective Suspend", "Disable o
 
 & powercfg.exe /setacvalueindex SCHEME_CURRENT $usbSubGuid $usbSuspendGuid 0
 & powercfg.exe /setactive SCHEME_CURRENT
-Write-Output "USB Selective Suspend disabled on AC power. Connected debuggers and DACs will remain awake."
+Write-Output "USB Selective Suspend disabled on AC power. Connected debuggers and DACs will remain awake."

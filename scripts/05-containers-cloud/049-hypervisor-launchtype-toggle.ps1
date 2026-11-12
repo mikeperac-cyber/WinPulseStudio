@@ -3,7 +3,18 @@
     Hyper-V Hypervisor LaunchType Switcher (Auto vs Off) (#049)
 .DESCRIPTION
     Checks or toggles bcdedit /set hypervisorlaunchtype auto|off.
+.EXAMPLE
+    .\049-hypervisor-launchtype-toggle.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\049-hypervisor-launchtype-toggle.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -24,4 +35,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("BCDEdit hypervisorlaunchtype", "Se
 }
 
 & bcdedit.exe /set hypervisorlaunchtype $LaunchType.ToLower()
-Write-Output "Set hypervisorlaunchtype to $LaunchType. Reboot required to apply."
+Write-Output "Set hypervisorlaunchtype to $LaunchType. Reboot required to apply."

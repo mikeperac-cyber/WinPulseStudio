@@ -3,7 +3,18 @@
     Windows Firewall Public Profile Inbound Exposure Auditor (#084)
 .DESCRIPTION
     Checks Get-NetFirewallProfile status and lists active inbound Allow rules on the Public profile.
+.EXAMPLE
+    .\084-firewall-outbound-telemetry-block.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\084-firewall-outbound-telemetry-block.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -20,4 +31,4 @@ $publicRules = Get-NetFirewallRule -Direction Inbound -Enabled True -Action Allo
     Where-Object { $_.Profile -match 'Public|Any' } | Select-Object -First 15 DisplayName, Profile, Owner
 
 Write-Output "Top Active Inbound Allow Rules on Public/Any Profile:"
-$publicRules | Format-Table -AutoSize | Out-String | Write-Output
+$publicRules | Format-Table -AutoSize | Out-String | Write-Output

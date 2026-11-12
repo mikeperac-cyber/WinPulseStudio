@@ -3,7 +3,18 @@
     Faulty & Degraded PnP Device Driver Inspector (#099)
 .DESCRIPTION
     Finds any PnP device where ConfigManagerErrorCode != 0.
+.EXAMPLE
+    .\099-driver-signature-problem-audit.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\099-driver-signature-problem-audit.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -22,4 +33,4 @@ if (-not $faulty) {
 
 foreach ($dev in $faulty) {
     Write-Output ("[PROBLEM] {0} | ErrorCode: {1} | DeviceID: {2}" -f $dev.Name, $dev.ConfigManagerErrorCode, $dev.DeviceID)
-}
+}

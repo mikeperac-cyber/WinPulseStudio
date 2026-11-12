@@ -3,7 +3,18 @@
     Flush DNS Resolver Cache & Clear ARP Table (#051)
 .DESCRIPTION
     Flushes the Windows DNS resolver cache and displays current DNS server configuration.
+.EXAMPLE
+    .\051-dns-flush-winsock-reset.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\051-dns-flush-winsock-reset.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -24,4 +35,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("DNS Client Cache", "Clear-DnsClien
 }
 
 Clear-DnsClientCache
-Write-Output "DNS Client Resolver Cache flushed successfully."
+Write-Output "DNS Client Resolver Cache flushed successfully."

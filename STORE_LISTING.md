@@ -1,7 +1,7 @@
-# Microsoft WinPulse Control Studio - Store Listing Metadata
+# WinPulse Control Studio - Store Listing Metadata
 #
-# App Name: Microsoft WinPulse Control Studio
-# Developer: Microsoft Corporation
+# App Name: WinPulse Control Studio
+# Developer: WinPulse Studio
 # Category: Utilities & Tools
 # Subcategory: System Tools
 # Age Rating: 3+
@@ -28,9 +28,9 @@
 #   - 5 smart workload presets (AI Inference, Dev Compile, Daily Focus,
 #     Battery Travel, Clean Privacy)
 #   - Static script validation before execution
-#   - Reversible operations with change logging
+#   - Per-script undo switches and a run-history log
 #   - Safety Lock default ON (requires unlock before execution)
-#   - MSIX packaged for Microsoft Store
+#   - MSIX build script included; Store signing/onboarding required
 #
 # Suggested Keywords:
 #   windows, optimization, powershell, system, performance, cleanup,

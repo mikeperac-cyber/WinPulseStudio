@@ -3,7 +3,18 @@
     Empty All Recycle Bins & Inspect VSS Shadow Storage (#074)
 .DESCRIPTION
     Runs Clear-RecycleBin across fixed volumes.
+.EXAMPLE
+    .\074-recycle-bin-shadowcopy-trim.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\074-recycle-bin-shadowcopy-trim.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -19,4 +30,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("All Drives Recycle Bin", "Clear-Re
 }
 
 Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-Write-Output "All Recycle Bins emptied."
+Write-Output "All Recycle Bins emptied."

@@ -3,7 +3,18 @@
     Ollama Local LLM Flash-Attention & KV-Cache Tuner (#023)
 .DESCRIPTION
     Sets user environment variables for Ollama to enable Flash Attention and Q8_0 KV cache quantization for longer context windows in less VRAM.
+.EXAMPLE
+    .\023-ollama-server-tuning.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\023-ollama-server-tuning.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -39,4 +50,4 @@ foreach ($kv in $ollamaVars.GetEnumerator()) {
     Set-Item -Path "Env:\$($kv.Key)" -Value $kv.Value
 }
 
-Write-Output "Configured Ollama environment variables successfully."
+Write-Output "Configured Ollama environment variables successfully."

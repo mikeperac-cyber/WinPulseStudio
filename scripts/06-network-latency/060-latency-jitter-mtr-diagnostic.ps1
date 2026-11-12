@@ -3,7 +3,18 @@
     Multi-Target Ping, Jitter & Edge Latency Benchmark (#060)
 .DESCRIPTION
     Measures RTT latency and jitter across key network hops.
+.EXAMPLE
+    .\060-latency-jitter-mtr-diagnostic.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\060-latency-jitter-mtr-diagnostic.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -32,4 +43,4 @@ foreach ($t in $targets) {
     } else {
         Write-Output ("Target {0,-15} -> Unreachable" -f $t)
     }
-}
+}

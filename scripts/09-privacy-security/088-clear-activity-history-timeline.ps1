@@ -3,7 +3,18 @@
     Disable Windows Activity History & Purge Recent Jump Lists (#088)
 .DESCRIPTION
     Disables PublishUserActivities and UploadUserActivities in HKLM:\SOFTWARE\Policies\Microsoft\Windows\System.
+.EXAMPLE
+    .\088-clear-activity-history-timeline.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\088-clear-activity-history-timeline.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -24,4 +35,4 @@ if (-not (Test-Path $sysPol)) { New-Item -Path $sysPol -Force | Out-Null }
 Set-ItemProperty -Path $sysPol -Name "EnableActivityFeed" -Value 0 -Type DWord
 Set-ItemProperty -Path $sysPol -Name "PublishUserActivities" -Value 0 -Type DWord
 Set-ItemProperty -Path $sysPol -Name "UploadUserActivities" -Value 0 -Type DWord
-Write-Output "Windows Activity History tracking and cloud upload disabled."
+Write-Output "Windows Activity History tracking and cloud upload disabled."

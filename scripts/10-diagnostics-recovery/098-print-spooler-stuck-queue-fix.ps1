@@ -3,7 +3,18 @@
     Flush Stuck Print Spooler & Virtual PDF Queue (#098)
 .DESCRIPTION
     Stops Spooler service, clears C:\Windows\System32\spool\PRINTERS, and restarts Spooler.
+.EXAMPLE
+    .\098-print-spooler-stuck-queue-fix.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\098-print-spooler-stuck-queue-fix.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -24,4 +35,4 @@ if (Test-Path $spoolFolder) {
     Get-ChildItem -Path $spoolFolder -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
 }
 Start-Service -Name "Spooler"
-Write-Output "Print Spooler queue flushed and service restarted."
+Write-Output "Print Spooler queue flushed and service restarted."

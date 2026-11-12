@@ -3,7 +3,18 @@
     Disable Windows Update P2P Upload Bandwidth Drain (#059)
 .DESCRIPTION
     Sets DODownloadMode=0 (HTTP Only, no P2P peering) in HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization.
+.EXAMPLE
+    .\059-delivery-optimization-p2p-off.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\059-delivery-optimization-p2p-off.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -22,4 +33,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($doKey, "Set DODownloadMode = 0 (HT
 
 if (-not (Test-Path $doKey)) { New-Item -Path $doKey -Force | Out-Null }
 Set-ItemProperty -Path $doKey -Name "DODownloadMode" -Value 0 -Type DWord
-Write-Output "Delivery Optimization P2P upload peering disabled."
+Write-Output "Delivery Optimization P2P upload peering disabled."

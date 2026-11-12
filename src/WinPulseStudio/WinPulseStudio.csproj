@@ -9,7 +9,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>WinPulseStudio</AssemblyName>
     <RootNamespace>WinPulseStudio</RootNamespace>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Title>Microsoft WinPulse Control Studio</Title>
     <Description>Desktop Control Center for Windows Developers &amp; AI Workstations with 100 Built-In PowerShell Scripts</Description>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
@@ -17,6 +17,27 @@
 
   <ItemGroup>
     <Resource Include="Assets\app.ico" />
+  </ItemGroup>
+
+  <!--
+    Ship the 100 built-in PowerShell scripts and the catalog manifest with PUBLISHED
+    builds (dotnet publish / MSIX layout). Normal dev builds keep resolving the
+    workspace scripts/ folder by walking up from the output directory, so edits made
+    in the built-in source editor still target the real workspace files.
+  -->
+  <ItemGroup>
+    <Content Include="..\..\scripts\**\*.ps1"
+             CopyToPublishDirectory="PreserveNewest"
+             Link="scripts\%(RecursiveDir)%(Filename)%(Extension)"
+             TargetPath="scripts\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="..\..\scripts\manifest.json"
+             CopyToPublishDirectory="PreserveNewest"
+             Link="scripts\manifest.json"
+             TargetPath="scripts\manifest.json" />
+    <Content Include="..\..\tests\Validate-AllScripts.ps1"
+             CopyToPublishDirectory="PreserveNewest"
+             Link="tests\Validate-AllScripts.ps1"
+             TargetPath="tests\Validate-AllScripts.ps1" />
   </ItemGroup>
 
 </Project>

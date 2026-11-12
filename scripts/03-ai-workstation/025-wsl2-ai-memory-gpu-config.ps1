@@ -3,7 +3,18 @@
     WSL2 .wslconfig AI & CUDA Memory Optimizer (#025)
 .DESCRIPTION
     Creates or updates %USERPROFILE%\.wslconfig tuned for AI/ML workloads with autoMemoryReclaim=gradual and mirrored networking.
+.EXAMPLE
+    .\025-wsl2-ai-memory-gpu-config.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\025-wsl2-ai-memory-gpu-config.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -45,4 +56,4 @@ if (Test-Path $wslConfigPath) {
     Write-Output "Backed up existing .wslconfig to $wslConfigPath.bak"
 }
 Set-Content -Path $wslConfigPath -Value $content -Encoding UTF8
-Write-Output "Wrote optimized AI .wslconfig to $wslConfigPath"
+Write-Output "Wrote optimized AI .wslconfig to $wslConfigPath"

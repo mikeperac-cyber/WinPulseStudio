@@ -3,7 +3,18 @@
     Toggle Fast Startup & Hibernation Space Saver (#016)
 .DESCRIPTION
     Controls HiberbootEnabled and hiberfil.sys type (Reduced / Full / Off).
+.EXAMPLE
+    .\016-hibernate-faststartup-control.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\016-hibernate-faststartup-control.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -43,4 +54,4 @@ switch ($Mode) {
         & powercfg.exe /h /type full
         Write-Output "Full hibernation enabled."
     }
-}
+}

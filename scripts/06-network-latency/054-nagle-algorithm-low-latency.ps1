@@ -3,7 +3,18 @@
     Disable Nagle's Algorithm (TcpAckFrequency & TCPNoDelay) (#054)
 .DESCRIPTION
     Configures TcpAckFrequency=1 and TCPNoDelay=1 on active IPv4 Tcpip\Parameters\Interfaces keys.
+.EXAMPLE
+    .\054-nagle-algorithm-low-latency.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\054-nagle-algorithm-low-latency.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -34,4 +45,4 @@ foreach ($nic in $upNics) {
 
 if ($DryRun) {
     Write-Output "[DRY-RUN] Would set TcpAckFrequency=1 and TCPNoDelay=1 on $($upNics.Count) active interface(s)."
-}
+}

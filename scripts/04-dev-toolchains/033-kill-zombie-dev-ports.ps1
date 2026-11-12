@@ -3,7 +3,18 @@
     Zombie Localhost Dev Port Reaper (#033)
 .DESCRIPTION
     Finds TCP listeners on common dev server ports (3000, 5173, 8000, 8080, etc.) and optionally terminates orphaned processes.
+.EXAMPLE
+    .\033-kill-zombie-dev-ports.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\033-kill-zombie-dev-ports.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -35,4 +46,4 @@ foreach ($conn in $listeners) {
 
 if ($DryRun -or -not $KillListeners) {
     Write-Output "[DRY-RUN / SCAN] Pass -KillListeners to terminate the processes above."
-}
+}

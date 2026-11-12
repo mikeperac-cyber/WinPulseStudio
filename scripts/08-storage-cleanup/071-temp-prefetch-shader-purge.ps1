@@ -3,7 +3,18 @@
     Deep Temp, DirectX & NVIDIA/AMD Shader Cache Purge (#071)
 .DESCRIPTION
     Measures and cleans temporary folders and GPU shader caches without touching active locked files.
+.EXAMPLE
+    .\071-temp-prefetch-shader-purge.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\071-temp-prefetch-shader-purge.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -34,4 +45,4 @@ foreach ($t in $targets) {
         }
     }
 }
-Write-Output ("Total Scanned Temp & Shader Cache: {0} MB" -f [math]::Round($totalBytes / 1MB, 1))
+Write-Output ("Total Scanned Temp & Shader Cache: {0} MB" -f [math]::Round($totalBytes / 1MB, 1))

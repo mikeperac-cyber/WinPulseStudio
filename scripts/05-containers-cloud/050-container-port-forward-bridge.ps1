@@ -3,7 +3,18 @@
     WSL2 / Container to LAN Port Proxy Manager (#050)
 .DESCRIPTION
     Lists active netsh portproxy rules and optionally adds or resets a v4tov4 port bridge.
+.EXAMPLE
+    .\050-container-port-forward-bridge.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\050-container-port-forward-bridge.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -30,4 +41,4 @@ if ($ResetAllProxies -and $PSCmdlet.ShouldProcess("netsh portproxy", "Reset all 
 } elseif ($ListenPort -gt 0 -and $ConnectPort -gt 0 -and $PSCmdlet.ShouldProcess("Port $ListenPort -> ${ConnectAddress}:${ConnectPort}", "Add v4tov4 proxy")) {
     & netsh.exe interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.0 connectport=$ConnectPort connectaddress=$ConnectAddress
     Write-Output "Added port proxy: 0.0.0.0:$ListenPort -> ${ConnectAddress}:${ConnectPort}"
-}
+}

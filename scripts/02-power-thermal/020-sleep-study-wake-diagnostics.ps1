@@ -3,7 +3,18 @@
     Modern Standby & Phantom Wake Auditor (#020)
 .DESCRIPTION
     Audits powercfg /lastwake, /waketimers, /devicequery wake_armed, and /requests.
+.EXAMPLE
+    .\020-sleep-study-wake-diagnostics.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\020-sleep-study-wake-diagnostics.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -25,4 +36,4 @@ Write-Output "`n--- Active Wake Timers ---"
 if (-not $DryRun) {
     Write-Output "`n--- Active Power Requests ---"
     & powercfg.exe /requests
-}
+}

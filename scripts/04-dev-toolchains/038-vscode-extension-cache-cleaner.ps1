@@ -3,7 +3,18 @@
     VS Code / Cursor Cached VSIX & Crashpad Cleaner (#038)
 .DESCRIPTION
     Purges CachedExtensionVSIXs, Crashpad\reports, and old logs in %APPDATA%\Code and %APPDATA%\Cursor.
+.EXAMPLE
+    .\038-vscode-extension-cache-cleaner.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\038-vscode-extension-cache-cleaner.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -37,4 +48,4 @@ foreach ($root in $ideRoots) {
         }
     }
 }
-Write-Output ("Total IDE Cache Reclaimable/Cleaned: {0} MB" -f [math]::Round($totalReclaimBytes / 1MB, 1))
+Write-Output ("Total IDE Cache Reclaimable/Cleaned: {0} MB" -f [math]::Round($totalReclaimBytes / 1MB, 1))

@@ -3,7 +3,18 @@
     Purge Windows Delivery Optimization Peer Cache (#079)
 .DESCRIPTION
     Clears the Windows Update Delivery Optimization cache via Delete-DeliveryOptimizationCache.
+.EXAMPLE
+    .\079-delivery-optimization-cache-clear.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\079-delivery-optimization-cache-clear.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -23,4 +34,4 @@ if (Get-Command "Delete-DeliveryOptimizationCache" -ErrorAction SilentlyContinue
     Write-Output "Delivery Optimization cache cleared."
 } else {
     Write-Output "Delete-DeliveryOptimizationCache cmdlet not available on this OS build."
-}
+}

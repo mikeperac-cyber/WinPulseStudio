@@ -3,7 +3,18 @@
     Toggle Windows 11 Full Classic Right-Click Context Menu (#065)
 .DESCRIPTION
     Creates or removes HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32.
+.EXAMPLE
+    .\065-classic-right-click-context-menu.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\065-classic-right-click-context-menu.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -30,4 +41,4 @@ if ($RestoreModernMenu) {
     New-Item -Path $clsidPath -Force | Out-Null
     Set-ItemProperty -Path $clsidPath -Name "(Default)" -Value "" -Type String
     Write-Output "Enabled full classic right-click context menu (restart Explorer to apply)."
-}
+}

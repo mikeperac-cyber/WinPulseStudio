@@ -3,7 +3,18 @@
     LAN SMB3 Multichannel & NAS Transfer Optimizer (#057)
 .DESCRIPTION
     Checks Get-SmbClientConfiguration and enables MultiChannel and LargeMtu for maximum LAN throughput.
+.EXAMPLE
+    .\057-smb-signing-lan-transfer-boost.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\057-smb-signing-lan-transfer-boost.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -24,4 +35,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("SmbClientConfiguration", "Enable M
 }
 
 Set-SmbClientConfiguration -EnableMultiChannel $true -EnableLargeMtu $true -EnableBandwidthThrottling $false -Force
-Write-Output "SMB3 Multichannel and Large MTU enabled."
+Write-Output "SMB3 Multichannel and Large MTU enabled."

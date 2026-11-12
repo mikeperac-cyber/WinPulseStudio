@@ -3,7 +3,18 @@
     Extend GPU TDR Timeout for Local LLM / CUDA Kernels (#021)
 .DESCRIPTION
     Sets TdrDelay and TdrDdiDelay in HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers to prevent premature GPU resets during long compute kernels.
+.EXAMPLE
+    .\021-gpu-tdr-timeout-ai-training.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\021-gpu-tdr-timeout-ai-training.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -27,4 +38,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($gfxPath, "Set TdrDelay=$target sec
 
 Set-ItemProperty -Path $gfxPath -Name "TdrDelay" -Value $target -Type DWord
 Set-ItemProperty -Path $gfxPath -Name "TdrDdiDelay" -Value $target -Type DWord
-Write-Output "GPU TDR timeout set to ${target}s. Reboot required to take full effect."
+Write-Output "GPU TDR timeout set to ${target}s. Reboot required to take full effect."

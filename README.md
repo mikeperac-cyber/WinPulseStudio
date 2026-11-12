@@ -1,4 +1,4 @@
-# Microsoft WinPulse Control Studio
+# WinPulse Control Studio
 
 A native Windows `.NET 10` WPF Desktop Application designed to control, optimize, and diagnose a **Developer, Local AI/LLM, and Personal Windows Workstation** through **100 built-in, production-grade PowerShell scripts**.
 
@@ -7,27 +7,48 @@ A native Windows `.NET 10` WPF Desktop Application designed to control, optimize
 ## Key Features
 
 - **100 Built-In PowerShell Scripts (`.ps1`)**: Organized across 10 specialized categories (`scripts/01-speed-performance` through `scripts/10-diagnostics-recovery`), each with `CmdletBinding(SupportsShouldProcess = $true)`, `Set-StrictMode -Version Latest`, and `-DryRun` simulation support.
-- **Safety Lock (Default ON — Zero Unintended Execution)**:
-  - The desktop app boots with **🔒 Safety Lock: ON (No-Run Mode)** by default. While active, clicking any script's verify/simulate/run button performs **static PowerShell AST & Cmdlet inspection** without executing system changes.
-  - Unlocking the Safety Lock in the top bar unlocks live `-DryRun` simulation and full script execution.
+- **Guided Home for everyday use**: Pick a plain-language goal (faster AI, faster builds, battery life, cleanup & privacy, or "something feels wrong"). WinPulse shows a step-by-step plan, explains what each step changes, requires every step to be previewed before Apply is enabled, and asks for explicit confirmation — with an optional one-click System Restore point.
+- **Staged-trust Safety Lock (Default ON)**:
+  - The desktop app boots with **Safety Lock: ON**. Live changes are blocked everywhere; AST verification and `-DryRun` previews are always allowed.
+  - The guided flow turns the lock off only for its Apply batch and turns it back on when the batch finishes.
+- **Richer script details**: Every script entry in `scripts/manifest.json` now includes a plain-language summary, a "what will this change" list, undo instructions, and prerequisites. Advanced Mode shows these in expandable panels.
+- **Run history & reports**: Every verify, preview and applied change is logged to `%LOCALAPPDATA%\WinPulseStudio\history.json` with a History screen (filters, detail output, re-run, copy report, clear).
+- **Revert support**: Scripts that ship a built-in undo switch (e.g. `-Revert`, `-RestoreNotifications`, `-EnableSysMain`) expose a **Revert Change** button in Advanced Mode; the manifest's undo guidance names the switch.
+- **Custom collections**: Save any filtered selection of scripts from Advanced Mode as a named collection that appears on the Home screen.
 - **5 Smart Workload Presets**:
   1. **AI & Local LLM Inference Turbo** (`#001`, `#011`, `#021`, `#022`, `#023`, `#024`, `#025`, `#030`)
   2. **Maximum Build & Compile Speed** (`#001`, `#003`, `#004`, `#005`, `#007`, `#018`, `#031`, `#032`, `#036`)
   3. **Deep Focus & Developer Ergonomics** (`#002`, `#061`, `#062`, `#063`, `#064`, `#065`, `#082`)
   4. **On-The-Go Ultra Battery Endurance** (`#012`, `#013`, `#017`, `#020`, `#059`, `#078`)
   5. **Deep Storage Clean & Privacy Shield** (`#091`, `#035`, `#038`, `#071`, `#073`, `#076`, `#081`, `#082`, `#088`)
-- **Built-In PowerShell Source Code Editor & AST Verifier**: View, edit, copy, or statically verify any of the 100 `.ps1` scripts directly inside the right-hand inspector pane.
+- **Advanced Mode**: The full 3-column catalog with search, filters, favorites, presets, the built-in PowerShell source editor, structured **Results** and **Raw Log** tabs, and static AST verification.
 
 ---
 
+## Prerequisites
+
+- **Windows 10 version 2004 (build 19041) or Windows 11.**
+- **PowerShell 7 (`pwsh`) on `PATH`.** The app is a .NET/WPF front end; it invokes `pwsh` for every verify, preview, apply, and revert. Windows PowerShell 5.1 (`powershell.exe`) is not sufficient. The app checks for `pwsh` at startup and shows a clear warning if it is missing.
+- **.NET 10 SDK** only for building from source. The single-file exe and MSIX package are self-contained.
+- **Administrator rights** for scripts whose manifest entry says `Requires Admin`. The app warns when the current session is not elevated.
+
 ## Quick Start
+
+### 0. Get the Standalone `.exe` (Recommended for Download & Share)
+Build **one self-contained** `dist\WinPulseStudio.exe` — the full app, the .NET runtime, and all **100 built-in scripts bundled inside**. No .NET install or repo checkout needed on the target PC, but PowerShell 7 (`pwsh`) must be installed:
+```powershell
+pwsh -File .\Build-SingleExe.ps1
+```
+Then simply download/copy `dist\WinPulseStudio.exe` and double-click to run. On first launch the bundled scripts and catalog manifest are unpacked automatically.
+
+The exe is unsigned unless you run the build with a local certificate. Windows SmartScreen may warn on first run; see `CODE_SIGNING.md`.
 
 ### 1. Launch the Desktop Application
 Double-click `Launch-WinPulseStudio.cmd` or run:
 ```powershell
 .\src\WinPulseStudio\bin\Release\net10.0-windows\WinPulseStudio.exe
 ```
-Or build and run via the .NET CLI:
+The app opens on the **Home** screen. Choose a goal for the guided flow, or switch to **Advanced Mode** in the sidebar for the full catalog. Or build and run via the .NET CLI:
 ```powershell
 dotnet run --project .\src\WinPulseStudio\WinPulseStudio.csproj -c Release
 ```
@@ -37,6 +58,19 @@ To parse every script's Abstract Syntax Tree (`[System.Management.Automation.Lan
 ```powershell
 pwsh -NoProfile -File .\tests\Validate-AllScripts.ps1
 ```
+
+### 3. Build the MSIX Package (Local Testing)
+```powershell
+pwsh -File .\Build-MSIX.ps1
+```
+This publishes a self-contained `win-x64` layout, copies `scripts/`, `tests/`, `Package.appxmanifest`, `app.manifest`, and `Assets/` into `package\staging`, and packages `package\output\WinPulseStudio_1.2.0.0_x64.msix`. Pass `-SkipSigning` to skip the local self-signed certificate. Microsoft Store submission still requires a Store-issued certificate and Partner Center onboarding.
+
+### 4. Run the Automated Tests
+```powershell
+dotnet test .\WinPulseStudio.slnx -c Release
+```
+
+> **History vs. change journal:** the History screen logs every verify, preview, applied run, and revert with its output. It is a run log, not a full system-change journal. Per-script undo switches are listed in the catalog and exposed by the **Revert Change** button in Advanced Mode.
 
 ---
 

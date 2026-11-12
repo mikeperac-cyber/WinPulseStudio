@@ -3,7 +3,18 @@
     Camera & Microphone Hardware Consent Auditor (#087)
 .DESCRIPTION
     Lists applications in HKCU:\Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam and microphone.
+.EXAMPLE
+    .\087-camera-microphone-privacy-shield.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\087-camera-microphone-privacy-shield.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -24,4 +35,4 @@ foreach ($cap in @("webcam", "microphone")) {
             Write-Output ("  {0,-18} -> {1}" -f $status, $appName)
         }
     }
-}
+}

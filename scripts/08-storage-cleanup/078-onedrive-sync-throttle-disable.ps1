@@ -3,7 +3,18 @@
     OneDrive Background Sync Controller (#078)
 .DESCRIPTION
     Inspects OneDrive process RAM/CPU footprint and cleanly shuts down OneDrive during heavy compilation.
+.EXAMPLE
+    .\078-onedrive-sync-throttle-disable.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\078-onedrive-sync-throttle-disable.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -29,4 +40,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("OneDrive.exe", "Shutdown OneDrive 
 }
 
 Stop-Process -Name "OneDrive" -Force -ErrorAction SilentlyContinue
-Write-Output "OneDrive background sync stopped."
+Write-Output "OneDrive background sync stopped."

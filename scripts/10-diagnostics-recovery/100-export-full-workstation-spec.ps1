@@ -3,7 +3,18 @@
     Export Full Developer & AI Workstation Spec Report (JSON) (#100)
 .DESCRIPTION
     Collects OS, CPU, RAM, GPU, Disk, and Dev Toolchain metadata into a structured summary.
+.EXAMPLE
+    .\100-export-full-workstation-spec.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\100-export-full-workstation-spec.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -36,4 +47,4 @@ Write-Output $json
 if (-not $DryRun -and $PSCmdlet.ShouldProcess($ExportPath, "Write JSON spec report")) {
     Set-Content -Path $ExportPath -Value $json -Encoding UTF8
     Write-Output "Saved full workstation report to: $ExportPath"
-}
+}

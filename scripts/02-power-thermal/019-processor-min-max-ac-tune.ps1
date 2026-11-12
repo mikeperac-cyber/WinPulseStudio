@@ -3,7 +3,18 @@
     Workstation AC Processor State Tuner (#019)
 .DESCRIPTION
     Sets PROCTHROTTLEMIN and PROCTHROTTLEMAX on AC power for the active power plan.
+.EXAMPLE
+    .\019-processor-min-max-ac-tune.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\019-processor-min-max-ac-tune.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -25,4 +36,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("AC Processor State", "Set Min=$Min
 & powercfg.exe /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN $MinPercent
 & powercfg.exe /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX $MaxPercent
 & powercfg.exe /setactive SCHEME_CURRENT
-Write-Output "Configured AC Processor State: Min=$MinPercent%, Max=$MaxPercent%."
+Write-Output "Configured AC Processor State: Min=$MinPercent%, Max=$MaxPercent%."

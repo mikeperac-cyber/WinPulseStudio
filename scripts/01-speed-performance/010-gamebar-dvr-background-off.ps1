@@ -3,7 +3,18 @@
     Disable GameDVR Background Frame Capture (#010)
 .DESCRIPTION
     Disables background DVR capture hooks in HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR and System\GameConfigStore.
+.EXAMPLE
+    .\010-gamebar-dvr-background-off.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\010-gamebar-dvr-background-off.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -28,4 +39,4 @@ Set-ItemProperty -Path $dvrPath -Name "AppCaptureEnabled" -Value $val -Type DWor
 if (Test-Path $gcsPath) {
     Set-ItemProperty -Path $gcsPath -Name "GameDVR_Enabled" -Value $val -Type DWord
 }
-Write-Output ("GameDVR Background Capture set to {0}." -f $(if ($EnableCapture) { "Enabled" } else { "Disabled" }))
+Write-Output ("GameDVR Background Capture set to {0}." -f $(if ($EnableCapture) { "Enabled" } else { "Disabled" }))

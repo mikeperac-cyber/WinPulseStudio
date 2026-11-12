@@ -1,6 +1,6 @@
 {
-  "appTitle": "Microsoft WinPulse Control Studio",
-  "version": "1.0.0",
+  "appTitle": "WinPulse Control Studio",
+  "version": "1.2.0",
   "totalScripts": 100,
   "presets": [
     {
@@ -41,15 +41,6 @@
       "name": "Deep Focus & Developer Ergonomics",
       "icon": "Target",
       "description": "Sets up a distraction-free daily coding environment: mutes toast notifications, enables Snappy UI, configures Explorer extensions & hidden files, enables Win+V clipboard history, and blocks Start Menu Bing ads.",
-      "Ids": [
-        "002",
-        "061",
-        "062",
-        "063",
-        "064",
-        "065",
-        "082"
-      ],
       "scriptIds": [
         "002",
         "061",
@@ -113,7 +104,14 @@
         "standby"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/01-speed-performance/001-flush-standby-memory.ps1"
+      "relativePath": "scripts/01-speed-performance/001-flush-standby-memory.ps1",
+      "plainSummary": "Frees up memory that background apps reserved but are not actively using.",
+      "whatChanges": [
+        "Temporarily trims unused memory pages from background apps and reports how much was freed.",
+        "No files, settings or services are changed."
+      ],
+      "howToRevert": "Nothing to undo. Apps reload memory as needed.",
+      "prerequisites": []
     },
     {
       "id": "002",
@@ -135,7 +133,14 @@
         "desktop"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/01-speed-performance/002-high-perf-visual-fx.ps1"
+      "relativePath": "scripts/01-speed-performance/002-high-perf-visual-fx.ps1",
+      "plainSummary": "Makes menus and window animations instant instead of animated.",
+      "whatChanges": [
+        "Sets your user account to a performance-focused Visual Effects profile (window and taskbar animations off, menu delay 20 ms).",
+        "Keeps ClearType text smoothing and thumbnail previews on."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs the script with -Revert), or re-enable animations in Settings > Accessibility > Visual effects.",
+      "prerequisites": []
     },
     {
       "id": "003",
@@ -157,7 +162,16 @@
         "io"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/01-speed-performance/003-disable-sysmain-superfetch.ps1"
+      "relativePath": "scripts/01-speed-performance/003-disable-sysmain-superfetch.ps1",
+      "plainSummary": "Stops Windows background Superfetch caching from causing disk spikes on fast SSD/NVMe drives.",
+      "whatChanges": [
+        "Chooses a SysMain service startup type based on your drive type (reduced background caching on NVMe/SSD).",
+        "May start or stop the SysMain service immediately."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -EnableSysMain), or set the SysMain service back to Automatic in Services.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "004",
@@ -179,7 +193,16 @@
         "filesystem"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/01-speed-performance/004-ntfs-filesystem-turbo.ps1"
+      "relativePath": "scripts/01-speed-performance/004-ntfs-filesystem-turbo.ps1",
+      "plainSummary": "Tweaks NTFS file-system settings so projects with many small files (node_modules, git) open and build faster.",
+      "whatChanges": [
+        "Changes NTFS FileSystem registry values that control 8.3 short names, last-access timestamps and paged pool memory.",
+        "A reboot may be needed for full effect."
+      ],
+      "howToRevert": "Re-enable 8.3 short names and last-access updates with fsutil, or roll back with a System Restore point.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "005",
@@ -201,7 +224,15 @@
         "priority"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/01-speed-performance/005-priority-foreground-boost.ps1"
+      "relativePath": "scripts/01-speed-performance/005-priority-foreground-boost.ps1",
+      "plainSummary": "Gives the app in the foreground a bigger share of CPU time so it feels snappier.",
+      "whatChanges": [
+        "Sets Win32PrioritySeparation to 0x26 in HKLM\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl."
+      ],
+      "howToRevert": "Set Win32PrioritySeparation back to the Windows default (2) in Registry Editor.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "006",
@@ -223,7 +254,16 @@
         "write-speed"
       ],
       "estimatedSeconds": 6,
-      "relativePath": "scripts/01-speed-performance/006-trim-nvme-storage.ps1"
+      "relativePath": "scripts/01-speed-performance/006-trim-nvme-storage.ps1",
+      "plainSummary": "Runs TRIM and storage optimization on your SSD/NVMe drives.",
+      "whatChanges": [
+        "Runs the Windows storage optimizer (TRIM) and reports volume status.",
+        "No settings are changed."
+      ],
+      "howToRevert": "Nothing to undo. TRIM is normal drive maintenance.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "007",
@@ -245,7 +285,15 @@
         "disk"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/01-speed-performance/007-disable-search-indexer-burst.ps1"
+      "relativePath": "scripts/01-speed-performance/007-disable-search-indexer-burst.ps1",
+      "plainSummary": "Pauses the Windows Search indexer while you build so it stops competing for disk time.",
+      "whatChanges": [
+        "Stops the WSearch (Windows Search) service and sets it to Delayed Start."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -ResumeIndexer), or start Windows Search in Services.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "008",
@@ -267,7 +315,15 @@
         "throttling"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/01-speed-performance/008-multimedia-system-profile-lowlatency.ps1"
+      "relativePath": "scripts/01-speed-performance/008-multimedia-system-profile-lowlatency.ps1",
+      "plainSummary": "Tunes Windows multimedia scheduling for lower audio, video and network latency.",
+      "whatChanges": [
+        "Sets SystemResponsiveness and NetworkThrottlingIndex in the Multimedia SystemProfile registry key."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -Revert) to restore default multimedia values.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "009",
@@ -289,7 +345,14 @@
         "ram"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/01-speed-performance/009-startup-impact-audit-trim.ps1"
+      "relativePath": "scripts/01-speed-performance/009-startup-impact-audit-trim.ps1",
+      "plainSummary": "Lists programs that start with Windows and trims Edge background preloading.",
+      "whatChanges": [
+        "Reads user and machine startup (Run) registry keys and reports each entry.",
+        "Turns off Edge background prelaunch for your user account."
+      ],
+      "howToRevert": "Re-enable Edge startup boost in Edge settings, or manage entries in Settings > Apps > Startup.",
+      "prerequisites": []
     },
     {
       "id": "010",
@@ -311,7 +374,13 @@
         "capture"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/01-speed-performance/010-gamebar-dvr-background-off.ps1"
+      "relativePath": "scripts/01-speed-performance/010-gamebar-dvr-background-off.ps1",
+      "plainSummary": "Stops Xbox Game Bar background recording from using GPU time while you work.",
+      "whatChanges": [
+        "Turns off GameDVR background capture in HKCU GameDVR and GameConfigStore."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -EnableCapture), or re-enable background recording in Settings > Gaming > Captures.",
+      "prerequisites": []
     },
     {
       "id": "011",
@@ -333,7 +402,17 @@
         "power"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/02-power-thermal/011-unlock-ultimate-performance.ps1"
+      "relativePath": "scripts/02-power-thermal/011-unlock-ultimate-performance.ps1",
+      "plainSummary": "Unlocks and activates Windows hidden Ultimate Performance power plan.",
+      "whatChanges": [
+        "Adds and activates the Ultimate Performance power scheme using powercfg.",
+        "Power settings change immediately."
+      ],
+      "howToRevert": "Switch back to Balanced in Settings > System > Power, or run powercfg /setactive SCHEME_BALANCED.",
+      "prerequisites": [
+        "Administrator rights.",
+        "Best on desktops or plugged-in laptops."
+      ]
     },
     {
       "id": "012",
@@ -355,7 +434,13 @@
         "dc"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/02-power-thermal/012-eco-battery-saver-profile.ps1"
+      "relativePath": "scripts/02-power-thermal/012-eco-battery-saver-profile.ps1",
+      "plainSummary": "Switches to a battery-saving power profile to stretch unplugged time.",
+      "whatChanges": [
+        "Activates an eco battery power plan and caps CPU performance while on battery."
+      ],
+      "howToRevert": "Switch back to Balanced in Settings > System > Power.",
+      "prerequisites": []
     },
     {
       "id": "013",
@@ -377,7 +462,15 @@
         "powercfg"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/02-power-thermal/013-cpu-boost-policy-toggle.ps1"
+      "relativePath": "scripts/02-power-thermal/013-cpu-boost-policy-toggle.ps1",
+      "plainSummary": "Controls CPU turbo boost to reduce heat and fan noise, or restore performance.",
+      "whatChanges": [
+        "Changes the processor performance boost mode (PERFBOOSTMODE) for the active power plan."
+      ],
+      "howToRevert": "Set Processor performance boost mode back to Enabled in Advanced power settings.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "014",
@@ -399,7 +492,15 @@
         "latency"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/02-power-thermal/014-pcie-aspm-link-power-off.ps1"
+      "relativePath": "scripts/02-power-thermal/014-pcie-aspm-link-power-off.ps1",
+      "plainSummary": "Turns off PCIe link power saving while plugged in for stable device performance.",
+      "whatChanges": [
+        "Disables PCI Express link state power management (ASPM) for the active AC power plan."
+      ],
+      "howToRevert": "Re-enable PCI Express Link State Power Management in Advanced power settings.",
+      "prerequisites": [
+        "May need Administrator rights."
+      ]
     },
     {
       "id": "015",
@@ -421,7 +522,15 @@
         "power"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/02-power-thermal/015-usb-selective-suspend-guard.ps1"
+      "relativePath": "scripts/02-power-thermal/015-usb-selective-suspend-guard.ps1",
+      "plainSummary": "Stops Windows from suspending USB devices used by debuggers and audio gear.",
+      "whatChanges": [
+        "Disables USB selective suspend for the active power plan."
+      ],
+      "howToRevert": "Re-enable USB selective suspend in Advanced power settings.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "016",
@@ -443,7 +552,16 @@
         "kernel"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/02-power-thermal/016-hibernate-faststartup-control.ps1"
+      "relativePath": "scripts/02-power-thermal/016-hibernate-faststartup-control.ps1",
+      "plainSummary": "Manages Fast Startup and the hibernation file to save disk space.",
+      "whatChanges": [
+        "Turns Fast Startup and/or hibernation on or off.",
+        "May delete or recreate hiberfil.sys, which can be several GB in size."
+      ],
+      "howToRevert": "Re-enable Fast Startup or hibernation in Settings > System > Power, or run powercfg /hibernate on.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "017",
@@ -465,7 +583,15 @@
         "laptop"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/02-power-thermal/017-battery-health-degradation-report.ps1"
+      "relativePath": "scripts/02-power-thermal/017-battery-health-degradation-report.ps1",
+      "plainSummary": "Shows your battery wear level, design versus current capacity and cycle count.",
+      "whatChanges": [
+        "None. Reads battery data only."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": [
+        "A laptop battery is required."
+      ]
     },
     {
       "id": "018",
@@ -487,7 +613,13 @@
         "throttling"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/02-power-thermal/018-power-throttling-exemption.ps1"
+      "relativePath": "scripts/02-power-thermal/018-power-throttling-exemption.ps1",
+      "plainSummary": "Stops Windows from slowing compilers and IDEs in the background.",
+      "whatChanges": [
+        "Adjusts power-throttling (EcoQoS) policy so heavy developer apps keep full speed."
+      ],
+      "howToRevert": "Re-enable power throttling for those apps in Settings > System > Power > Battery usage, or use a restore point.",
+      "prerequisites": []
     },
     {
       "id": "019",
@@ -509,7 +641,13 @@
         "idle"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/02-power-thermal/019-processor-min-max-ac-tune.ps1"
+      "relativePath": "scripts/02-power-thermal/019-processor-min-max-ac-tune.ps1",
+      "plainSummary": "Sets the processor minimum and maximum speed states while plugged in.",
+      "whatChanges": [
+        "Changes Processor performance minimum and maximum state for the AC power plan."
+      ],
+      "howToRevert": "Restore the default processor power values in Advanced power settings.",
+      "prerequisites": []
     },
     {
       "id": "020",
@@ -531,7 +669,15 @@
         "powercfg"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/02-power-thermal/020-sleep-study-wake-diagnostics.ps1"
+      "relativePath": "scripts/02-power-thermal/020-sleep-study-wake-diagnostics.ps1",
+      "plainSummary": "Reports what wakes your PC from sleep and whether modern standby is healthy.",
+      "whatChanges": [
+        "None. Reads sleep, wake and wake-timer history."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": [
+        "Administrator rights may be needed for full wake history."
+      ]
     },
     {
       "id": "021",
@@ -554,7 +700,16 @@
         "llm"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/03-ai-workstation/021-gpu-tdr-timeout-ai-training.ps1"
+      "relativePath": "scripts/03-ai-workstation/021-gpu-tdr-timeout-ai-training.ps1",
+      "plainSummary": "Gives long GPU jobs more time before Windows resets the graphics driver.",
+      "whatChanges": [
+        "Sets TdrDelay and TdrDdiDelay in HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers (from about 2 seconds to about 60)."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -RevertDefault), or delete the TdrDelay/TdrDdiDelay values and reboot.",
+      "prerequisites": [
+        "Administrator rights.",
+        "A reboot is required."
+      ]
     },
     {
       "id": "022",
@@ -577,7 +732,16 @@
         "cuda"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/03-ai-workstation/022-hardware-accelerated-gpu-scheduling.ps1"
+      "relativePath": "scripts/03-ai-workstation/022-hardware-accelerated-gpu-scheduling.ps1",
+      "plainSummary": "Lets the GPU schedule its own work (Hardware-Accelerated GPU Scheduling).",
+      "whatChanges": [
+        "Sets HwSchMode=2 in HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -DisableHags), or turn HAGS off in Settings > System > Display > Graphics.",
+      "prerequisites": [
+        "Administrator rights.",
+        "A reboot is required."
+      ]
     },
     {
       "id": "023",
@@ -600,7 +764,16 @@
         "ai"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/03-ai-workstation/023-ollama-server-tuning.ps1"
+      "relativePath": "scripts/03-ai-workstation/023-ollama-server-tuning.ps1",
+      "plainSummary": "Turns on Ollama faster attention mode and compact KV cache for local models.",
+      "whatChanges": [
+        "Sets Ollama environment settings for flash attention and q8_0 KV cache.",
+        "Restart Ollama for the change to take effect."
+      ],
+      "howToRevert": "Remove the OLLAMA_FLASH_ATTENTION and OLLAMA_KV_CACHE_TYPE environment variables, then restart Ollama.",
+      "prerequisites": [
+        "Ollama installed."
+      ]
     },
     {
       "id": "024",
@@ -622,7 +795,14 @@
         "inference"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/03-ai-workstation/024-vram-hog-process-reaper.ps1"
+      "relativePath": "scripts/03-ai-workstation/024-vram-hog-process-reaper.ps1",
+      "plainSummary": "Finds background apps holding GPU memory before you run a local model.",
+      "whatChanges": [
+        "Lists apps using VRAM.",
+        "Only closes those apps if you use the optional close switch."
+      ],
+      "howToRevert": "Reopen any apps that were closed. Nothing else is changed.",
+      "prerequisites": []
     },
     {
       "id": "025",
@@ -645,7 +825,15 @@
         "memory"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/03-ai-workstation/025-wsl2-ai-memory-gpu-config.ps1"
+      "relativePath": "scripts/03-ai-workstation/025-wsl2-ai-memory-gpu-config.ps1",
+      "plainSummary": "Tunes WSL2 memory and GPU settings for local AI workloads.",
+      "whatChanges": [
+        "Creates or updates %UserProfile%\\.wslconfig with memory, swap, autoMemoryReclaim and GPU settings."
+      ],
+      "howToRevert": "Edit or delete .wslconfig, then run wsl --shutdown.",
+      "prerequisites": [
+        "WSL2 installed."
+      ]
     },
     {
       "id": "026",
@@ -668,7 +856,14 @@
         "ai"
       ],
       "estimatedSeconds": 5,
-      "relativePath": "scripts/03-ai-workstation/026-huggingface-pytorch-cache-audit.ps1"
+      "relativePath": "scripts/03-ai-workstation/026-huggingface-pytorch-cache-audit.ps1",
+      "plainSummary": "Shows how much disk space AI model caches use across HuggingFace, Ollama, PyTorch and LM Studio.",
+      "whatChanges": [
+        "None by default. Reads cache sizes only.",
+        "The optional clean switch deletes incomplete downloads."
+      ],
+      "howToRevert": "Nothing to undo for the audit. Deleted incomplete downloads will download again when needed.",
+      "prerequisites": []
     },
     {
       "id": "027",
@@ -690,7 +885,17 @@
         "clocks"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/03-ai-workstation/027-nvidia-cuda-persistence-power.ps1"
+      "relativePath": "scripts/03-ai-workstation/027-nvidia-cuda-persistence-power.ps1",
+      "plainSummary": "Sets NVIDIA GPU power limits and clocks for steadier AI compute.",
+      "whatChanges": [
+        "Applies power and clock limits through nvidia-smi.",
+        "These settings usually reset when the machine reboots unless configured to persist."
+      ],
+      "howToRevert": "Reset the GPU with nvidia-smi defaults or reboot.",
+      "prerequisites": [
+        "NVIDIA GPU and nvidia-smi.",
+        "Administrator rights."
+      ]
     },
     {
       "id": "028",
@@ -712,7 +917,15 @@
         "windows-ai"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/03-ai-workstation/028-windows-copilot-recall-control.ps1"
+      "relativePath": "scripts/03-ai-workstation/028-windows-copilot-recall-control.ps1",
+      "plainSummary": "Reduces Copilot and Recall background activity to free resources.",
+      "whatChanges": [
+        "Sets Windows Copilot and Windows AI policy values for your user and the machine."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -EnableWindowsAI), or re-enable Copilot in Settings.",
+      "prerequisites": [
+        "Administrator rights for machine-wide values."
+      ]
     },
     {
       "id": "029",
@@ -735,7 +948,13 @@
         "doctor"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/03-ai-workstation/029-python-ai-venv-cuda-doctor.ps1"
+      "relativePath": "scripts/03-ai-workstation/029-python-ai-venv-cuda-doctor.ps1",
+      "plainSummary": "Checks your Python, uv, CUDA and ONNX setup and reports problems.",
+      "whatChanges": [
+        "None. Reads installed tools and environment variables."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "030",
@@ -757,7 +976,13 @@
         "hardware"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/03-ai-workstation/030-npu-directml-compute-audit.ps1"
+      "relativePath": "scripts/03-ai-workstation/030-npu-directml-compute-audit.ps1",
+      "plainSummary": "Lists your NPU, GPU and DirectML accelerators and what they support.",
+      "whatChanges": [
+        "None. Reads hardware inventory only."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "031",
@@ -780,7 +1005,15 @@
         "cargo"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/04-dev-toolchains/031-windows-defender-dev-exclusions.ps1"
+      "relativePath": "scripts/04-dev-toolchains/031-windows-defender-dev-exclusions.ps1",
+      "plainSummary": "Tells Defender to skip scanning build folders so compiles finish faster.",
+      "whatChanges": [
+        "Adds Microsoft Defender exclusion paths for compiler and package-manager folders (dotnet, cargo, node, git and similar)."
+      ],
+      "howToRevert": "Remove the exclusions in Windows Security > Virus and threat protection > Exclusions.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "032",
@@ -802,7 +1035,15 @@
         "max_path"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/04-dev-toolchains/032-enable-windows-dev-mode-longpaths.ps1"
+      "relativePath": "scripts/04-dev-toolchains/032-enable-windows-dev-mode-longpaths.ps1",
+      "plainSummary": "Enables Developer Mode, sudo and file paths longer than 260 characters.",
+      "whatChanges": [
+        "Enables Developer Mode, Win32 long paths and the Windows sudo feature."
+      ],
+      "howToRevert": "Turn Developer Mode off in Settings > System > For developers; long paths and sudo can be turned off in Settings or Registry.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "033",
@@ -825,7 +1066,14 @@
         "kill"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/04-dev-toolchains/033-kill-zombie-dev-ports.ps1"
+      "relativePath": "scripts/04-dev-toolchains/033-kill-zombie-dev-ports.ps1",
+      "plainSummary": "Finds processes using common development ports and can stop them.",
+      "whatChanges": [
+        "Scans ports 3000, 5173, 8000, 8080 and 5000.",
+        "Only stops the owning processes if you use the optional kill switch."
+      ],
+      "howToRevert": "Restart the stopped dev server. Nothing persistent is changed.",
+      "prerequisites": []
     },
     {
       "id": "034",
@@ -846,8 +1094,15 @@
         "disk-cleanup",
         "nextjs"
       ],
-      "estimatedSeconds": 5,
-      "relativePath": "scripts/04-dev-toolchains/034-node-modules-graveyard-cleaner.ps1"
+      "estimatedSeconds": 60,
+      "relativePath": "scripts/04-dev-toolchains/034-node-modules-graveyard-cleaner.ps1",
+      "plainSummary": "Finds old build folders (node_modules, .next, Rust target) that waste disk space.",
+      "whatChanges": [
+        "Reports large stale build folders.",
+        "Only deletes them if you use the optional delete switch."
+      ],
+      "howToRevert": "Deleted build folders are rebuilt by npm or cargo. Nothing else changes.",
+      "prerequisites": []
     },
     {
       "id": "035",
@@ -869,8 +1124,14 @@
         "cache",
         "ssd"
       ],
-      "estimatedSeconds": 5,
-      "relativePath": "scripts/04-dev-toolchains/035-package-manager-cache-purge.ps1"
+      "estimatedSeconds": 60,
+      "relativePath": "scripts/04-dev-toolchains/035-package-manager-cache-purge.ps1",
+      "plainSummary": "Clears package-manager caches (npm, pnpm, pip, NuGet) to reclaim disk space.",
+      "whatChanges": [
+        "Deletes cache folders used by npm, pnpm, pip and NuGet."
+      ],
+      "howToRevert": "Nothing to undo. Packages re-download as needed.",
+      "prerequisites": []
     },
     {
       "id": "036",
@@ -892,7 +1153,15 @@
         "vcs"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/04-dev-toolchains/036-git-global-performance-tuning.ps1"
+      "relativePath": "scripts/04-dev-toolchains/036-git-global-performance-tuning.ps1",
+      "plainSummary": "Tunes Git for large repositories and fast filesystems.",
+      "whatChanges": [
+        "Sets global Git options such as fsmonitor, untracked cache, preload index and manyFiles."
+      ],
+      "howToRevert": "Remove the added options with git config --global --unset <key>.",
+      "prerequisites": [
+        "Git installed."
+      ]
     },
     {
       "id": "037",
@@ -914,8 +1183,18 @@
         "compact",
         "storage"
       ],
-      "estimatedSeconds": 6,
-      "relativePath": "scripts/04-dev-toolchains/037-wsl2-vhdx-compact-shrink.ps1"
+      "estimatedSeconds": 120,
+      "relativePath": "scripts/04-dev-toolchains/037-wsl2-vhdx-compact-shrink.ps1",
+      "plainSummary": "Shrinks WSL2 and Docker virtual disks to reclaim space.",
+      "whatChanges": [
+        "Compacts ext4.vhdx virtual disks using Optimize-VHD.",
+        "WSL and Docker are stopped while this runs."
+      ],
+      "howToRevert": "Nothing to undo. Compaction only reclaims unused space.",
+      "prerequisites": [
+        "WSL2 or Docker installed.",
+        "Administrator rights."
+      ]
     },
     {
       "id": "038",
@@ -937,7 +1216,13 @@
         "vsix"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/04-dev-toolchains/038-vscode-extension-cache-cleaner.ps1"
+      "relativePath": "scripts/04-dev-toolchains/038-vscode-extension-cache-cleaner.ps1",
+      "plainSummary": "Cleans VS Code or Cursor extension caches, crash reports and old logs.",
+      "whatChanges": [
+        "Deletes cached VSIX installers, crashpad dumps and old log files."
+      ],
+      "howToRevert": "Nothing to undo. Editors recreate caches as needed.",
+      "prerequisites": []
     },
     {
       "id": "039",
@@ -959,7 +1244,15 @@
         "deduplicate"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/04-dev-toolchains/039-env-path-deduplicator.ps1"
+      "relativePath": "scripts/04-dev-toolchains/039-env-path-deduplicator.ps1",
+      "plainSummary": "Removes duplicate and dead folders from your PATH.",
+      "whatChanges": [
+        "Rewrites your user and system PATH lists without duplicates or missing folders."
+      ],
+      "howToRevert": "Restore PATH from a backup or a System Restore point.",
+      "prerequisites": [
+        "Administrator rights to change the system PATH."
+      ]
     },
     {
       "id": "040",
@@ -981,7 +1274,13 @@
         "performance"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/04-dev-toolchains/040-dev-drive-refs-advisor.ps1"
+      "relativePath": "scripts/04-dev-toolchains/040-dev-drive-refs-advisor.ps1",
+      "plainSummary": "Checks whether Dev Drive (ReFS) and filesystem filter drivers are set up correctly.",
+      "whatChanges": [
+        "None. Reads filesystem and filter-driver status."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "041",
@@ -1002,8 +1301,16 @@
         "prune",
         "disk-space"
       ],
-      "estimatedSeconds": 4,
-      "relativePath": "scripts/05-containers-cloud/041-docker-deep-prune.ps1"
+      "estimatedSeconds": 120,
+      "relativePath": "scripts/05-containers-cloud/041-docker-deep-prune.ps1",
+      "plainSummary": "Deletes unused Docker images, containers and build caches.",
+      "whatChanges": [
+        "Runs Docker and BuildKit prune commands and reports reclaimed space."
+      ],
+      "howToRevert": "Nothing to undo. Docker re-downloads or rebuilds what it needs.",
+      "prerequisites": [
+        "Docker running."
+      ]
     },
     {
       "id": "042",
@@ -1025,7 +1332,16 @@
         "restart"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/05-containers-cloud/042-wsl-service-restart-reset.ps1"
+      "relativePath": "scripts/05-containers-cloud/042-wsl-service-restart-reset.ps1",
+      "plainSummary": "Restarts WSL2 services when WSL misbehaves.",
+      "whatChanges": [
+        "Lists WSL distributions and restarts WSL-related services.",
+        "Distributions stop and restart."
+      ],
+      "howToRevert": "Nothing to undo. It only restarts services.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "043",
@@ -1048,7 +1364,15 @@
         "network"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/05-containers-cloud/043-hyperv-vswitch-nat-fix.ps1"
+      "relativePath": "scripts/05-containers-cloud/043-hyperv-vswitch-nat-fix.ps1",
+      "plainSummary": "Repairs the network service behind WSL2 and Hyper-V when NAT routing breaks.",
+      "whatChanges": [
+        "Restarts the Host Network Service (hns) and resets virtual switch networking."
+      ],
+      "howToRevert": "Nothing to undo. Networking is restored; a reboot may be needed.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "044",
@@ -1070,7 +1394,15 @@
         "isolation"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/05-containers-cloud/044-windows-sandbox-dev-launcher.ps1"
+      "relativePath": "scripts/05-containers-cloud/044-windows-sandbox-dev-launcher.ps1",
+      "plainSummary": "Creates a Windows Sandbox profile for safe, isolated testing.",
+      "whatChanges": [
+        "Writes a .wsb sandbox configuration file with vGPU access."
+      ],
+      "howToRevert": "Delete the generated .wsb file.",
+      "prerequisites": [
+        "Windows Sandbox feature enabled."
+      ]
     },
     {
       "id": "045",
@@ -1092,7 +1424,13 @@
         "devops"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/05-containers-cloud/045-kubeconfig-context-auditor.ps1"
+      "relativePath": "scripts/05-containers-cloud/045-kubeconfig-context-auditor.ps1",
+      "plainSummary": "Lists your Kubernetes contexts and clusters so you know where commands will run.",
+      "whatChanges": [
+        "None. Reads ~/.kube/config."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "046",
@@ -1114,7 +1452,17 @@
         "security"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/05-containers-cloud/046-ssh-agent-key-autoloader.ps1"
+      "relativePath": "scripts/05-containers-cloud/046-ssh-agent-key-autoloader.ps1",
+      "plainSummary": "Starts the OpenSSH agent automatically and tightens key file permissions.",
+      "whatChanges": [
+        "Sets the ssh-agent service to Automatic and starts it.",
+        "Fixes private key file permissions in ~/.ssh."
+      ],
+      "howToRevert": "Set ssh-agent back to Manual in Services and restore previous key permissions if needed.",
+      "prerequisites": [
+        "OpenSSH client installed.",
+        "Administrator rights."
+      ]
     },
     {
       "id": "047",
@@ -1136,7 +1484,13 @@
         "domains"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/05-containers-cloud/047-local-hosts-dev-domains.ps1"
+      "relativePath": "scripts/05-containers-cloud/047-local-hosts-dev-domains.ps1",
+      "plainSummary": "Shows local development domains and container entries in your hosts file.",
+      "whatChanges": [
+        "None. Reads the hosts file."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "048",
@@ -1159,7 +1513,14 @@
         "cloud"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/05-containers-cloud/048-cloud-cli-token-cache-clean.ps1"
+      "relativePath": "scripts/05-containers-cloud/048-cloud-cli-token-cache-clean.ps1",
+      "plainSummary": "Cleans cloud CLI logs and token caches for AWS, Azure and Google Cloud.",
+      "whatChanges": [
+        "Deletes cached cloud CLI credentials and logs.",
+        "You may need to sign in again with each cloud tool."
+      ],
+      "howToRevert": "Sign in again with each cloud CLI. Deleted logs cannot be restored.",
+      "prerequisites": []
     },
     {
       "id": "049",
@@ -1181,7 +1542,17 @@
         "bare-metal"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/05-containers-cloud/049-hypervisor-launchtype-toggle.ps1"
+      "relativePath": "scripts/05-containers-cloud/049-hypervisor-launchtype-toggle.ps1",
+      "plainSummary": "Switches the Hyper-V hypervisor between automatic and off.",
+      "whatChanges": [
+        "Changes the hypervisor launch type with bcdedit.",
+        "A reboot is required."
+      ],
+      "howToRevert": "Set the hypervisor launch type back to Auto with bcdedit.",
+      "prerequisites": [
+        "Administrator rights.",
+        "A reboot is required."
+      ]
     },
     {
       "id": "050",
@@ -1203,7 +1574,15 @@
         "mobile-testing"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/05-containers-cloud/050-container-port-forward-bridge.ps1"
+      "relativePath": "scripts/05-containers-cloud/050-container-port-forward-bridge.ps1",
+      "plainSummary": "Manages WSL2 and container port forwarding to other devices on your network.",
+      "whatChanges": [
+        "Adds or resets netsh portproxy rules and related firewall entries."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -ResetAllProxies), or delete the portproxy rules with netsh.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "051",
@@ -1225,7 +1604,14 @@
         "resolver"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/06-network-latency/051-dns-flush-winsock-reset.ps1"
+      "relativePath": "scripts/06-network-latency/051-dns-flush-winsock-reset.ps1",
+      "plainSummary": "Flushes the DNS cache and clears stale ARP entries to fix network glitches.",
+      "whatChanges": [
+        "Clears the DNS resolver cache and ARP table.",
+        "No settings are changed."
+      ],
+      "howToRevert": "Nothing to undo. Caches rebuild automatically.",
+      "prerequisites": []
     },
     {
       "id": "052",
@@ -1248,7 +1634,15 @@
         "dns"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/06-network-latency/052-cloudflare-quad9-fast-dns.ps1"
+      "relativePath": "scripts/06-network-latency/052-cloudflare-quad9-fast-dns.ps1",
+      "plainSummary": "Benchmarks public DNS providers and switches to the fastest one.",
+      "whatChanges": [
+        "Benchmarks 1.1.1.1, 8.8.8.8 and 9.9.9.9, then sets your DNS servers on active adapters."
+      ],
+      "howToRevert": "Set DNS back to Obtain automatically in your network adapter settings.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "053",
@@ -1271,7 +1665,15 @@
         "netsh"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/06-network-latency/053-tcp-bbr-autotuning-optimizer.ps1"
+      "relativePath": "scripts/06-network-latency/053-tcp-bbr-autotuning-optimizer.ps1",
+      "plainSummary": "Tunes Windows TCP settings for better network throughput.",
+      "whatChanges": [
+        "Adjusts TCP auto-tuning, RSS and related network stack values."
+      ],
+      "howToRevert": "Reset TCP settings with netsh int tcp reset, or use a System Restore point.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "054",
@@ -1293,7 +1695,15 @@
         "latency"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/06-network-latency/054-nagle-algorithm-low-latency.ps1"
+      "relativePath": "scripts/06-network-latency/054-nagle-algorithm-low-latency.ps1",
+      "plainSummary": "Turns off Nagle algorithm for lower-latency connections.",
+      "whatChanges": [
+        "Adds TcpAckFrequency=1 and TCPNoDelay=1 to active network interfaces."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -Revert), or delete those registry values and reboot.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "055",
@@ -1315,7 +1725,13 @@
         "wireless"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/06-network-latency/055-wifi-roaming-power-saving-fix.ps1"
+      "relativePath": "scripts/06-network-latency/055-wifi-roaming-power-saving-fix.ps1",
+      "plainSummary": "Optimizes Wi-Fi power saving for faster roaming and better links.",
+      "whatChanges": [
+        "Sets the Wi-Fi adapter to maximum performance and adjusts roaming settings."
+      ],
+      "howToRevert": "Set the adapter power mode back to Balanced in Device Manager.",
+      "prerequisites": []
     },
     {
       "id": "056",
@@ -1337,7 +1753,13 @@
         "radar"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/06-network-latency/056-network-connection-radar.ps1"
+      "relativePath": "scripts/06-network-latency/056-network-connection-radar.ps1",
+      "plainSummary": "Shows live outbound network connections and which process owns each one.",
+      "whatChanges": [
+        "None. Reads TCP connection tables."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "057",
@@ -1359,7 +1781,15 @@
         "file-transfer"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/06-network-latency/057-smb-signing-lan-transfer-boost.ps1"
+      "relativePath": "scripts/06-network-latency/057-smb-signing-lan-transfer-boost.ps1",
+      "plainSummary": "Tunes SMB3 for faster large-file transfers to NAS devices.",
+      "whatChanges": [
+        "Adjusts SMB client multichannel and MTU-related settings."
+      ],
+      "howToRevert": "Restore SMB settings with Set-SmbClientConfiguration defaults or a System Restore point.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "058",
@@ -1381,7 +1811,13 @@
         "split-tunnel"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/06-network-latency/058-vpn-split-tunnel-route-fixer.ps1"
+      "relativePath": "scripts/06-network-latency/058-vpn-split-tunnel-route-fixer.ps1",
+      "plainSummary": "Diagnoses VPN interface metrics and stray default routes.",
+      "whatChanges": [
+        "None. Reads network routes and interface metrics."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "059",
@@ -1403,7 +1839,15 @@
         "upload"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/06-network-latency/059-delivery-optimization-p2p-off.ps1"
+      "relativePath": "scripts/06-network-latency/059-delivery-optimization-p2p-off.ps1",
+      "plainSummary": "Stops Windows Update from uploading updates to other PCs.",
+      "whatChanges": [
+        "Sets DODownloadMode=0 in the DeliveryOptimization policy key (HTTP only, no peer sharing)."
+      ],
+      "howToRevert": "Re-enable Delivery Optimization peer sharing in Settings > Windows Update > Advanced options.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "060",
@@ -1425,7 +1869,13 @@
         "gateway"
       ],
       "estimatedSeconds": 5,
-      "relativePath": "scripts/06-network-latency/060-latency-jitter-mtr-diagnostic.ps1"
+      "relativePath": "scripts/06-network-latency/060-latency-jitter-mtr-diagnostic.ps1",
+      "plainSummary": "Measures ping, jitter and latency to several targets.",
+      "whatChanges": [
+        "None. Runs network tests and reports results."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only benchmark.",
+      "prerequisites": []
     },
     {
       "id": "061",
@@ -1447,7 +1897,13 @@
         "coding"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/07-daily-productivity/061-deep-focus-do-not-disturb.ps1"
+      "relativePath": "scripts/07-daily-productivity/061-deep-focus-do-not-disturb.ps1",
+      "plainSummary": "Silences Windows toast notifications for focused work.",
+      "whatChanges": [
+        "Sets ToastEnabled=0 in HKCU PushNotifications."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -RestoreNotifications), or turn notifications back on in Settings > System > Notifications.",
+      "prerequisites": []
     },
     {
       "id": "062",
@@ -1469,7 +1925,13 @@
         "daily"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/07-daily-productivity/062-scheduled-dark-light-theme.ps1"
+      "relativePath": "scripts/07-daily-productivity/062-scheduled-dark-light-theme.ps1",
+      "plainSummary": "Switches Windows and apps between dark and light mode.",
+      "whatChanges": [
+        "Sets AppsUseLightTheme and SystemUsesLightTheme for your user."
+      ],
+      "howToRevert": "Choose your preferred theme again in Settings > Personalization > Colors.",
+      "prerequisites": []
     },
     {
       "id": "063",
@@ -1491,7 +1953,14 @@
         "daily"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/07-daily-productivity/063-clipboard-history-cloud-sync.ps1"
+      "relativePath": "scripts/07-daily-productivity/063-clipboard-history-cloud-sync.ps1",
+      "plainSummary": "Enables clipboard history (Win+V) and can clear the current clipboard.",
+      "whatChanges": [
+        "Sets EnableClipboardHistory=1 for your user.",
+        "The optional switch clears the current clipboard contents."
+      ],
+      "howToRevert": "Turn clipboard history off in Settings > System > Clipboard.",
+      "prerequisites": []
     },
     {
       "id": "064",
@@ -1513,7 +1982,13 @@
         "developer"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/07-daily-productivity/064-explorer-developer-ergonomics.ps1"
+      "relativePath": "scripts/07-daily-productivity/064-explorer-developer-ergonomics.ps1",
+      "plainSummary": "Shows file extensions and hidden files, opens Explorer to This PC and uses compact mode.",
+      "whatChanges": [
+        "Sets Explorer Advanced values: HideFileExt=0, Hidden=1, LaunchTo=1 and UseCompactMode=1."
+      ],
+      "howToRevert": "Restore defaults in File Explorer > View, or set the same registry values back.",
+      "prerequisites": []
     },
     {
       "id": "065",
@@ -1535,7 +2010,13 @@
         "shell"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/07-daily-productivity/065-classic-right-click-context-menu.ps1"
+      "relativePath": "scripts/07-daily-productivity/065-classic-right-click-context-menu.ps1",
+      "plainSummary": "Restores the full classic right-click menu in Windows 11.",
+      "whatChanges": [
+        "Creates an Explorer CLSID entry that brings back the classic context menu."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -RestoreModernMenu), or delete that CLSID key and restart Explorer.",
+      "prerequisites": []
     },
     {
       "id": "066",
@@ -1557,7 +2038,16 @@
         "meetings"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/07-daily-productivity/066-audio-endpoint-quick-reset.ps1"
+      "relativePath": "scripts/07-daily-productivity/066-audio-endpoint-quick-reset.ps1",
+      "plainSummary": "Restarts the Windows audio stack to fix sound and Bluetooth headset problems.",
+      "whatChanges": [
+        "Restarts the Windows audio services.",
+        "No settings are changed."
+      ],
+      "howToRevert": "Nothing to undo. Services restart automatically.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "067",
@@ -1579,7 +2069,13 @@
         "display"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/07-daily-productivity/067-multi-monitor-dpi-window-rescue.ps1"
+      "relativePath": "scripts/07-daily-productivity/067-multi-monitor-dpi-window-rescue.ps1",
+      "plainSummary": "Brings windows stranded on disconnected monitors back to your main screen.",
+      "whatChanges": [
+        "Moves off-screen windows onto the primary display."
+      ],
+      "howToRevert": "Move the windows back manually if needed.",
+      "prerequisites": []
     },
     {
       "id": "068",
@@ -1601,7 +2097,13 @@
         "monitor"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/07-daily-productivity/068-night-light-blue-light-filter.ps1"
+      "relativePath": "scripts/07-daily-productivity/068-night-light-blue-light-filter.ps1",
+      "plainSummary": "Sets a warm, dimmer display profile for late-night work.",
+      "whatChanges": [
+        "Adjusts night-light and brightness settings for your user."
+      ],
+      "howToRevert": "Turn off Night light in Settings > System > Display.",
+      "prerequisites": []
     },
     {
       "id": "069",
@@ -1623,7 +2125,13 @@
         "daily"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/07-daily-productivity/069-end-of-day-workspace-shutdown.ps1"
+      "relativePath": "scripts/07-daily-productivity/069-end-of-day-workspace-shutdown.ps1",
+      "plainSummary": "Checks your coding repositories for uncommitted work before you wrap up.",
+      "whatChanges": [
+        "None. Reads Git status across repositories and lists uncommitted changes."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only checklist.",
+      "prerequisites": []
     },
     {
       "id": "070",
@@ -1644,8 +2152,17 @@
         "security",
         "daily"
       ],
-      "estimatedSeconds": 5,
-      "relativePath": "scripts/07-daily-productivity/070-winget-daily-silent-upgrader.ps1"
+      "estimatedSeconds": 300,
+      "relativePath": "scripts/07-daily-productivity/070-winget-daily-silent-upgrader.ps1",
+      "plainSummary": "Finds outdated WinGet apps and can upgrade them silently.",
+      "whatChanges": [
+        "Lists outdated apps.",
+        "Only upgrades them if you use the optional upgrade switch."
+      ],
+      "howToRevert": "Reinstall or downgrade a specific app with WinGet if a new version causes problems.",
+      "prerequisites": [
+        "WinGet available."
+      ]
     },
     {
       "id": "071",
@@ -1666,8 +2183,14 @@
         "nvidia",
         "cleanup"
       ],
-      "estimatedSeconds": 4,
-      "relativePath": "scripts/08-storage-cleanup/071-temp-prefetch-shader-purge.ps1"
+      "estimatedSeconds": 30,
+      "relativePath": "scripts/08-storage-cleanup/071-temp-prefetch-shader-purge.ps1",
+      "plainSummary": "Clears temporary files, DirectX shader caches and GPU vendor shader caches.",
+      "whatChanges": [
+        "Deletes files under Temp and shader cache folders for NVIDIA, AMD and DirectX."
+      ],
+      "howToRevert": "Nothing to undo. Caches rebuild automatically.",
+      "prerequisites": []
     },
     {
       "id": "072",
@@ -1688,8 +2211,16 @@
         "storage",
         "cleanup"
       ],
-      "estimatedSeconds": 8,
-      "relativePath": "scripts/08-storage-cleanup/072-windows-update-dism-cleanup.ps1"
+      "estimatedSeconds": 600,
+      "relativePath": "scripts/08-storage-cleanup/072-windows-update-dism-cleanup.ps1",
+      "plainSummary": "Cleans the Windows component store and update caches with DISM.",
+      "whatChanges": [
+        "Runs DISM component cleanup and removes superseded update files."
+      ],
+      "howToRevert": "Nothing to undo. Windows Update re-downloads what it needs.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "073",
@@ -1710,8 +2241,14 @@
         "storage",
         "cleanup"
       ],
-      "estimatedSeconds": 3,
-      "relativePath": "scripts/08-storage-cleanup/073-crash-dump-wer-cleaner.ps1"
+      "estimatedSeconds": 20,
+      "relativePath": "scripts/08-storage-cleanup/073-crash-dump-wer-cleaner.ps1",
+      "plainSummary": "Deletes crash dumps and queued Windows Error Reporting files.",
+      "whatChanges": [
+        "Removes memory minidumps and queued error reports."
+      ],
+      "howToRevert": "Nothing to undo. Deleted crash logs cannot be recovered.",
+      "prerequisites": []
     },
     {
       "id": "074",
@@ -1733,7 +2270,14 @@
         "cleanup"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/08-storage-cleanup/074-recycle-bin-shadowcopy-trim.ps1"
+      "relativePath": "scripts/08-storage-cleanup/074-recycle-bin-shadowcopy-trim.ps1",
+      "plainSummary": "Empties the Recycle Bin and reports shadow-copy storage use.",
+      "whatChanges": [
+        "Permanently deletes Recycle Bin contents on all drives.",
+        "Inspects Volume Shadow Copy storage."
+      ],
+      "howToRevert": "No undo. Deleted Recycle Bin items are gone.",
+      "prerequisites": []
     },
     {
       "id": "075",
@@ -1755,7 +2299,13 @@
         "ssd"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/08-storage-cleanup/075-large-file-duplicate-hunter.ps1"
+      "relativePath": "scripts/08-storage-cleanup/075-large-file-duplicate-hunter.ps1",
+      "plainSummary": "Lists the 25 largest files and forgotten ISO or ZIP archives.",
+      "whatChanges": [
+        "None. Scans disks and reports large files."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "076",
@@ -1777,8 +2327,15 @@
         "cache",
         "cleanup"
       ],
-      "estimatedSeconds": 4,
-      "relativePath": "scripts/08-storage-cleanup/076-browser-cache-vacuum.ps1"
+      "estimatedSeconds": 30,
+      "relativePath": "scripts/08-storage-cleanup/076-browser-cache-vacuum.ps1",
+      "plainSummary": "Clears browser media and code caches for Edge, Chrome and Brave.",
+      "whatChanges": [
+        "Deletes browser cache folders.",
+        "Sites may load more slowly once while caches rebuild."
+      ],
+      "howToRevert": "Nothing to undo. Browsers rebuild caches automatically.",
+      "prerequisites": []
     },
     {
       "id": "077",
@@ -1800,7 +2357,14 @@
         "clean"
       ],
       "estimatedSeconds": 5,
-      "relativePath": "scripts/08-storage-cleanup/077-windows-bloatware-remover.ps1"
+      "relativePath": "scripts/08-storage-cleanup/077-windows-bloatware-remover.ps1",
+      "plainSummary": "Lists preinstalled consumer apps and can remove them.",
+      "whatChanges": [
+        "Audits installed Appx packages.",
+        "The removal action uninstalls selected bloatware apps."
+      ],
+      "howToRevert": "Reinstall removed apps from the Microsoft Store.",
+      "prerequisites": []
     },
     {
       "id": "078",
@@ -1822,7 +2386,14 @@
         "locks"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/08-storage-cleanup/078-onedrive-sync-throttle-disable.ps1"
+      "relativePath": "scripts/08-storage-cleanup/078-onedrive-sync-throttle-disable.ps1",
+      "plainSummary": "Pauses OneDrive background syncing to free bandwidth.",
+      "whatChanges": [
+        "Stops OneDrive background sync activity.",
+        "Syncing stays paused until OneDrive is restarted or resumed."
+      ],
+      "howToRevert": "Restart OneDrive or resume syncing from the OneDrive tray icon.",
+      "prerequisites": []
     },
     {
       "id": "079",
@@ -1843,7 +2414,15 @@
         "ssd"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/08-storage-cleanup/079-delivery-optimization-cache-clear.ps1"
+      "relativePath": "scripts/08-storage-cleanup/079-delivery-optimization-cache-clear.ps1",
+      "plainSummary": "Clears the Delivery Optimization peer cache used for Windows Updates.",
+      "whatChanges": [
+        "Deletes cached Windows Update content shared between PCs."
+      ],
+      "howToRevert": "Nothing to undo. Windows re-downloads what it needs.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "080",
@@ -1865,7 +2444,13 @@
         "audit"
       ],
       "estimatedSeconds": 5,
-      "relativePath": "scripts/08-storage-cleanup/080-appdata-orphaned-folder-finder.ps1"
+      "relativePath": "scripts/08-storage-cleanup/080-appdata-orphaned-folder-finder.ps1",
+      "plainSummary": "Shows which AppData folders use the most space and which look orphaned.",
+      "whatChanges": [
+        "None. Scans AppData sizes and reports orphaned folders."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "081",
@@ -1886,7 +2471,16 @@
         "background-cpu"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/09-privacy-security/081-disable-windows-telemetry-diagtrack.ps1"
+      "relativePath": "scripts/09-privacy-security/081-disable-windows-telemetry-diagtrack.ps1",
+      "plainSummary": "Reduces Windows telemetry and disables the DiagTrack service.",
+      "whatChanges": [
+        "Sets the AllowTelemetry policy to 0.",
+        "Stops the DiagTrack service and sets it to Disabled."
+      ],
+      "howToRevert": "Re-enable DiagTrack (Automatic) in Services and turn telemetry back on in Settings > Privacy > Diagnostics.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "082",
@@ -1908,7 +2502,13 @@
         "privacy"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/09-privacy-security/082-disable-start-menu-bing-ads.ps1"
+      "relativePath": "scripts/09-privacy-security/082-disable-start-menu-bing-ads.ps1",
+      "plainSummary": "Turns off Bing web results and suggested ads in the Start menu.",
+      "whatChanges": [
+        "Sets Explorer policy and ContentDeliveryManager values for your user."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -RestoreBingSearch), or re-enable search highlights in Settings.",
+      "prerequisites": []
     },
     {
       "id": "083",
@@ -1930,7 +2530,13 @@
         "hardening"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/09-privacy-security/083-uac-smartscreen-security-audit.ps1"
+      "relativePath": "scripts/09-privacy-security/083-uac-smartscreen-security-audit.ps1",
+      "plainSummary": "Checks UAC, SmartScreen and Exploit Guard security settings.",
+      "whatChanges": [
+        "None. Reads security policy values."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "084",
@@ -1952,7 +2558,13 @@
         "ports"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/09-privacy-security/084-firewall-outbound-telemetry-block.ps1"
+      "relativePath": "scripts/09-privacy-security/084-firewall-outbound-telemetry-block.ps1",
+      "plainSummary": "Reports which inbound firewall rules are exposed on public networks.",
+      "whatChanges": [
+        "None. Reads firewall profiles and rules."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "085",
@@ -1974,7 +2586,15 @@
         "security"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/09-privacy-security/085-bitlocker-tpm-security-check.ps1"
+      "relativePath": "scripts/09-privacy-security/085-bitlocker-tpm-security-check.ps1",
+      "plainSummary": "Checks TPM, Secure Boot and BitLocker encryption status.",
+      "whatChanges": [
+        "None. Reads device security status."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": [
+        "Administrator rights may be needed."
+      ]
     },
     {
       "id": "086",
@@ -1996,7 +2616,15 @@
         "storage"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/09-privacy-security/086-usb-badusb-storage-lockdown.ps1"
+      "relativePath": "scripts/09-privacy-security/086-usb-badusb-storage-lockdown.ps1",
+      "plainSummary": "Makes USB storage read-only to block BadUSB-style attacks.",
+      "whatChanges": [
+        "Sets StorageDevicePolicies WriteProtect=1 so USB drives cannot be written to."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -AllowUsbWrites), or set WriteProtect=0.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "087",
@@ -2018,7 +2646,13 @@
         "permissions"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/09-privacy-security/087-camera-microphone-privacy-shield.ps1"
+      "relativePath": "scripts/09-privacy-security/087-camera-microphone-privacy-shield.ps1",
+      "plainSummary": "Shows which apps have used your camera and microphone.",
+      "whatChanges": [
+        "None. Reads camera and microphone consent history."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "088",
@@ -2039,7 +2673,16 @@
         "privacy"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/09-privacy-security/088-clear-activity-history-timeline.ps1"
+      "relativePath": "scripts/09-privacy-security/088-clear-activity-history-timeline.ps1",
+      "plainSummary": "Disables Windows activity history and clears recent jump lists.",
+      "whatChanges": [
+        "Sets activity-history policy values.",
+        "Clears recent item and jump lists."
+      ],
+      "howToRevert": "Re-enable activity history in Settings > Privacy > Activity history.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "089",
@@ -2061,7 +2704,13 @@
         "performance"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/09-privacy-security/089-spectre-vbs-hvci-status-control.ps1"
+      "relativePath": "scripts/09-privacy-security/089-spectre-vbs-hvci-status-control.ps1",
+      "plainSummary": "Reports whether memory integrity and virtualization-based security are on.",
+      "whatChanges": [
+        "None. Reads VBS and HVCI status."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "090",
@@ -2083,7 +2732,15 @@
         "blocklist"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/09-privacy-security/090-hosts-ad-tracker-shield.ps1"
+      "relativePath": "scripts/09-privacy-security/090-hosts-ad-tracker-shield.ps1",
+      "plainSummary": "Blocks telemetry and ad-tracker domains through the hosts file.",
+      "whatChanges": [
+        "Adds a managed blocklist section to the Windows hosts file."
+      ],
+      "howToRevert": "Use the Revert button in Advanced Mode (runs -RemoveShield), or remove the WinPulse block from the hosts file.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "091",
@@ -2104,8 +2761,17 @@
         "recovery",
         "safety"
       ],
-      "estimatedSeconds": 6,
-      "relativePath": "scripts/10-diagnostics-recovery/091-create-system-restore-point.ps1"
+      "estimatedSeconds": 30,
+      "relativePath": "scripts/10-diagnostics-recovery/091-create-system-restore-point.ps1",
+      "plainSummary": "Creates a Windows System Restore checkpoint before big changes.",
+      "whatChanges": [
+        "Creates a System Restore point.",
+        "May enable System Protection if it was off."
+      ],
+      "howToRevert": "Restore points are for rolling back. Delete old points in System Protection settings.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "092",
@@ -2126,8 +2792,18 @@
         "repair",
         "windows"
       ],
-      "estimatedSeconds": 5,
-      "relativePath": "scripts/10-diagnostics-recovery/092-sfc-dism-system-healer.ps1"
+      "estimatedSeconds": 10,
+      "relativePath": "scripts/10-diagnostics-recovery/092-sfc-dism-system-healer.ps1",
+      "plainSummary": "Verifies Windows system files with DISM and SFC.",
+      "whatChanges": [
+        "Runs DISM image health checks and System File Checker scans.",
+        "Repairs files only if corruption is found."
+      ],
+      "howToRevert": "Nothing to undo. It repairs Windows system files.",
+      "prerequisites": [
+        "Administrator rights.",
+        "Can take 10 minutes or more."
+      ]
     },
     {
       "id": "093",
@@ -2149,7 +2825,13 @@
         "diagnostics"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/10-diagnostics-recovery/093-bsod-whea-crash-analyzer.ps1"
+      "relativePath": "scripts/10-diagnostics-recovery/093-bsod-whea-crash-analyzer.ps1",
+      "plainSummary": "Analyzes blue-screen crashes and hardware error events.",
+      "whatChanges": [
+        "None. Reads crash events and minidumps."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "094",
@@ -2171,7 +2853,15 @@
         "health"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/10-diagnostics-recovery/094-smart-disk-endurance-monitor.ps1"
+      "relativePath": "scripts/10-diagnostics-recovery/094-smart-disk-endurance-monitor.ps1",
+      "plainSummary": "Shows SSD and NVMe health, temperature and wear level.",
+      "whatChanges": [
+        "None. Reads SMART and storage reliability data."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "095",
@@ -2194,7 +2884,13 @@
         "hardware"
       ],
       "estimatedSeconds": 2,
-      "relativePath": "scripts/10-diagnostics-recovery/095-ram-spd-memory-diagnostic.ps1"
+      "relativePath": "scripts/10-diagnostics-recovery/095-ram-spd-memory-diagnostic.ps1",
+      "plainSummary": "Shows RAM sticks, speeds, slots and dual-channel status.",
+      "whatChanges": [
+        "None. Reads memory module data."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "096",
@@ -2217,7 +2913,15 @@
         "aws"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/10-diagnostics-recovery/096-windows-time-ntp-resync.ps1"
+      "relativePath": "scripts/10-diagnostics-recovery/096-windows-time-ntp-resync.ps1",
+      "plainSummary": "Resyncs the Windows clock with internet time servers.",
+      "whatChanges": [
+        "Restarts the Windows Time service and forces a time resync."
+      ],
+      "howToRevert": "Nothing to undo. The clock stays accurate.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "097",
@@ -2238,7 +2942,13 @@
         "repair"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/10-diagnostics-recovery/097-windows-store-wsreset-healer.ps1"
+      "relativePath": "scripts/10-diagnostics-recovery/097-windows-store-wsreset-healer.ps1",
+      "plainSummary": "Repairs Microsoft Store and App Installer caches.",
+      "whatChanges": [
+        "Resets Store and App Installer caches."
+      ],
+      "howToRevert": "Nothing to undo. Caches rebuild on next launch.",
+      "prerequisites": []
     },
     {
       "id": "098",
@@ -2260,7 +2970,15 @@
         "service"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/10-diagnostics-recovery/098-print-spooler-stuck-queue-fix.ps1"
+      "relativePath": "scripts/10-diagnostics-recovery/098-print-spooler-stuck-queue-fix.ps1",
+      "plainSummary": "Clears stuck print jobs and restarts the print spooler.",
+      "whatChanges": [
+        "Stops the Spooler service, clears the print queue and starts it again."
+      ],
+      "howToRevert": "Nothing to undo. Queued jobs are lost and must be reprinted.",
+      "prerequisites": [
+        "Administrator rights."
+      ]
     },
     {
       "id": "099",
@@ -2282,7 +3000,13 @@
         "code-43"
       ],
       "estimatedSeconds": 3,
-      "relativePath": "scripts/10-diagnostics-recovery/099-driver-signature-problem-audit.ps1"
+      "relativePath": "scripts/10-diagnostics-recovery/099-driver-signature-problem-audit.ps1",
+      "plainSummary": "Lists devices and drivers with errors or warnings.",
+      "whatChanges": [
+        "None. Reads Plug-and-Play device status."
+      ],
+      "howToRevert": "Nothing to undo. This is a read-only report.",
+      "prerequisites": []
     },
     {
       "id": "100",
@@ -2295,7 +3019,7 @@
       "impact": "Low",
       "requiresAdmin": false,
       "reversible": true,
-      "safeReadOnly": true,
+      "safeReadOnly": false,
       "tags": [
         "inventory",
         "specs",
@@ -2304,7 +3028,13 @@
         "workstation"
       ],
       "estimatedSeconds": 4,
-      "relativePath": "scripts/10-diagnostics-recovery/100-export-full-workstation-spec.ps1"
+      "relativePath": "scripts/10-diagnostics-recovery/100-export-full-workstation-spec.ps1",
+      "plainSummary": "Exports a full report of your workstation specifications to JSON.",
+      "whatChanges": [
+        "Writes a JSON report file with CPU, GPU, disk, memory and OS details."
+      ],
+      "howToRevert": "Delete the generated JSON report file.",
+      "prerequisites": []
     }
   ]
 }

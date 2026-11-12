@@ -3,7 +3,18 @@
     VRAM Pre-Flight Cleaner for AI Inference (#024)
 .DESCRIPTION
     Audits GPU VRAM consumers via nvidia-smi / Performance Counters and optionally closes non-essential background GPU apps.
+.EXAMPLE
+    .\024-vram-hog-process-reaper.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\024-vram-hog-process-reaper.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -41,4 +52,4 @@ if ($DryRun -or -not $CloseBackgroundGpuApps -or -not $PSCmdlet.ShouldProcess("B
 foreach ($p in $runningHogs) {
     Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
     Write-Output "Stopped $($p.ProcessName) (PID $($p.Id))."
-}
+}

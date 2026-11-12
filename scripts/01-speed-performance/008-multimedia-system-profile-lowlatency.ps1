@@ -3,7 +3,18 @@
     MMCSS Low-Latency System Responsiveness (#008)
 .DESCRIPTION
     Tunes HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile for low-latency audio/video/network throughput.
+.EXAMPLE
+    .\008-multimedia-system-profile-lowlatency.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\008-multimedia-system-profile-lowlatency.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -29,4 +40,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($mmPath, "Set SystemResponsiveness=
 
 Set-ItemProperty -Path $mmPath -Name "SystemResponsiveness" -Value $targetResp -Type DWord
 Set-ItemProperty -Path $mmPath -Name "NetworkThrottlingIndex" -Value $targetNet -Type DWord
-Write-Output "MMCSS SystemProfile tuned for low-latency operation."
+Write-Output "MMCSS SystemProfile tuned for low-latency operation."

@@ -3,7 +3,18 @@
     NVMe / SSD SMART Health, Temp & Wear Level Monitor (#094)
 .DESCRIPTION
     Reads PhysicalDisk status and StorageReliabilityCounter telemetry.
+.EXAMPLE
+    .\094-smart-disk-endurance-monitor.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\094-smart-disk-endurance-monitor.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -20,4 +31,4 @@ foreach ($d in $disks) {
     if ($rel) {
         Write-Output ("  -> Temp: {0} C | Wear: {1}% | ReadErrors: {2} | WriteErrors: {3}" -f $rel.Temperature, $rel.Wear, $rel.ReadErrorsTotal, $rel.WriteErrorsTotal)
     }
-}
+}

@@ -3,7 +3,18 @@
     Telemetry & Ad-Tracker Hosts Blocklist Manager (#090)
 .DESCRIPTION
     Adds or removes a managed telemetry sinkhole block in C:\Windows\System32\drivers\etc\hosts.
+.EXAMPLE
+    .\090-hosts-ad-tracker-shield.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\090-hosts-ad-tracker-shield.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -36,4 +47,4 @@ if ($RemoveShield) {
     $blockText = "`r`n# [WinPulse-Shield-Start]`r`n" + ($blockDomains -join "`r`n") + "`r`n# [WinPulse-Shield-End]`r`n"
     Set-Content -Path $hostsFile -Value ($cleaned.TrimEnd() + $blockText) -Encoding Ascii
     Write-Output "Applied WinPulse-Shield telemetry sinkhole to hosts file."
-}
+}

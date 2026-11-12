@@ -3,7 +3,18 @@
     Minimize Windows Telemetry & DiagTrack Service (#081)
 .DESCRIPTION
     Configures HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection\AllowTelemetry=0 and stops DiagTrack.
+.EXAMPLE
+    .\081-disable-windows-telemetry-diagtrack.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\081-disable-windows-telemetry-diagtrack.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -30,4 +41,4 @@ if ($svc) {
     Stop-Service -Name "DiagTrack" -Force -ErrorAction SilentlyContinue
     Set-Service -Name "DiagTrack" -StartupType Disabled
 }
-Write-Output "Telemetry minimized and DiagTrack disabled."
+Write-Output "Telemetry minimized and DiagTrack disabled."

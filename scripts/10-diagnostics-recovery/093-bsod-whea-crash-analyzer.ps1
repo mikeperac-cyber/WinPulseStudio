@@ -3,7 +3,18 @@
     BSOD BugCheck & WHEA Hardware Error Event Analyzer (#093)
 .DESCRIPTION
     Scans System Event Log for Event IDs 41 (Kernel-Power), 1001 (BugCheck), and WHEA-Logger hardware errors.
+.EXAMPLE
+    .\093-bsod-whea-crash-analyzer.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\093-bsod-whea-crash-analyzer.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -28,4 +39,4 @@ if (-not $events) {
 
 foreach ($ev in $events) {
     Write-Output ("[{0:yyyy-MM-dd HH:mm}] ID {1} ({2}): {3}" -f $ev.TimeCreated, $ev.Id, $ev.ProviderName, ($ev.Message -split "`r?`n")[0])
-}
+}

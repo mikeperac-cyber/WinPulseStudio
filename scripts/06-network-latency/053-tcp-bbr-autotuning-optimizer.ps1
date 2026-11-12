@@ -3,7 +3,18 @@
     TCP Stack, Receive Window Auto-Tuning & RSS Optimizer (#053)
 .DESCRIPTION
     Audits and optimizes netsh int tcp global parameters for high-speed developer downloads and low latency.
+.EXAMPLE
+    .\053-tcp-bbr-autotuning-optimizer.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\053-tcp-bbr-autotuning-optimizer.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -22,4 +33,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("netsh int tcp global", "Apply Auto
 
 & netsh.exe int tcp set global autotuninglevel=normal | Out-Null
 & netsh.exe int tcp set global rss=enabled | Out-Null
-Write-Output "TCP Receive Window Auto-Tuning and RSS enabled."
+Write-Output "TCP Receive Window Auto-Tuning and RSS enabled."

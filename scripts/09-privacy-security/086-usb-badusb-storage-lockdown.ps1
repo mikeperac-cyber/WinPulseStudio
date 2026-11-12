@@ -3,7 +3,18 @@
     USB Mass Storage Write-Protect / Read-Only Shield (#086)
 .DESCRIPTION
     Configures HKLM:\SYSTEM\CurrentControlSet\Control\StorageDevicePolicies\WriteProtect.
+.EXAMPLE
+    .\086-usb-badusb-storage-lockdown.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\086-usb-badusb-storage-lockdown.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -24,4 +35,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($polKey, "Set WriteProtect=$val")) 
 
 if (-not (Test-Path $polKey)) { New-Item -Path $polKey -Force | Out-Null }
 Set-ItemProperty -Path $polKey -Name "WriteProtect" -Value $val -Type DWord
-Write-Output ("USB Mass Storage WriteProtect set to {0}." -f $(if ($val -eq 1) { "Read-Only" } else { "Read/Write" }))
+Write-Output ("USB Mass Storage WriteProtect set to {0}." -f $(if ($val -eq 1) { "Read-Only" } else { "Read/Write" }))

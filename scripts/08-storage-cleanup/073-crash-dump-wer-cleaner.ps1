@@ -3,7 +3,18 @@
     Purge Memory Dumps, Minidumps & WER Crash Queues (#073)
 .DESCRIPTION
     Scans and removes application crash dumps and Windows Error Reporting archives.
+.EXAMPLE
+    .\073-crash-dump-wer-cleaner.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\073-crash-dump-wer-cleaner.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -33,4 +44,4 @@ foreach ($dp in $dumpPaths) {
         }
     }
 }
-Write-Output ("Total Crash Dump & WER Space Found: {0} MB" -f $totalMB)
+Write-Output ("Total Crash Dump & WER Space Found: {0} MB" -f $totalMB)

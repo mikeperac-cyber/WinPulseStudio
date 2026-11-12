@@ -3,7 +3,18 @@
     Disable PCIe Link State Power Management (ASPM) (#014)
 .DESCRIPTION
     Configures SUB_PCIEXPRESS ASPM to 0 (Off) on AC power and 1 (Moderate Power Savings) on DC power.
+.EXAMPLE
+    .\014-pcie-aspm-link-power-off.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\014-pcie-aspm-link-power-off.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -21,4 +32,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("SCHEME_CURRENT SUB_PCIEXPRESS", "D
 & powercfg.exe /setacvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ASPM 0
 & powercfg.exe /setdcvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ASPM 1
 & powercfg.exe /setactive SCHEME_CURRENT
-Write-Output "PCIe Link State Power Management disabled on AC power for zero wake latency."
+Write-Output "PCIe Link State Power Management disabled on AC power for zero wake latency."

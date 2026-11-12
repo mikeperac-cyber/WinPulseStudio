@@ -3,7 +3,18 @@
     File Explorer Developer Ergonomics (#064)
 .DESCRIPTION
     Sets HideFileExt=0, Hidden=1, LaunchTo=1 (This PC), and UseCompactMode=1 in HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced.
+.EXAMPLE
+    .\064-explorer-developer-ergonomics.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\064-explorer-developer-ergonomics.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -27,4 +38,4 @@ Set-ItemProperty -Path $advKey -Name "HideFileExt" -Value 0 -Type DWord
 Set-ItemProperty -Path $advKey -Name "Hidden" -Value 1 -Type DWord
 Set-ItemProperty -Path $advKey -Name "LaunchTo" -Value 1 -Type DWord
 Set-ItemProperty -Path $advKey -Name "UseCompactMode" -Value 1 -Type DWord
-Write-Output "File Explorer configured for developers (File extensions, dotfiles, and Compact Mode enabled)."
+Write-Output "File Explorer configured for developers (File extensions, dotfiles, and Compact Mode enabled)."

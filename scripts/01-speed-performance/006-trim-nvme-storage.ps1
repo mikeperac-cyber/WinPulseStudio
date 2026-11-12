@@ -3,7 +3,18 @@
     NVMe ReTrim & Storage Slab Optimizer (#006)
 .DESCRIPTION
     Runs Optimize-Volume -ReTrim on all local fixed NTFS/ReFS volumes backed by SSD/NVMe storage.
+.EXAMPLE
+    .\006-trim-nvme-storage.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\006-trim-nvme-storage.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -24,4 +35,4 @@ foreach ($vol in $volumes) {
         Optimize-Volume -DriveLetter $vol.DriveLetter -ReTrim -Verbose
         Write-Output "  [OK] ReTrim completed on $($vol.DriveLetter):"
     }
-}
+}

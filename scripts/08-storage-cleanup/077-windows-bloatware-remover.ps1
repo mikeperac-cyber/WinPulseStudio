@@ -3,7 +3,18 @@
     Consumer Appx Bloatware Auditor & Debloater (#077)
 .DESCRIPTION
     Scans for non-essential consumer Appx packages and removes them on request.
+.EXAMPLE
+    .\077-windows-bloatware-remover.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\077-windows-bloatware-remover.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -36,4 +47,4 @@ foreach ($pkg in $foundPackages) {
         Remove-AppxPackage -Package $pkg.PackageFullName -ErrorAction SilentlyContinue
         Write-Output "     Removed $($pkg.Name)"
     }
-}
+}

@@ -3,7 +3,18 @@
     Instant System & App Dark / Light Mode Switcher (#062)
 .DESCRIPTION
     Toggles AppsUseLightTheme and SystemUsesLightTheme in HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize.
+.EXAMPLE
+    .\062-scheduled-dark-light-theme.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\062-scheduled-dark-light-theme.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -31,4 +42,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($themeKey, "Set LightTheme=$newVal"
 
 Set-ItemProperty -Path $themeKey -Name "AppsUseLightTheme" -Value $newVal -Type DWord
 Set-ItemProperty -Path $themeKey -Name "SystemUsesLightTheme" -Value $newVal -Type DWord
-Write-Output ("Switched Windows theme to {0}." -f $(if ($newVal -eq 0) { "Dark Mode" } else { "Light Mode" }))
+Write-Output ("Switched Windows theme to {0}." -f $(if ($newVal -eq 0) { "Dark Mode" } else { "Light Mode" }))

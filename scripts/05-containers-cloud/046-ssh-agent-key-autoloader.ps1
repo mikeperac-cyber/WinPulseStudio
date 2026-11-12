@@ -3,7 +3,18 @@
     OpenSSH Agent Auto-Start & Key Permission Hardener (#046)
 .DESCRIPTION
     Starts Windows ssh-agent service and verifies ~/.ssh key files.
+.EXAMPLE
+    .\046-ssh-agent-key-autoloader.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\046-ssh-agent-key-autoloader.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -33,4 +44,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("ssh-agent Service", "Set StartupTy
 
 Set-Service -Name "ssh-agent" -StartupType Automatic
 Start-Service -Name "ssh-agent"
-Write-Output "OpenSSH Agent service started and set to Automatic."
+Write-Output "OpenSSH Agent service started and set to Automatic."

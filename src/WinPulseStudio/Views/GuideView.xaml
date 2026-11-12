@@ -1,0 +1,342 @@
+<UserControl x:Class="WinPulseStudio.Views.GuideView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="{StaticResource BgPrimaryBrush}"
+             Foreground="{StaticResource TextPrimaryBrush}"
+             FontFamily="Segoe UI Variable Text, Segoe UI">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0"
+                Background="{StaticResource BgSecondaryBrush}"
+                BorderBrush="{StaticResource BorderSubtleBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="18,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="← Back to Home"
+                        Click="BtnBackHome_Click"
+                        Style="{StaticResource FluentButtonStyle}"
+                        VerticalAlignment="Center"
+                        Margin="0,0,16,0"/>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock x:Name="TxtGoalTitle"
+                               Text="Goal"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="#F8FAFC"
+                               TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="TxtGoalSubtitle"
+                               Text="Subtitle"
+                               FontSize="12"
+                               Foreground="#94A3B8"
+                               TextWrapping="Wrap"
+                               Margin="0,3,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="16,0,0,0">
+                    <TextBlock x:Name="TxtProgress"
+                               Text="0 of 0 previewed"
+                               FontSize="11"
+                               Foreground="#94A3B8"
+                               HorizontalAlignment="Right"/>
+                    <ProgressBar x:Name="PrgProgress"
+                                 Width="170"
+                                 Height="6"
+                                 Margin="0,5,0,0"
+                                 Minimum="0"
+                                 Maximum="1"
+                                 Value="0"
+                                 Background="#1E293B"
+                                 Foreground="#38BDF8"
+                                 BorderThickness="0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- STEPS -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="18,14,18,18">
+                <ItemsControl x:Name="LstSteps">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource BgCardBrush}"
+                                    BorderBrush="{StaticResource BorderSubtleBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="10"
+                                    Padding="16,13"
+                                    Margin="0,0,0,10">
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Background="{Binding StatusBackground}"
+                                                CornerRadius="10"
+                                                Padding="9,3"
+                                                VerticalAlignment="Center"
+                                                Margin="0,0,10,0">
+                                            <TextBlock Text="{Binding StatusText}"
+                                                       Foreground="{Binding StatusForeground}"
+                                                       FontSize="10.5"
+                                                       FontWeight="Bold"/>
+                                        </Border>
+
+                                        <Border Grid.Column="1"
+                                                Background="#0F172A"
+                                                BorderBrush="#38BDF8"
+                                                BorderThickness="1"
+                                                CornerRadius="5"
+                                                Padding="7,2"
+                                                Margin="0,0,10,0"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding DisplayId}"
+                                                       FontFamily="Cascadia Mono, Consolas"
+                                                       FontSize="12"
+                                                       FontWeight="Bold"
+                                                       Foreground="#38BDF8"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="14.5"
+                                                       FontWeight="Bold"
+                                                       Foreground="#F8FAFC"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{Binding MetaLine}"
+                                                       FontSize="10.5"
+                                                       Foreground="#64748B"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Border Background="#0F172A" CornerRadius="4" Padding="7,2" Margin="0,0,6,0">
+                                                <TextBlock Text="{Binding AdminBadgeText}" FontSize="10.5" FontWeight="SemiBold" Foreground="#FBBF24"/>
+                                            </Border>
+                                            <Border Background="#0F172A" CornerRadius="4" Padding="7,2">
+                                                <TextBlock Text="{Binding ModeBadgeText}" FontSize="10.5" FontWeight="SemiBold" Foreground="#94A3B8"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock Text="{Binding SummaryText}"
+                                               FontSize="12.5"
+                                               Foreground="#CBD5E1"
+                                               TextWrapping="Wrap"
+                                               Margin="0,8,0,0"/>
+
+                                    <Border Background="#422006"
+                                            CornerRadius="6"
+                                            Padding="10,5"
+                                            Margin="0,8,0,0"
+                                            Visibility="{Binding PrereqVisibility}">
+                                        <TextBlock Text="{Binding PrereqLine}"
+                                                   FontSize="11"
+                                                   Foreground="#FCD34D"
+                                                   TextWrapping="Wrap"/>
+                                    </Border>
+
+                                    <WrapPanel Margin="0,6,0,0">
+                                        <Button Content="Preview this step"
+                                                Tag="{Binding}"
+                                                Click="BtnPreviewStep_Click"
+                                                Style="{StaticResource FluentButtonStyle}"
+                                                Padding="11,4"
+                                                Margin="0,4,8,0"/>
+                                        <ToggleButton IsChecked="{Binding IsDetailsOpen, Mode=TwoWay}"
+                                                      Cursor="Hand"
+                                                      Margin="0,4,8,0">
+                                            <ToggleButton.Template>
+                                                <ControlTemplate TargetType="ToggleButton">
+                                                    <Border x:Name="Bd" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="11,4">
+                                                        <ContentPresenter VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#0369A1"/>
+                                                            <Setter TargetName="Bd" Property="BorderBrush" Value="#38BDF8"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </ToggleButton.Template>
+                                            <TextBlock Text="What it changes / How to undo" FontSize="11.5" Foreground="#E2E8F0"/>
+                                        </ToggleButton>
+                                        <ToggleButton IsChecked="{Binding IsOutputOpen, Mode=TwoWay}"
+                                                      Cursor="Hand"
+                                                      Margin="0,4,0,0"
+                                                      Visibility="{Binding HasOutput, Converter={StaticResource BoolToVis}}">
+                                            <ToggleButton.Template>
+                                                <ControlTemplate TargetType="ToggleButton">
+                                                    <Border x:Name="Bd" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="11,4">
+                                                        <ContentPresenter VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#0369A1"/>
+                                                            <Setter TargetName="Bd" Property="BorderBrush" Value="#38BDF8"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </ToggleButton.Template>
+                                            <TextBlock Text="Output" FontSize="11.5" Foreground="#E2E8F0"/>
+                                        </ToggleButton>
+                                    </WrapPanel>
+
+                                    <Border Background="#0F172A"
+                                            CornerRadius="7"
+                                            Padding="12,8"
+                                            Margin="0,8,0,0"
+                                            Visibility="{Binding IsDetailsOpen, Converter={StaticResource BoolToVis}}">
+                                        <StackPanel>
+                                            <StackPanel Visibility="{Binding HasWhatChanges, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock Text="WHAT WILL THIS CHANGE?"
+                                                           FontSize="10"
+                                                           FontWeight="Bold"
+                                                           Foreground="#38BDF8"
+                                                           Margin="0,0,0,4"/>
+                                                <ItemsControl ItemsSource="{Binding WhatChanges}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal" Margin="0,1">
+                                                                <TextBlock Text="•" Foreground="#38BDF8" Margin="0,0,6,0"/>
+                                                                <TextBlock Text="{Binding}" Foreground="#CBD5E1" FontSize="11.5" TextWrapping="Wrap"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                            <StackPanel Visibility="{Binding HasHowToRevert, Converter={StaticResource BoolToVis}}" Margin="0,8,0,0">
+                                                <TextBlock Text="HOW TO UNDO"
+                                                           FontSize="10"
+                                                           FontWeight="Bold"
+                                                           Foreground="#FCD34D"
+                                                           Margin="0,0,0,4"/>
+                                                <TextBlock Text="{Binding HowToRevert}" Foreground="#CBD5E1" FontSize="11.5" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Background="#050811"
+                                            BorderBrush="#1E293B"
+                                            BorderThickness="1"
+                                            CornerRadius="7"
+                                            Margin="0,8,0,0"
+                                            Visibility="{Binding IsOutputOpen, Converter={StaticResource BoolToVis}}">
+                                        <TextBox Text="{Binding OutputText, Mode=OneWay}"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 Foreground="#6EE7B7"
+                                                 FontFamily="Cascadia Mono, Consolas"
+                                                 FontSize="11"
+                                                 Padding="10"
+                                                 MaxHeight="160"
+                                                 IsReadOnly="True"
+                                                 TextWrapping="NoWrap"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 HorizontalScrollBarVisibility="Auto"/>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- SUMMARY -->
+                <Border x:Name="SummaryPanel"
+                        Visibility="Collapsed"
+                        Background="{StaticResource BgCardBrush}"
+                        BorderBrush="#10B981"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        Padding="18,15"
+                        Margin="0,4,0,16">
+                    <StackPanel>
+                        <TextBlock x:Name="TxtSummaryTitle" Text="All done!" FontSize="18" FontWeight="Bold" Foreground="#F8FAFC"/>
+                        <TextBlock x:Name="TxtSummaryDetail" Text="" FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,4,0,10"/>
+
+                        <TextBlock Text="HOW TO UNDO APPLIED CHANGES"
+                                   FontSize="10.5"
+                                   FontWeight="Bold"
+                                   Foreground="#FCD34D"
+                                   Margin="0,0,0,5"/>
+                        <ItemsControl x:Name="LstSummaryReverts">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,3">
+                                        <TextBlock Text="{Binding Title}" Foreground="#F8FAFC" FontWeight="SemiBold" FontSize="12"/>
+                                        <TextBlock Text="{Binding Revert}" Foreground="#CBD5E1" FontSize="11.5" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock x:Name="TxtNoReverts"
+                                   Text="These steps did not leave any permanent changes behind."
+                                   Foreground="#94A3B8"
+                                   FontSize="11.5"
+                                   Visibility="Collapsed"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <Button Content="📋 Copy Report" Click="BtnCopyReport_Click" Style="{StaticResource FluentButtonStyle}" Margin="0,0,8,0"/>
+                            <Button Content="🕘 View History" Click="BtnViewHistory_Click" Style="{StaticResource FluentButtonStyle}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- BOTTOM ACTION BAR -->
+        <Border Grid.Row="2"
+                Background="{StaticResource BgSecondaryBrush}"
+                BorderBrush="{StaticResource BorderSubtleBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="18,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="TxtApplyHint"
+                           Text="Previews are simulations — nothing changes until you choose Apply."
+                           FontSize="11.5"
+                           Foreground="#94A3B8"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="BtnPreviewAll"
+                            Content="Preview All Steps"
+                            Click="BtnPreviewAll_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="0,0,8,0"/>
+                    <Button x:Name="BtnRestorePoint"
+                            Content="🛡 Create Restore Point"
+                            Click="BtnRestorePoint_Click"
+                            Style="{StaticResource FluentButtonStyle}"
+                            Margin="0,0,8,0"
+                            ToolTip="Creates a Windows System Restore checkpoint before applying changes (requires Administrator)"/>
+                    <Button x:Name="BtnApply"
+                            Content="Apply Changes for Real"
+                            Click="BtnApply_Click"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Padding="16,8"
+                            ToolTip="Applies every step for real. Asks for confirmation and turns Safety Lock off only for this batch."/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -7,10 +7,10 @@ namespace WinPulseStudio.Models;
 public sealed class ManifestRoot
 {
     [JsonPropertyName("appTitle")]
-    public string AppTitle { get; set; } = "Microsoft WinPulse Control Studio";
+    public string AppTitle { get; set; } = "WinPulse Control Studio";
 
     [JsonPropertyName("version")]
-    public string Version { get; set; } = "1.0.0";
+    public string Version { get; set; } = "1.2.0";
 
     [JsonPropertyName("totalScripts")]
     public int TotalScripts { get; set; }
@@ -55,7 +55,7 @@ public sealed class CategoryFilterItem
 public sealed class ScriptItem : INotifyPropertyChanged
 {
     private bool _isFavorite;
-    private string _statusText = "AST Verified ✓";
+    private string _statusText = "Ready";
 
     [JsonPropertyName("id")]
     public string Id { get; set; } = string.Empty;
@@ -96,8 +96,41 @@ public sealed class ScriptItem : INotifyPropertyChanged
     [JsonPropertyName("estimatedSeconds")]
     public int EstimatedSeconds { get; set; } = 2;
 
+    [JsonPropertyName("plainSummary")]
+    public string PlainSummary { get; set; } = string.Empty;
+
+    [JsonPropertyName("whatChanges")]
+    public List<string> WhatChanges { get; set; } = [];
+
+    [JsonPropertyName("howToRevert")]
+    public string HowToRevert { get; set; } = string.Empty;
+
+    [JsonPropertyName("prerequisites")]
+    public List<string> Prerequisites { get; set; } = [];
+
     [JsonPropertyName("relativePath")]
     public string RelativePath { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public string SummaryText => string.IsNullOrWhiteSpace(PlainSummary) ? Description : PlainSummary;
+
+    [JsonIgnore]
+    public bool HasWhatChanges => WhatChanges.Count > 0;
+
+    [JsonIgnore]
+    public bool HasHowToRevert => !string.IsNullOrWhiteSpace(HowToRevert);
+
+    [JsonIgnore]
+    public bool HasPrerequisites => Prerequisites.Count > 0;
+
+    [JsonIgnore]
+    public string PrerequisitesText => string.Join("  •  ", Prerequisites);
+
+    [JsonIgnore]
+    public bool HasDetails => HasWhatChanges || HasHowToRevert || HasPrerequisites;
+
+    [JsonIgnore]
+    public string BundledPath { get; set; } = string.Empty;
 
     [JsonIgnore]
     public string FullPath { get; set; } = string.Empty;

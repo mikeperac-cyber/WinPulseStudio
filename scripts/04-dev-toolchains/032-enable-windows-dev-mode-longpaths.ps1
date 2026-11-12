@@ -3,7 +3,18 @@
     Enable Developer Mode, Sudo & Win32 Long Paths (#032)
 .DESCRIPTION
     Sets LongPathsEnabled=1 in FileSystem and AllowDevelopmentWithoutDevLicense=1 in AppModelUnlock.
+.EXAMPLE
+    .\032-enable-windows-dev-mode-longpaths.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\032-enable-windows-dev-mode-longpaths.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -29,4 +40,4 @@ if (-not (Test-Path $devKey)) { New-Item -Path $devKey -Force | Out-Null }
 Set-ItemProperty -Path $devKey -Name "AllowDevelopmentWithoutDevLicense" -Value 1 -Type DWord
 Set-ItemProperty -Path $devKey -Name "AllowAllTrustedApps" -Value 1 -Type DWord
 
-Write-Output "Win32 Long Paths (>260 chars) and Developer Mode symlinks enabled."
+Write-Output "Win32 Long Paths (>260 chars) and Developer Mode symlinks enabled."

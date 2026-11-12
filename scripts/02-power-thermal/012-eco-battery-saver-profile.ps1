@@ -3,7 +3,18 @@
     Ultra-Endurance On-The-Go Battery Profile (#012)
 .DESCRIPTION
     Tunes DC (battery) processor state and switches to a battery-conserving power profile.
+.EXAMPLE
+    .\012-eco-battery-saver-profile.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\012-eco-battery-saver-profile.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -27,4 +38,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("Active Power Scheme", "Set DC Max 
 & powercfg.exe /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5
 & powercfg.exe /setdcvalueindex SCHEME_CURRENT SUB_VIDEO VIDEOIDLE 180
 & powercfg.exe /setactive SCHEME_CURRENT
-Write-Output "Configured Ultra-Endurance Battery profile (Max DC CPU: $MaxCpuOnBatteryPercent%)."
+Write-Output "Configured Ultra-Endurance Battery profile (Max DC CPU: $MaxCpuOnBatteryPercent%)."

@@ -3,7 +3,18 @@
     Git Monorepo & Filesystem Cache Turbo Config (#036)
 .DESCRIPTION
     Configures git global settings optimized for Windows NTFS performance.
+.EXAMPLE
+    .\036-git-global-performance-tuning.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\036-git-global-performance-tuning.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -37,4 +48,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("~/.gitconfig", "Apply Git Windows 
 foreach ($kv in $gitTweaks.GetEnumerator()) {
     & git config --global $kv.Key $kv.Value
     Write-Output ("Applied: git config --global {0} = {1}" -f $kv.Key, $kv.Value)
-}
+}

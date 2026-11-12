@@ -3,7 +3,18 @@
     Late-Night Coding Display Brightness & Eye-Care Controller (#068)
 .DESCRIPTION
     Uses WmiMonitorBrightnessMethods in root\wmi to inspect and adjust internal display brightness.
+.EXAMPLE
+    .\068-night-light-blue-light-filter.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\068-night-light-blue-light-filter.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -29,4 +40,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("Display Panel", "Set Brightness to
 
 $methods = Get-CimInstance -Namespace root\wmi -ClassName WmiMonitorBrightnessMethods
 Invoke-CimMethod -InputObject $methods -MethodName WmiSetBrightness -Arguments @{ Timeout = 1; Brightness = [byte]$TargetBrightness } | Out-Null
-Write-Output "Display brightness set to $TargetBrightness%."
+Write-Output "Display brightness set to $TargetBrightness%."

@@ -3,7 +3,18 @@
     NPU, GPU & DirectML Accelerator Inventory (#030)
 .DESCRIPTION
     Queries Win32_VideoController and PnP ComputeAccelerator / Display devices to report AI compute capabilities.
+.EXAMPLE
+    .\030-npu-directml-compute-audit.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\030-npu-directml-compute-audit.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -25,4 +36,4 @@ if ($npus) {
     }
 } else {
     Write-Output "[NPU] No dedicated PnP ComputeAccelerator class device detected (using GPU DirectML/CUDA)."
-}
+}

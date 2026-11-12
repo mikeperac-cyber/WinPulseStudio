@@ -3,7 +3,18 @@
     Virtualization-Based Security (VBS / Memory Integrity) Inspector (#089)
 .DESCRIPTION
     Queries Win32_DeviceGuard in root\Microsoft\Windows\DeviceGuard.
+.EXAMPLE
+    .\089-spectre-vbs-hvci-status-control.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\089-spectre-vbs-hvci-status-control.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -21,4 +32,4 @@ if (-not $dg) {
 
 $vbsStatusMap = @{ 0 = "Not Enabled"; 1 = "Enabled (Not Running)"; 2 = "Enabled & Running" }
 Write-Output ("VirtualizationBasedSecurityStatus: {0} ({1})" -f $dg.VirtualizationBasedSecurityStatus, $vbsStatusMap[[int]$dg.VirtualizationBasedSecurityStatus])
-Write-Output ("SecurityServicesRunning          : {0}" -f ($dg.SecurityServicesRunning -join ', '))
+Write-Output ("SecurityServicesRunning          : {0}" -f ($dg.SecurityServicesRunning -join ', '))

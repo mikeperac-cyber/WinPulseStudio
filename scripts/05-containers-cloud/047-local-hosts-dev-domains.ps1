@@ -3,7 +3,18 @@
     Hosts File Local Dev Domain & Docker Entry Auditor (#047)
 .DESCRIPTION
     Reads and parses active non-comment entries in the Windows hosts file.
+.EXAMPLE
+    .\047-local-hosts-dev-domains.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\047-local-hosts-dev-domains.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -23,4 +34,4 @@ $lines = Get-Content -Path $hostsPath | Where-Object { $_ -notmatch '^\s*#' -and
 Write-Output ("Active custom host mappings: {0}" -f @($lines).Count)
 foreach ($line in $lines) {
     Write-Output ("  {0}" -f $line.Trim())
-}
+}

@@ -3,7 +3,18 @@
     WSL2 Distro Inspector & LxssManager Cold Restart (#042)
 .DESCRIPTION
     Audits wsl --list --verbose and performs a clean shutdown/restart of WSL2 services.
+.EXAMPLE
+    .\042-wsl-service-restart-reset.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\042-wsl-service-restart-reset.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -31,4 +42,4 @@ $wslSvc = Get-Service -Name "WslService" -ErrorAction SilentlyContinue
 if ($wslSvc) {
     Restart-Service -Name "WslService" -Force
 }
-Write-Output "WSL2 utility VM cleanly reset."
+Write-Output "WSL2 utility VM cleanly reset."

@@ -3,7 +3,18 @@
     Exempt Compilers & IDEs from EcoQoS Throttling (#018)
 .DESCRIPTION
     Disables Windows power throttling for discovered developer binaries so builds stay on Performance cores (P-cores).
+.EXAMPLE
+    .\018-power-throttling-exemption.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\018-power-throttling-exemption.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -32,4 +43,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("PowerThrottling", "Exempt $($resol
 foreach ($exePath in $resolvedPaths) {
     & powercfg.exe /powerthrottling disable /path "$exePath" | Out-Null
     Write-Output "Exempted from EcoQoS throttling: $exePath"
-}
+}

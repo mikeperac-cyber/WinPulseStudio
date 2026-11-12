@@ -3,7 +3,18 @@
     Kubernetes ~/.kube/config Context & Cluster Auditor (#045)
 .DESCRIPTION
     Audits ~/.kube/config size, contexts, and kubectl client status.
+.EXAMPLE
+    .\045-kubeconfig-context-auditor.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\045-kubeconfig-context-auditor.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -24,4 +35,4 @@ Write-Output ("Found kubeconfig: {0} ({1} KB, LastModified: {2})" -f $item.FullN
 
 if (Get-Command "kubectl" -ErrorAction SilentlyContinue) {
     & kubectl config get-contexts
-}
+}

@@ -3,7 +3,18 @@
     Docker Engine & BuildKit Cache Deep Prune (#041)
 .DESCRIPTION
     Runs docker system df and prunes dangling containers, networks, images, and BuildKit cache.
+.EXAMPLE
+    .\041-docker-deep-prune.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\041-docker-deep-prune.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -32,4 +43,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("Docker Daemon", "docker system pru
 
 & docker system prune -f
 & docker builder prune -f
-Write-Output "Docker dangling images, stopped containers, and build caches pruned."
+Write-Output "Docker dangling images, stopped containers, and build caches pruned."

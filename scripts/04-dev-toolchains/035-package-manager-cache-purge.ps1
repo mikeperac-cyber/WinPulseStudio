@@ -3,7 +3,18 @@
     Unified Package Manager Cache Purge (npm/pip/NuGet) (#035)
 .DESCRIPTION
     Measures and clears package caches across npm, pip, and NuGet.
+.EXAMPLE
+    .\035-package-manager-cache-purge.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\035-package-manager-cache-purge.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -39,4 +50,4 @@ if (Get-Command "dotnet" -ErrorAction SilentlyContinue) {
 if (Get-Command "npm" -ErrorAction SilentlyContinue) {
     & npm cache verify
 }
-Write-Output "Package manager caches cleaned and verified."
+Write-Output "Package manager caches cleaned and verified."

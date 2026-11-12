@@ -3,7 +3,18 @@
     Multi-Browser Media & Code Cache Vacuum (#076)
 .DESCRIPTION
     Scans and purges Chromium Cache_Data, Code Cache, and GPUCache without touching cookies or sessions.
+.EXAMPLE
+    .\076-browser-cache-vacuum.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\076-browser-cache-vacuum.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -37,4 +48,4 @@ foreach ($b in $browsers) {
         }
     }
 }
-Write-Output ("Total Browser Cache Reclaimable: {0} MB" -f $totalMB)
+Write-Output ("Total Browser Cache Reclaimable: {0} MB" -f $totalMB)

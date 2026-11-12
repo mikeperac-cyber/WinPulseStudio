@@ -3,7 +3,18 @@
     CPU Turbo Boost Thermal & Fan Controller (#013)
 .DESCRIPTION
     Unhides PERFBOOSTMODE (be337238-0d82-4146-a960-4f3749d470c7) and configures CPU Turbo Boost policy.
+.EXAMPLE
+    .\013-cpu-boost-policy-toggle.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\013-cpu-boost-policy-toggle.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -34,4 +45,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("CPU Boost Policy", "Set PERFBOOSTM
 & powercfg.exe /setacvalueindex SCHEME_CURRENT SUB_PROCESSOR $boostGuid $modeIndex
 & powercfg.exe /setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR $boostGuid 0
 & powercfg.exe /setactive SCHEME_CURRENT
-Write-Output "CPU Turbo Boost Mode set to '$BoostMode' on AC and 'Disabled' on Battery."
+Write-Output "CPU Turbo Boost Mode set to '$BoostMode' on AC and 'Disabled' on Battery."

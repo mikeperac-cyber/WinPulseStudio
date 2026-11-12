@@ -4,8 +4,7 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <!-- Fluent Dark Palette Brushes -->
-        <SolidColorBrush x:Key="BgPrimaryBrush" Color="#0B1120"/>
-        <SolidColorBrush x:Key="BgSecondaryBrush" Color="#111827"/>
+        <SolidColorBrush x:Key="BgPrimaryBrush" Color="#0B1120"/>        <SolidColorBrush x:Key="BgSecondaryBrush" Color="#111827"/>
         <SolidColorBrush x:Key="BgCardBrush" Color="#1E293B"/>
         <SolidColorBrush x:Key="BgCardHoverBrush" Color="#26354D"/>
         <SolidColorBrush x:Key="BgInputBrush" Color="#0F172A"/>
@@ -84,6 +83,53 @@
                                 <Setter TargetName="border" Property="Opacity" Value="0.45"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- Dark TabControl used for Results / Raw Log -->
+        <Style x:Key="DarkTabItemStyle" TargetType="TabItem">
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="Bd" Background="Transparent" CornerRadius="5" Padding="{TemplateBinding Padding}" Margin="0,0,4,0">
+                            <ContentPresenter ContentSource="Header" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1E293B"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1E293B"/>
+                                <Setter Property="Foreground" Value="#F8FAFC"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DarkTabControlStyle" TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource DarkTabItemStyle}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TabPanel Grid.Row="0" IsItemsHost="True" Background="Transparent"/>
+                            <ContentPresenter Grid.Row="1" ContentSource="SelectedContent"/>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

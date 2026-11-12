@@ -3,7 +3,18 @@
     Defender Real-Time Build & Compiler Exclusions (#031)
 .DESCRIPTION
     Uses Add-MpPreference to exclude trusted compiler processes and workspace directories from synchronous file scanning.
+.EXAMPLE
+    .\031-windows-defender-dev-exclusions.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\031-windows-defender-dev-exclusions.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -36,4 +47,4 @@ foreach ($path in $WorkspacePaths) {
         Write-Output "Added Defender Path Exclusion: $path"
     }
 }
-Write-Output "Configured Defender exclusions for $($devProcesses.Count) developer processes."
+Write-Output "Configured Defender exclusions for $($devProcesses.Count) developer processes."

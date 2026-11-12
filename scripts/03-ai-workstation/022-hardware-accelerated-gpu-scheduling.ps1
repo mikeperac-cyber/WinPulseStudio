@@ -3,7 +3,18 @@
     Enable Hardware-Accelerated GPU Scheduling (HAGS) (#022)
 .DESCRIPTION
     Configures HwSchMode=2 in HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers.
+.EXAMPLE
+    .\022-hardware-accelerated-gpu-scheduling.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\022-hardware-accelerated-gpu-scheduling.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -25,4 +36,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($gfxPath, "Set HwSchMode=$target"))
 }
 
 Set-ItemProperty -Path $gfxPath -Name "HwSchMode" -Value $target -Type DWord
-Write-Output ("HwSchMode set to {0}. Restart Windows to apply changes." -f $target)
+Write-Output ("HwSchMode set to {0}. Restart Windows to apply changes." -f $target)

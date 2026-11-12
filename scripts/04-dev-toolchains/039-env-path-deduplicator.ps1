@@ -3,7 +3,18 @@
     System & User PATH Deduplicator & Dead-Entry Cleaner (#039)
 .DESCRIPTION
     Inspects User PATH for duplicates and missing folders, backs up to ~/.path-backup.txt, and writes deduplicated User PATH.
+.EXAMPLE
+    .\039-env-path-deduplicator.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\039-env-path-deduplicator.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -48,4 +59,4 @@ if ($DryRun -or ($duplicates -eq 0) -or -not $PSCmdlet.ShouldProcess("User PATH"
 $backupFile = Join-Path $env:USERPROFILE ".winpulse-path-backup.txt"
 Set-Content -Path $backupFile -Value $userPathRaw -Encoding UTF8
 [Environment]::SetEnvironmentVariable("Path", ($cleanEntries -join ';'), "User")
-Write-Output "Deduplicated User PATH (Backup saved to $backupFile)."
+Write-Output "Deduplicated User PATH (Backup saved to $backupFile)."

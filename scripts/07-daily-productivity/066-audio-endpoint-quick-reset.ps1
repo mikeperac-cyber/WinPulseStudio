@@ -3,7 +3,18 @@
     Restart Windows Audio Stack & Bluetooth Headset Recovery (#066)
 .DESCRIPTION
     Lists active audio devices and restarts AudioEndpointBuilder and Audiosrv services.
+.EXAMPLE
+    .\066-audio-endpoint-quick-reset.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\066-audio-endpoint-quick-reset.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -24,4 +35,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("Audiosrv & AudioEndpointBuilder", 
 
 Restart-Service -Name "AudioEndpointBuilder" -Force
 Restart-Service -Name "Audiosrv" -Force
-Write-Output "Windows Audio services restarted cleanly."
+Write-Output "Windows Audio services restarted cleanly."

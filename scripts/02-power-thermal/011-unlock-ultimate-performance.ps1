@@ -3,7 +3,18 @@
     Unlock & Activate Ultimate Performance Plan (#011)
 .DESCRIPTION
     Duplicates the Ultimate Performance GUID if not already present and sets it as the active Windows power scheme.
+.EXAMPLE
+    .\011-unlock-ultimate-performance.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\011-unlock-ultimate-performance.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -28,4 +39,4 @@ if ($dupOutput -match '([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]
     $newGuid = $Matches[1]
     & powercfg.exe /setactive $newGuid
     Write-Output "Activated Ultimate Performance scheme: $newGuid"
-}
+}

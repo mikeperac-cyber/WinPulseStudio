@@ -3,7 +3,18 @@
     Windows Copilot & Recall Resource Controller (#028)
 .DESCRIPTION
     Configures TurnOffWindowsCopilot and DisableAIDataAnalysis policies to manage background Windows AI resource usage.
+.EXAMPLE
+    .\028-windows-copilot-recall-control.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\028-windows-copilot-recall-control.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -29,4 +40,4 @@ Set-ItemProperty -Path $copilotUserKey -Name "TurnOffWindowsCopilot" -Value $dis
 if (-not (Test-Path $aiMachineKey)) { New-Item -Path $aiMachineKey -Force | Out-Null }
 Set-ItemProperty -Path $aiMachineKey -Name "DisableAIDataAnalysis" -Value $disableVal -Type DWord
 
-Write-Output ("Windows Copilot & Recall background analysis set to: {0}" -f $(if ($EnableWindowsAI) { "Enabled" } else { "Disabled (Resources Freed)" }))
+Write-Output ("Windows Copilot & Recall background analysis set to: {0}" -f $(if ($EnableWindowsAI) { "Enabled" } else { "Disabled (Resources Freed)" }))

@@ -3,7 +3,18 @@
     Deep Focus Coding Mode (Mute Toasts & Distractions) (#061)
 .DESCRIPTION
     Toggles Windows Toast notifications in HKCU:\Software\Microsoft\Windows\CurrentVersion\PushNotifications.
+.EXAMPLE
+    .\061-deep-focus-do-not-disturb.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\061-deep-focus-do-not-disturb.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -26,4 +37,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($pushKey, "Set ToastEnabled=$target
 
 if (-not (Test-Path $pushKey)) { New-Item -Path $pushKey -Force | Out-Null }
 Set-ItemProperty -Path $pushKey -Name "ToastEnabled" -Value $target -Type DWord
-Write-Output ("Deep Focus Mode: ToastEnabled set to {0}." -f $target)
+Write-Output ("Deep Focus Mode: ToastEnabled set to {0}." -f $target)

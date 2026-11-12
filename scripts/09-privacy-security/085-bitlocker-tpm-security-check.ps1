@@ -3,7 +3,18 @@
     TPM 2.0, Secure Boot & BitLocker Encryption Inspector (#085)
 .DESCRIPTION
     Audits Secure Boot, TPM 2.0 status, and BitLocker volume protection status.
+.EXAMPLE
+    .\085-bitlocker-tpm-security-check.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\085-bitlocker-tpm-security-check.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -28,4 +39,4 @@ if ($tpm) {
 $bl = Get-BitLockerVolume -ErrorAction SilentlyContinue
 if ($bl) {
     $bl | Select-Object MountPoint, VolumeStatus, ProtectionStatus, EncryptionPercentage | Format-Table -AutoSize | Out-String | Write-Output
-}
+}

@@ -3,7 +3,18 @@
     Generate Isolated Windows Sandbox (.wsb) Profile (#044)
 .DESCRIPTION
     Creates a disposable DevSandbox.wsb file with vGPU enabled and a read-only mapped host folder.
+.EXAMPLE
+    .\044-windows-sandbox-dev-launcher.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\044-windows-sandbox-dev-launcher.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -36,4 +47,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($OutputPath, "Write .wsb Sandbox pr
 }
 
 Set-Content -Path $OutputPath -Value $wsbXml -Encoding UTF8
-Write-Output "Created Windows Sandbox configuration: $OutputPath"
+Write-Output "Created Windows Sandbox configuration: $OutputPath"

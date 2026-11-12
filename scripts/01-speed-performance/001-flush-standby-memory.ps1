@@ -3,7 +3,18 @@
     Purge Standby & Working Set RAM (#001)
 .DESCRIPTION
     Uses Win32 EmptyWorkingSet API to trim idle pages from background processes and reports memory freed.
+.EXAMPLE
+    .\001-flush-standby-memory.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\001-flush-standby-memory.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -59,4 +70,4 @@ Start-Sleep -Milliseconds 600
 $osAfter = Get-CimInstance -ClassName Win32_OperatingSystem
 $freeAfterMB = [math]::Round($osAfter.FreePhysicalMemory / 1024, 1)
 $deltaMB = [math]::Round($freeAfterMB - $freeBeforeMB, 1)
-Write-Output ("Trimmed {0} processes. Memory After: {1} MB free (Reclaimed: {2} MB)" -f $trimmedCount, $freeAfterMB, $deltaMB)
+Write-Output ("Trimmed {0} processes. Memory After: {1} MB free (Reclaimed: {2} MB)" -f $trimmedCount, $freeAfterMB, $deltaMB)

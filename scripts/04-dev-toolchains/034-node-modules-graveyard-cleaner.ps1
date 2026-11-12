@@ -3,7 +3,18 @@
     Stale node_modules & Build Artifact Pruner (#034)
 .DESCRIPTION
     Finds node_modules, .next, and target directories older than $StaleDays and reports or removes them.
+.EXAMPLE
+    .\034-node-modules-graveyard-cleaner.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\034-node-modules-graveyard-cleaner.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -33,4 +44,4 @@ foreach ($d in $dirs) {
         Remove-Item -LiteralPath $d.FullName -Recurse -Force -ErrorAction SilentlyContinue
         Write-Output "  [REMOVED] $($d.FullName)"
     }
-}
+}

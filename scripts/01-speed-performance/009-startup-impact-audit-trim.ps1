@@ -3,7 +3,18 @@
     Startup App & Prelauncher Slimmer (#009)
 .DESCRIPTION
     Audits startup entries across HKCU/HKLM Run keys and disables Edge background prelaunch to save boot time and idle RAM.
+.EXAMPLE
+    .\009-startup-impact-audit-trim.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\009-startup-impact-audit-trim.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -40,4 +51,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($edgePolicy, "Disable StartupBoostE
 if (-not (Test-Path $edgePolicy)) { New-Item -Path $edgePolicy -Force | Out-Null }
 Set-ItemProperty -Path $edgePolicy -Name "StartupBoostEnabled" -Value 0 -Type DWord
 Set-ItemProperty -Path $edgePolicy -Name "BackgroundModeEnabled" -Value 0 -Type DWord
-Write-Output "Disabled Edge background prelaunch and startup boost."
+Write-Output "Disabled Edge background prelaunch and startup boost."

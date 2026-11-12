@@ -3,7 +3,18 @@
     VPN Interface Metric & Orphaned Route Doctor (#058)
 .DESCRIPTION
     Displays IPv4 default routes (0.0.0.0/0) and VPN adapter interface metrics to diagnose split-tunnel conflicts.
+.EXAMPLE
+    .\058-vpn-split-tunnel-route-fixer.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\058-vpn-split-tunnel-route-fixer.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -22,4 +33,4 @@ Get-NetRoute -DestinationPrefix "0.0.0.0/0" -ErrorAction SilentlyContinue |
 Write-Output "--- Virtual / VPN Interfaces ---"
 Get-NetIPInterface -AddressFamily IPv4 | Where-Object { $_.ConnectionState -eq 'Connected' } |
     Select-Object ifIndex, InterfaceAlias, InterfaceMetric, NlMtu |
-    Sort-Object InterfaceMetric | Format-Table -AutoSize | Out-String | Write-Output
+    Sort-Object InterfaceMetric | Format-Table -AutoSize | Out-String | Write-Output

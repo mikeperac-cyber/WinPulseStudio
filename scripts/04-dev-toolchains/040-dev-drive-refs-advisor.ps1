@@ -3,7 +3,18 @@
     Dev Drive (ReFS) & Filesystem Filter Driver Auditor (#040)
 .DESCRIPTION
     Checks fixed volumes for ReFS / Dev Drive status and lists active filesystem filter drivers.
+.EXAMPLE
+    .\040-dev-drive-refs-advisor.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\040-dev-drive-refs-advisor.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -23,4 +34,4 @@ if ($refsVols.Count -eq 0) {
     Write-Output "`n[RECOMMENDATION] No ReFS Dev Drive detected. Creating a 50GB+ Dev Drive in Windows Settings -> System -> Storage -> Disks & Volumes improves npm/cargo/dotnet build times by ~25-30%."
 } else {
     Write-Output "`n[OK] ReFS volume detected on this workstation."
-}
+}

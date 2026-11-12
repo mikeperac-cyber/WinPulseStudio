@@ -3,7 +3,18 @@
     Battery Wear Level & Cycle Count Inspector (#017)
 .DESCRIPTION
     Generates powercfg batteryreport XML and computes battery health percentage (FullChargeCapacity / DesignCapacity).
+.EXAMPLE
+    .\017-battery-health-degradation-report.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\017-battery-health-degradation-report.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -39,4 +50,4 @@ if (Test-Path $xmlPath) {
         $health = if ($design -gt 0) { [math]::Round(($full / $design) * 100, 1) } else { 0 }
         Write-Output ("Model: {0} | Design: {1} mWh | Full Charge: {2} mWh | Health: {3}% | Cycles: {4}" -f $item.Id, $design, $full, $health, $item.CycleCount)
     }
-}
+}

@@ -3,7 +3,18 @@
     AppData Top Space Consumers & Orphaned Folder Auditor (#080)
 .DESCRIPTION
     Audits top-level directories in %APPDATA% and reports their LastWriteTime and file counts.
+.EXAMPLE
+    .\080-appdata-orphaned-folder-finder.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\080-appdata-orphaned-folder-finder.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -24,4 +35,4 @@ $summary = foreach ($d in $dirs) {
     }
 }
 
-$summary | Sort-Object SizeMB -Descending | Select-Object -First 15 | Format-Table -AutoSize | Out-String | Write-Output
+$summary | Sort-Object SizeMB -Descending | Select-Object -First 15 | Format-Table -AutoSize | Out-String | Write-Output

@@ -3,7 +3,18 @@
     Wi-Fi 6/6E/7 Link Quality & Power-Save Optimizer (#055)
 .DESCRIPTION
     Displays detailed Wi-Fi radio telemetry and sets wireless adapter power mode to Maximum Performance on AC.
+.EXAMPLE
+    .\055-wifi-roaming-power-saving-fix.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\055-wifi-roaming-power-saving-fix.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -25,4 +36,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess("Wireless Adapter Power Policy", "S
 
 & powercfg.exe /setacvalueindex SCHEME_CURRENT $wifiSubGuid $wifiPwrGuid 0
 & powercfg.exe /setactive SCHEME_CURRENT
-Write-Output "Configured Wireless Adapter for Maximum Performance on AC power."
+Write-Output "Configured Wireless Adapter for Maximum Performance on AC power."

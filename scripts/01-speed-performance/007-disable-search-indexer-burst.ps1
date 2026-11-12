@@ -3,7 +3,18 @@
     Pause Windows Search Indexer (Build Mode) (#007)
 .DESCRIPTION
     Pauses or resumes the WSearch service to prevent indexing storms during software compilation or branch switching.
+.EXAMPLE
+    .\007-disable-search-indexer-burst.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\007-disable-search-indexer-burst.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -34,4 +45,4 @@ if ($ResumeIndexer) {
 } else {
     Stop-Service -Name "WSearch" -Force -ErrorAction SilentlyContinue
     Write-Output "WSearch paused. Disk and CPU resources freed for builds."
-}
+}

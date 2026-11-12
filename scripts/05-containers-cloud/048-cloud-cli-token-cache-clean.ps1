@@ -3,7 +3,18 @@
     Cloud CLI Log & Token Cache Cleaner (AWS/Azure/GCP) (#048)
 .DESCRIPTION
     Cleans stale CLI log files in ~/.azure/logs, ~/.azure/telemetry, and %APPDATA%\gcloud\logs.
+.EXAMPLE
+    .\048-cloud-cli-token-cache-clean.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\048-cloud-cli-token-cache-clean.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -31,4 +42,4 @@ foreach ($dir in $logDirs) {
     } else {
         Write-Output ("Directory not present: {0}" -f $dir)
     }
-}
+}

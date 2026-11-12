@@ -3,7 +3,18 @@
     Developer Snappy UI Visual Effects (#002)
 .DESCRIPTION
     Configures Explorer VisualEffects and Desktop WindowMetrics for zero-latency window transitions while keeping ClearType and thumbnails enabled.
+.EXAMPLE
+    .\002-high-perf-visual-fx.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\002-high-perf-visual-fx.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -51,4 +62,4 @@ Set-ItemProperty -Path $desktopPath -Name "MenuShowDelay" -Value $settings.MenuS
 Set-ItemProperty -Path $desktopPath -Name "FontSmoothing" -Value "2" -Type String
 Set-ItemProperty -Path $desktopPath -Name "FontSmoothingType" -Value 2 -Type DWord
 
-Write-Output "Applied Developer Snappy UI profile. ClearType font smoothing remains active."
+Write-Output "Applied Developer Snappy UI profile. ClearType font smoothing remains active."

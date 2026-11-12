@@ -3,7 +3,18 @@
     WSL2 & Docker Virtual Disk (ext4.vhdx) Compactor (#037)
 .DESCRIPTION
     Finds ext4.vhdx files under %LOCALAPPDATA%\Packages and %LOCALAPPDATA%\Docker and reports or compacts them.
+.EXAMPLE
+    .\037-wsl2-vhdx-compact-shrink.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\037-wsl2-vhdx-compact-shrink.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -45,4 +56,4 @@ foreach ($vhd in $vhdxFiles) {
         Optimize-VHD -Path $vhd.FullName -Mode Full
         Write-Output "Compacted: $($vhd.FullName)"
     }
-}
+}

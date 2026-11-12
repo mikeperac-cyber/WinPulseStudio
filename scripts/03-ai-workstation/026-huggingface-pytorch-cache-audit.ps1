@@ -3,7 +3,18 @@
     AI Model Weights Cache Auditor (HF, Ollama, Torch) (#026)
 .DESCRIPTION
     Audits disk footprint of local AI model directories and cleans incomplete/orphaned lock files.
+.EXAMPLE
+    .\026-huggingface-pytorch-cache-audit.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\026-huggingface-pytorch-cache-audit.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -42,4 +53,4 @@ foreach ($loc in $cacheLocations) {
         Write-Output ("[{0}] Not present ({1})" -f $loc.Name, $loc.Path)
     }
 }
-Write-Output ("Total AI Model Cache Footprint: {0} GB" -f [math]::Round($totalBytes / 1GB, 2))
+Write-Output ("Total AI Model Cache Footprint: {0} GB" -f [math]::Round($totalBytes / 1GB, 2))

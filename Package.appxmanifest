@@ -5,15 +5,15 @@
          xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
          IgnorableNamespaces="uap rescap desktop">
 
-  <Identity Name="Microsoft.WinPulseStudio"
-            Publisher="CN=Microsoft Corporation"
-            Version="1.0.0.0" />
+  <Identity Name="WinPulse.Studio"
+            Publisher="CN=WinPulse Studio"
+            Version="1.2.0.0" />
 
   <Properties>
-    <DisplayName>Microsoft WinPulse Control Studio</DisplayName>
-    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
-    <PublisherLogo>Assets\StoreLogo.png</PublisherLogo>
-    <Description>Microsoft WinPulse Control Studio - System optimization and PowerShell automation suite for Windows 10 and 11.</Description>
+    <DisplayName>WinPulse Control Studio</DisplayName>
+    <PublisherDisplayName>WinPulse Studio</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>WinPulse Control Studio - system optimization and PowerShell automation suite for Windows 10 and 11.</Description>
   </Properties>
 
   <Resources>
@@ -21,15 +21,11 @@
   </Resources>
 
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22631.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" />
   </Dependencies>
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
-    <rescap:Capability Name="appointmentCalendar" />
-    <rescap:Capability Name="systemManagement" />
-    <rescap:Capability Name="registryReadWrite" />
-    <rescap:Capability Name="systemResources" />
   </Capabilities>
 
   <Applications>
@@ -38,22 +34,12 @@
         DisplayName="WinPulse Studio"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Microsoft WinPulse Control Studio"
+        Description="WinPulse Control Studio"
         BackgroundColor="#0078D4">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\Square310x310Logo.png" />
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
-      <Extensions>
-        <desktop:Extension Category="windows.fullTrustCommand">
-          <desktop:FullTrustCommand>
-            <desktop:Command Id="launch"
-                             DisplayName="Launch WinPulse Studio"
-                             Glyph="Assets\Square44x44Logo.png"
-                             EntryPoint="Windows.FullTrustApplication" />
-          </desktop:FullTrustCommand>
-        </desktop:Extension>
-      </Extensions>
-    </Application>
+      </Application>
   </Applications>
 
 </Package>

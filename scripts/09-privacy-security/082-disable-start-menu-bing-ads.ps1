@@ -3,7 +3,18 @@
     Disable Start Menu Bing Web Search & Suggested Ads (#082)
 .DESCRIPTION
     Sets DisableSearchBoxSuggestions=1 and disables ContentDeliveryManager silent app installs.
+.EXAMPLE
+    .\082-disable-start-menu-bing-ads.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\082-disable-start-menu-bing-ads.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -31,4 +42,4 @@ if (Test-Path $cdmKey) {
     Set-ItemProperty -Path $cdmKey -Name "SystemPaneSuggestionsEnabled" -Value 0 -Type DWord
     Set-ItemProperty -Path $cdmKey -Name "SubscribedContent-338388Enabled" -Value 0 -Type DWord
 }
-Write-Output "Start Menu Bing web search and suggested ads disabled. Local search is now strictly local and instant."
+Write-Output "Start Menu Bing web search and suggested ads disabled. Local search is now strictly local and instant."

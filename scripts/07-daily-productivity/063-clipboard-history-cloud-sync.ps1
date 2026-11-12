@@ -3,7 +3,18 @@
     Enable Win+V Multi-Slot Clipboard History & Sanitizer (#063)
 .DESCRIPTION
     Enables EnableClipboardHistory=1 in HKCU:\Software\Microsoft\Clipboard.
+.EXAMPLE
+    .\063-clipboard-history-cloud-sync.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\063-clipboard-history-cloud-sync.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -29,4 +40,4 @@ if ($ClearCurrentClipboard) {
     Set-Clipboard -Value $null
     Write-Output "Cleared active clipboard content."
 }
-Write-Output "Win+V Multi-Slot Clipboard History enabled."
+Write-Output "Win+V Multi-Slot Clipboard History enabled."

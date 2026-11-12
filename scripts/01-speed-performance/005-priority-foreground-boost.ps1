@@ -3,7 +3,18 @@
     Win32PrioritySeparation Foreground Boost (#005)
 .DESCRIPTION
     Tunes HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl\Win32PrioritySeparation to 0x26 (38 decimal) for optimal foreground responsiveness.
+.EXAMPLE
+    .\005-priority-foreground-boost.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\005-priority-foreground-boost.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -31,4 +42,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($regPath, "Set Win32PrioritySeparat
 }
 
 Set-ItemProperty -Path $regPath -Name "Win32PrioritySeparation" -Value $targetVal -Type DWord
-Write-Output ("Updated Win32PrioritySeparation to 0x{0:X2} ({1})." -f $targetVal, $Profile)
+Write-Output ("Updated Win32PrioritySeparation to 0x{0:X2} ({1})." -f $targetVal, $Profile)

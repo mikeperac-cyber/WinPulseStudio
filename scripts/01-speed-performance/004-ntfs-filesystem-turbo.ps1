@@ -3,7 +3,18 @@
     NTFS Small-File & Monorepo I/O Boost (#004)
 .DESCRIPTION
     Configures NTFS parameters via HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem for high-throughput small file workloads.
+.EXAMPLE
+    .\004-ntfs-filesystem-turbo.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\004-ntfs-filesystem-turbo.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -29,4 +40,4 @@ if ($DryRun -or -not $PSCmdlet.ShouldProcess($fsReg, "Apply NTFS Monorepo I/O Tw
 & fsutil.exe behavior set memoryusage 2 | Out-Null
 & fsutil.exe behavior set disablelastaccess 1 | Out-Null
 
-Write-Output "NTFS filesystem parameters tuned for high-speed small-file operations."
+Write-Output "NTFS filesystem parameters tuned for high-speed small-file operations."

@@ -3,7 +3,18 @@
     Top 25 Largest Files & Forgotten ISO/ZIP Hunter (#075)
 .DESCRIPTION
     Read-only scan of Downloads and Documents for files > 50MB sorted by size descending.
+.EXAMPLE
+    .\075-large-file-duplicate-hunter.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\075-large-file-duplicate-hunter.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -31,4 +42,4 @@ if (-not $top25) {
 
 foreach ($f in $top25) {
     Write-Output ("{0,8} MB | {1:yyyy-MM-dd} | {2}" -f [math]::Round($f.Length / 1MB, 1), $f.LastWriteTime, $f.FullName)
-}
+}

@@ -3,7 +3,18 @@
     Rescue Off-Screen Stranded Windows to Primary Display (#067)
 .DESCRIPTION
     Finds visible main application windows and brings off-screen windows to (100, 100) on the primary screen via user32.dll SetWindowPos.
+.EXAMPLE
+    .\067-multi-monitor-dpi-window-rescue.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\067-multi-monitor-dpi-window-rescue.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun
@@ -49,4 +60,4 @@ foreach ($wp in $windowProcs) {
         }
     }
 }
-Write-Output "Rescued $rescued off-screen window(s)."
+Write-Output "Rescued $rescued off-screen window(s)."

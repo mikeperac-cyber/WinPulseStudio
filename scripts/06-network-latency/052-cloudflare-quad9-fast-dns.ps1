@@ -3,7 +3,18 @@
     Benchmark & Switch to Fastest Public DNS (#052)
 .DESCRIPTION
     Measures response time to Cloudflare (1.1.1.1), Google (8.8.8.8), and Quad9 (9.9.9.9) and optionally applies the winner.
+.EXAMPLE
+    .\052-cloudflare-quad9-fast-dns.ps1 -DryRun
+
+    Simulates the change without modifying the system.
+
+    .\052-cloudflare-quad9-fast-dns.ps1
+
+    Applies the change. Some scripts require Administrator; see the catalog prerequisites.
+
 #>
+#Requires -Version 7.0
+
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [switch]$DryRun,
@@ -47,4 +58,4 @@ foreach ($nic in $activeAdapters) {
         Set-DnsClientServerAddress -InterfaceIndex $nic.ifIndex -ServerAddresses @($winner.Primary, $winner.Secondary)
         Write-Output "Configured $($winner.Name) DNS ($($winner.Primary)) on $($nic.Name)"
     }
-}
+}

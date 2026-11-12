@@ -22,6 +22,56 @@ if (-not (Test-Path $manifestPath)) {
 $manifest = Get-Content -Path $manifestPath -Raw | ConvertFrom-Json
 $scriptsList = @($manifest.scripts)
 
+# Manifest schema sanity: ids, required fields, optional detail-field types, preset references.
+$manifestErrors = [System.Collections.Generic.List[string]]::new()
+$knownIds = @{}
+foreach ($entry in $scriptsList) {
+    $idKey = [string]$entry.id
+    if ($knownIds.ContainsKey($idKey)) {
+        $manifestErrors.Add("Duplicate script id in manifest: $idKey")
+    }
+    $knownIds[$idKey] = $true
+
+    foreach ($field in @('id', 'name', 'category', 'categoryId', 'description', 'relativePath')) {
+        if ([string]::IsNullOrWhiteSpace([string]$entry.$field)) {
+            $manifestErrors.Add("[$idKey] Missing required manifest field: $field")
+        }
+    }
+
+    foreach ($arrayField in @('whatChanges', 'prerequisites')) {
+        $prop = $entry.PSObject.Properties[$arrayField]
+        if ($null -ne $prop -and $prop.Value -isnot [System.Array]) {
+            $manifestErrors.Add("[$idKey] Manifest field '$arrayField' must be an array")
+        }
+    }
+
+    foreach ($textField in @('plainSummary', 'howToRevert')) {
+        $prop = $entry.PSObject.Properties[$textField]
+        if ($null -ne $prop -and $prop.Value -isnot [string]) {
+            $manifestErrors.Add("[$idKey] Manifest field '$textField' must be text")
+        }
+    }
+}
+
+foreach ($preset in @($manifest.presets)) {
+    if (@($preset.scriptIds).Count -eq 0) {
+        $manifestErrors.Add("Preset '$($preset.id)' has no scriptIds")
+    }
+    foreach ($sid in @($preset.scriptIds)) {
+        if (-not $knownIds.ContainsKey([string]$sid)) {
+            $manifestErrors.Add("Preset '$($preset.id)' references unknown script id: $sid")
+        }
+    }
+}
+
+if ($manifestErrors.Count -gt 0) {
+    Write-Host "Manifest schema validation failed:" -ForegroundColor Red
+    foreach ($err in $manifestErrors) {
+        Write-Host "  FAIL: $err" -ForegroundColor Red
+    }
+    exit 1
+}
+
 Write-Host "=========================================================================" -ForegroundColor Cyan
 Write-Host " WinPulse Studio - Deep Static AST & Cmdlet Verifier (Zero Execution)   " -ForegroundColor Cyan
 Write-Host "=========================================================================" -ForegroundColor Cyan

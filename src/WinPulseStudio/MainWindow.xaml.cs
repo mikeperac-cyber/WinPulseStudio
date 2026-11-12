@@ -18,6 +18,12 @@ public partial class MainWindow : Window, INavigator
     private static readonly SolidColorBrush NavActiveBgBrush = CreateFrozen(Color.FromRgb(3, 105, 161));
     private static readonly SolidColorBrush NavActiveBorderBrush = CreateFrozen(Color.FromRgb(56, 189, 248));
     private static readonly SolidColorBrush TransparentBrush = CreateFrozen(Colors.Transparent);
+    private static readonly SolidColorBrush SafetyLockedFgBrush = CreateFrozen(Color.FromRgb(110, 231, 183));
+    private static readonly SolidColorBrush SafetyLockedBgBrush = CreateFrozen(Color.FromRgb(6, 78, 59));
+    private static readonly SolidColorBrush SafetyLockedBorderBrush = CreateFrozen(Color.FromRgb(16, 185, 129));
+    private static readonly SolidColorBrush SafetyUnlockedFgBrush = CreateFrozen(Color.FromRgb(253, 224, 71));
+    private static readonly SolidColorBrush SafetyUnlockedBgBrush = CreateFrozen(Color.FromRgb(120, 53, 15));
+    private static readonly SolidColorBrush SafetyUnlockedBorderBrush = CreateFrozen(Color.FromRgb(245, 158, 11));
 
     private static SolidColorBrush CreateFrozen(Color color)
     {
@@ -28,6 +34,7 @@ public partial class MainWindow : Window, INavigator
 
     private readonly SessionContext _session = new();
     private readonly DispatcherTimer _telemetryTimer = new();
+    private HomeView? _homeView;
     private AdvancedView? _advancedView;
     private CommandsView? _commandsView;
     private HistoryView? _historyView;
@@ -42,12 +49,27 @@ public partial class MainWindow : Window, INavigator
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         TxtWorkspacePath.Text = $"Workspace: {_session.Workspace.WorkspaceRoot}";
+        TxtHostCpu.Text = $"{Environment.MachineName} • {Environment.ProcessorCount} Logical Cores";
         UpdateTelemetryHeader();
         UpdateSafetyLockUi();
 
         _telemetryTimer.Interval = TimeSpan.FromSeconds(3);
         _telemetryTimer.Tick += (_, _) => UpdateTelemetryHeader();
         _telemetryTimer.Start();
+
+        StateChanged += (_, _) =>
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                _telemetryTimer.Stop();
+            }
+            else if (!_telemetryTimer.IsEnabled)
+            {
+                UpdateTelemetryHeader();
+                _telemetryTimer.Start();
+            }
+        };
+        Closed += (_, _) => _telemetryTimer.Stop();
 
         _session.StatusChanged += (_, message) => TxtFooterStatus.Text = message;
         _session.SafetyLockChanged += (_, _) => UpdateSafetyLockUi();
@@ -62,7 +84,6 @@ public partial class MainWindow : Window, INavigator
 
     private void UpdateTelemetryHeader()
     {
-        TxtHostCpu.Text = $"{Environment.MachineName} • {Environment.ProcessorCount} Logical Cores";
         var (usedGb, totalGb, loadPct) = WorkspaceService.GetMemoryTelemetry();
         TxtRamUsage.Text = $"{usedGb:0.0} / {totalGb:0.0} GB ({loadPct}%)";
 
@@ -75,7 +96,8 @@ public partial class MainWindow : Window, INavigator
 
     public void ShowHome()
     {
-        ContentHost.Content = new HomeView(_session, this);
+        _homeView ??= new HomeView(_session, this);
+        ContentHost.Content = _homeView;
         SetActiveNav(BtnNavHome);
         _session.SetStatus("Home • Choose a goal to see exactly what will change before anything runs.");
     }
@@ -146,16 +168,16 @@ public partial class MainWindow : Window, INavigator
         if (_session.SafetyLockEnabled)
         {
             TxtSafetyLockLabel.Text = "🔒 Safety Lock: ON (Live changes blocked)";
-            TxtSafetyLockLabel.Foreground = new SolidColorBrush(Color.FromRgb(110, 231, 183));
-            BtnSafetyLock.Background = new SolidColorBrush(Color.FromRgb(6, 78, 59));
-            BtnSafetyLock.BorderBrush = new SolidColorBrush(Color.FromRgb(16, 185, 129));
+            TxtSafetyLockLabel.Foreground = SafetyLockedFgBrush;
+            BtnSafetyLock.Background = SafetyLockedBgBrush;
+            BtnSafetyLock.BorderBrush = SafetyLockedBorderBrush;
         }
         else
         {
             TxtSafetyLockLabel.Text = "🔓 Safety Lock: OFF (Live changes allowed)";
-            TxtSafetyLockLabel.Foreground = new SolidColorBrush(Color.FromRgb(253, 224, 71));
-            BtnSafetyLock.Background = new SolidColorBrush(Color.FromRgb(120, 53, 15));
-            BtnSafetyLock.BorderBrush = new SolidColorBrush(Color.FromRgb(245, 158, 11));
+            TxtSafetyLockLabel.Foreground = SafetyUnlockedFgBrush;
+            BtnSafetyLock.Background = SafetyUnlockedBgBrush;
+            BtnSafetyLock.BorderBrush = SafetyUnlockedBorderBrush;
         }
     }
 }

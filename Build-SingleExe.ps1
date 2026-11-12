@@ -48,48 +48,8 @@ if (-not (Test-Path $publishedExe)) {
 }
 
 if (-not $SkipSigning) {
-    $signTool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin' -Recurse -Filter signtool.exe -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -match '\\x64\\' } |
-        Sort-Object FullName -Descending |
-        Select-Object -First 1
-    if (-not $signTool) {
-        throw 'SignTool.exe not found. Install the Windows 10/11 SDK or pass -SkipSigning.'
-    }
-
-    $cert = Get-ChildItem Cert:\CurrentUser\My -ErrorAction SilentlyContinue |
-        Where-Object { $_.Subject -eq $CertificateSubject } |
-        Select-Object -First 1
-    if (-not $cert) {
-        Write-Host "==> Creating local signing certificate: $CertificateSubject" -ForegroundColor Yellow
-        $cert = New-SelfSignedCertificate `
-            -Subject $CertificateSubject `
-            -Type Custom `
-            -KeyUsage DigitalSignature `
-            -KeyExportPolicy Exportable `
-            -CertStoreLocation Cert:\CurrentUser\My `
-            -KeyAlgorithm RSA `
-            -KeyLength 2048 `
-            -HashAlgorithm SHA256 `
-            -NotAfter (Get-Date).AddYears(2)
-    }
-
-    Write-Host '==> Signing exe ...' -ForegroundColor Cyan
-    # Timestamp the signature so it stays valid after the certificate expires.
-    # Fall back to an untime-stamped signature if the server is unreachable.
-    & $signTool.FullName sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /sha1 $cert.Thumbprint $publishedExe
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host '    Timestamp server unreachable; signing without a timestamp.' -ForegroundColor Yellow
-        & $signTool.FullName sign /fd SHA256 /sha1 $cert.Thumbprint $publishedExe
-    }
-    if ($LASTEXITCODE -ne 0) {
-        throw "Signing failed with exit code $LASTEXITCODE."
-    }
-
-    # Export the public certificate next to the exe so users can inspect or
-    # trust it (needed to install the self-signed MSIX, for example).
-    $cerPath = Join-Path $outDirFull 'WinPulseStudio.cer'
-    Export-Certificate -Cert $cert -FilePath $cerPath -Type CERT | Out-Null
-    Write-Host "    Certificate exported: $cerPath" -ForegroundColor Gray
+    . (Join-Path $PSScriptRoot 'tools\Invoke-WinPulseSigning.ps1')
+    Invoke-WinPulseCodeSign -TargetPath $publishedExe -CertificateSubject $CertificateSubject -ExportCertDir $outDirFull
 }
 
 $sizeMb = [math]::Round((Get-Item $publishedExe).Length / 1MB, 1)

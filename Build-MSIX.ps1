@@ -1,4 +1,4 @@
-#Requires -Version 7.0
+﻿#Requires -Version 7.0
 <#
 .SYNOPSIS
     Builds a Store-style MSIX layout from the current source and packages it.
@@ -70,48 +70,9 @@ Write-Host "==> Packing MSIX..." -ForegroundColor Cyan
 if ($LASTEXITCODE -ne 0) { throw "MakeAppx pack failed with exit code $LASTEXITCODE." }
 
 if (-not $SkipSigning) {
-    $signTool = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Recurse -Filter signtool.exe -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -match "\\x64\\" } |
-        Sort-Object FullName -Descending |
-        Select-Object -First 1
-    if (-not $signTool) { throw "SignTool.exe not found. Install the Windows 10/11 SDK." }
+    . (Join-Path $root 'tools\Invoke-WinPulseSigning.ps1')
+    Invoke-WinPulseCodeSign -TargetPath $msix -CertificateSubject $CertificateSubject -ExportCertDir $output
 
-    $cert = Get-ChildItem Cert:\CurrentUser\My -ErrorAction SilentlyContinue |
-        Where-Object { $_.Subject -eq $CertificateSubject } |
-        Select-Object -First 1
-    if (-not $cert) {
-        Write-Host "==> Creating local signing certificate: $CertificateSubject" -ForegroundColor Yellow
-        $cert = New-SelfSignedCertificate `
-            -Subject $CertificateSubject `
-            -Type Custom `
-            -KeyUsage DigitalSignature `
-            -KeyExportPolicy Exportable `
-            -CertStoreLocation Cert:\CurrentUser\My `
-            -KeyAlgorithm RSA `
-            -KeyLength 2048 `
-            -HashAlgorithm SHA256 `
-            -NotAfter (Get-Date).AddYears(2)
-    }
-
-    Write-Host "==> Signing MSIX..." -ForegroundColor Cyan
-    # Timestamp the signature so it stays valid after the certificate expires.
-    # Fall back to an untime-stamped signature if the server is unreachable.
-    & $signTool.FullName sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /sha1 $cert.Thumbprint $msix
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "    Timestamp server unreachable; signing without a timestamp." -ForegroundColor Yellow
-        & $signTool.FullName sign /fd SHA256 /sha1 $cert.Thumbprint $msix
-    }
-    if ($LASTEXITCODE -ne 0) { throw "Signing failed with exit code $LASTEXITCODE." }
-
-    # Export the public certificate next to the package so testers can trust it
-    # (Import-Certificate into TrustedPeople) before installing.
-    $cerPath = Join-Path $output "WinPulseStudio.cer"
-    Export-Certificate -Cert $cert -FilePath $cerPath -Type CERT | Out-Null
-    Write-Host "    Certificate exported: $cerPath" -ForegroundColor Gray
-
-    # Verification against a trusted root is intentionally left to the operator:
-    # a self-signed certificate is not trusted until it is installed in the
-    # Trusted Root store, and signtool verify can block on that prompt.
     Write-Host "    Signature written. Trust the certificate before installing." -ForegroundColor Yellow
 }
 

@@ -477,6 +477,9 @@ Write-Output ""  Safety     : Non-execution static verification succeeded.""
             timeout: TimeSpan.FromMinutes(2));
     }
 
+    private const int MaxCapturedChars = 262_144;
+    private const string TruncationBanner = "[TRUNCATED] Earlier output omitted to bound memory; showing most recent output.\r\n";
+
     private static async Task<RunOutcome> RunProcessCaptureAsync(
         string fileName,
         string arguments,
@@ -511,11 +514,21 @@ Write-Output ""  Safety     : Non-execution static verification succeeded.""
             }
         };
 
+        var stdoutDone = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var stderrDone = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
         void Append(string line)
         {
             lock (sb)
             {
                 sb.AppendLine(line);
+                if (sb.Length > MaxCapturedChars)
+                {
+                    int keep = MaxCapturedChars - TruncationBanner.Length;
+                    int removeCount = sb.Length - keep;
+                    sb.Remove(0, removeCount);
+                    sb.Insert(0, TruncationBanner);
+                }
             }
 
             try
@@ -536,6 +549,10 @@ Write-Output ""  Safety     : Non-execution static verification succeeded.""
                 {
                     Append(e.Data);
                 }
+                else
+                {
+                    stdoutDone.TrySetResult(true);
+                }
             };
             proc.ErrorDataReceived += (_, e) =>
             {
@@ -543,12 +560,24 @@ Write-Output ""  Safety     : Non-execution static verification succeeded.""
                 {
                     Append($"[STDERR] {e.Data}");
                 }
+                else
+                {
+                    stderrDone.TrySetResult(true);
+                }
             };
 
             proc.Start();
             proc.BeginOutputReadLine();
             proc.BeginErrorReadLine();
             await proc.WaitForExitAsync(timeoutCts.Token);
+            try
+            {
+                await Task.WhenAll(stdoutDone.Task, stderrDone.Task).WaitAsync(TimeSpan.FromSeconds(5));
+            }
+            catch (TimeoutException)
+            {
+                // Child handle kept stream open after exit; return what was flushed so far.
+            }
             stopwatch.Stop();
 
             lock (sb)

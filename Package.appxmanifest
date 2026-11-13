@@ -5,8 +5,8 @@
          xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
          IgnorableNamespaces="uap rescap desktop">
 
-  <Identity Name="WinPulse.Studio"
-            Publisher="CN=WinPulse Studio"
+  <Identity Name="MikePerac.WinPulseStudio"
+            Publisher="CN=4F57FA0D-0E3C-4115-91BB-AEA7447D17EF"
             Version="1.2.0.0" />
 
   <Properties>

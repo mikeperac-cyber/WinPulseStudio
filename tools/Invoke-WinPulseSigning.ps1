@@ -23,6 +23,7 @@ function Invoke-WinPulseCodeSign {
 
     $cert = Get-ChildItem Cert:\CurrentUser\My -ErrorAction SilentlyContinue |
         Where-Object { $_.Subject -eq $CertificateSubject } |
+        Sort-Object NotAfter -Descending |
         Select-Object -First 1
     if (-not $cert) {
         Write-Host "==> Creating local signing certificate: $CertificateSubject" -ForegroundColor Yellow
@@ -35,7 +36,8 @@ function Invoke-WinPulseCodeSign {
             -KeyAlgorithm RSA `
             -KeyLength 2048 `
             -HashAlgorithm SHA256 `
-            -NotAfter (Get-Date).AddYears(2)
+            -NotAfter (Get-Date).AddYears(2) `
+            -TextExtension @('2.5.29.37={text}1.3.6.1.5.5.7.3.3')
     }
 
     Write-Host "==> Signing $(Split-Path $TargetPath -Leaf)..." -ForegroundColor Cyan

@@ -56,7 +56,7 @@ pwsh -File .\Test-StoreReadiness.ps1
 ```
 
 - [ ] Install test passes (`==> SUCCESS: MSIX ... verified end to end`).
-- [ ] `Get-AppxPackage WinPulse.Studio` shows the expected version.
+- [ ] `Get-AppxPackage MikePerac.WinPulseStudio` shows the expected version.
 - [ ] Uninstall cleanly: `Remove-AppxPackage`.
 
 ## E. Submit

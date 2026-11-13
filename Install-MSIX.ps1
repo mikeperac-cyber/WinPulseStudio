@@ -35,10 +35,11 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $root = $PSScriptRoot
-$appxVersion = ([xml](Get-Content (Join-Path $root 'Package.appxmanifest') -Raw)).Package.Identity.Version
+$manifestIdentity = ([xml](Get-Content (Join-Path $root 'Package.appxmanifest') -Raw)).Package.Identity
+$appxVersion = $manifestIdentity.Version
 $msix = Join-Path $root "package\output\WinPulseStudio_${appxVersion}_x64.msix"
 $stagingManifest = Join-Path $root 'package\staging\AppxManifest.xml'
-$packageName = 'WinPulse.Studio'
+$packageName = $manifestIdentity.Name
 
 if (-not (Test-Path $msix)) { throw "MSIX not found: $msix (run Build-MSIX.ps1 first)" }
 if (-not (Test-Path $stagingManifest)) { throw "Staging manifest not found: $stagingManifest (run Build-MSIX.ps1 first)" }

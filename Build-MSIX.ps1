@@ -7,8 +7,8 @@
     Publishes a self-contained win-x64 build, copies the 100 built-in scripts,
     the validator, the package manifest, app manifest, and assets into a staging
     folder, then packages it with MakeAppx. When -SkipSigning is not specified,
-    the package is signed with the local "CN=WinPulse Studio" certificate (created
-    if needed).
+    the package is signed with the certificate matching Package.appxmanifest's
+    Publisher (created locally if needed).
 
     This produces a locally testable MSIX. Microsoft Store submission still
     requires a Store-issued signing certificate and Partner Center onboarding.
@@ -16,7 +16,7 @@
 [CmdletBinding()]
 param(
     [string]$Configuration = "Release",
-    [string]$CertificateSubject = "CN=WinPulse Studio",
+    [string]$CertificateSubject = "",
     [switch]$SkipSigning
 )
 
@@ -27,7 +27,11 @@ $root = $PSScriptRoot
 $project = Join-Path $root "src\WinPulseStudio\WinPulseStudio.csproj"
 $staging = Join-Path $root "package\staging"
 $output = Join-Path $root "package\output"
-$appxVersion = ([xml](Get-Content (Join-Path $root 'Package.appxmanifest') -Raw)).Package.Identity.Version
+$manifestIdentity = ([xml](Get-Content (Join-Path $root 'Package.appxmanifest') -Raw)).Package.Identity
+$appxVersion = $manifestIdentity.Version
+if ([string]::IsNullOrWhiteSpace($CertificateSubject)) {
+    $CertificateSubject = $manifestIdentity.Publisher
+}
 $msix = Join-Path $output "WinPulseStudio_${appxVersion}_x64.msix"
 
 if (-not (Test-Path $project)) { throw "Project not found: $project" }

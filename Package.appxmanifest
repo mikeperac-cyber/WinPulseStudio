@@ -11,7 +11,7 @@
 
   <Properties>
     <DisplayName>WinPulse Control Studio</DisplayName>
-    <PublisherDisplayName>WinPulse Studio</PublisherDisplayName>
+    <PublisherDisplayName>MikePerac</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
     <Description>WinPulse Control Studio - system optimization and PowerShell automation suite for Windows 10 and 11.</Description>
   </Properties>

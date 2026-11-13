@@ -10,7 +10,7 @@
             Version="1.2.0.0" />
 
   <Properties>
-    <DisplayName>WinPulse Control Studio</DisplayName>
+    <DisplayName>WinPulseStudio</DisplayName>
     <PublisherDisplayName>MikePerac</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
     <Description>WinPulse Control Studio - system optimization and PowerShell automation suite for Windows 10 and 11.</Description>
@@ -31,7 +31,7 @@
   <Applications>
     <Application Id="App" Executable="WinPulseStudio.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
-        DisplayName="WinPulse Studio"
+        DisplayName="WinPulseStudio"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="WinPulse Control Studio"

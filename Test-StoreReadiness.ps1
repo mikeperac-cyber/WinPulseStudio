@@ -1,4 +1,4 @@
-#Requires -Version 7.0
+﻿#Requires -Version 7.0
 <#
 .SYNOPSIS
     Pre-flight gate for Microsoft Store submission.
@@ -47,8 +47,8 @@ function To-VersionParts([string]$version) {
 $listingPath = Join-Path $root 'STORE_LISTING.md'
 $placeholderUrls = @()
 if (Test-Path $listingPath) {
-    $placeholderUrls = Select-String -Path $listingPath -Pattern 'https://example\.com' |
-        ForEach-Object { $_.Line.Trim() }
+    $placeholderUrls = @(Select-String -Path $listingPath -Pattern 'https://example\.com' |
+        ForEach-Object { $_.Line.Trim() })
 } else {
     Add-Failure 'STORE_LISTING.md is missing.'
 }

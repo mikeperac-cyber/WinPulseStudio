@@ -1,22 +1,91 @@
-# WinPulse Control Studio
+<div align="center">
 
-A native Windows `.NET 10` WPF Desktop Application designed to control, optimize, and diagnose a **Developer, Local AI/LLM, and Personal Windows Workstation** through **100 built-in, production-grade PowerShell scripts**.
+# ⚡ WinPulse Control Studio
 
-## Download & Install (Microsoft Store)
+### **God-Mode Control for Windows 10 & 11 — Safe, Transparent, Zero Telemetry.**
 
-[![Get it from Microsoft](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9NR9XH6B2ZCZ)
+A native `.NET 10` WPF command center for **Developers, Local AI/LLM Workstations, and Power Users** — powered by **100 audited, dry-run-ready PowerShell 7 scripts**.
 
-- **Web link:** [WinPulse Studio on Microsoft Store](https://apps.microsoft.com/detail/9NR9XH6B2ZCZ)
-- **Windows Store app:** `ms-windows-store://pdp/?ProductId=9NR9XH6B2ZCZ`
-- **Winget (PowerShell / Terminal):**
-  ```powershell
-  winget install 9NR9XH6B2ZCZ
-  ```
+<p>
+  <a href="https://apps.microsoft.com/detail/9NR9XH6B2ZCZ"><img src="https://img.shields.io/badge/Microsoft%20Store-Available%20Now-0078D4?style=for-the-badge&logo=microsoft&logoColor=white" alt="Microsoft Store" /></a>
+  <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?style=for-the-badge&logo=windows11&logoColor=white" alt="Windows 10 and 11" />
+  <img src="https://img.shields.io/badge/.NET-10.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 10" />
+  <img src="https://img.shields.io/badge/PowerShell-7%2B-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell 7+" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-10B981?style=for-the-badge" alt="MIT License" /></a>
+</p>
 
-> **Note:** WinPulse Studio invokes **PowerShell 7 (`pwsh`)** for script verification, dry-run previews, and execution. If `pwsh` is not already installed on your PC, install it with:
+<p>
+  <a href="https://apps.microsoft.com/detail/9NR9XH6B2ZCZ">
+    <img src="https://get.microsoft.com/images/en-us%20dark.svg" width="220" alt="Get it from Microsoft" />
+  </a>
+</p>
+
+<p>
+  <a href="https://apps.microsoft.com/detail/9NR9XH6B2ZCZ"><strong>Download on Microsoft Store</strong></a> •
+  <a href="#-screenshots">Screenshots</a> •
+  <a href="#-why-winpulse-studio">Why WinPulse</a> •
+  <a href="#complete-catalog-of-100-built-in-powershell-scripts">100-Script Catalog</a> •
+  <a href="PRIVACY.md">Privacy Policy</a>
+</p>
+
+<img src="docs/screenshots/01-home.png" alt="WinPulse Control Studio Dashboard" width="900" />
+
+</div>
+
+---
+
+## ✨ Why WinPulse Studio?
+
+| 🛡️ Safety Lock (ON by Default) | 🔍 Preview Before Anything Changes | ↩️ Built-In Revert & History | 🔒 100% Offline & Private |
+| :--- | :--- | :--- | :--- |
+| Live system writes are **blocked at startup**. Unlock only when you're ready to apply. | Inspect full source code, run **static AST checks**, and simulate with `-DryRun` first. | Reversible tweaks include one-click **undo switches** plus a full local **Run History** log. | **Zero telemetry, zero cloud sync, zero background services.** Nothing ever leaves your PC. |
+
+---
+
+## 🚀 Download & Install
+
+### Option 1: Microsoft Store *(Recommended)*
+Install directly from the official Microsoft Store listing with automatic updates:
+
+👉 **[Get WinPulse Studio on Microsoft Store](https://apps.microsoft.com/detail/9NR9XH6B2ZCZ)**
+
+Or launch the Store page directly from **PowerShell / Windows Terminal**:
+```powershell
+winget install 9NR9XH6B2ZCZ
+```
+*(Or open in the Microsoft Store app: `ms-windows-store://pdp/?ProductId=9NR9XH6B2ZCZ`)*
+
+> **One-time prerequisite:** WinPulse Studio uses **PowerShell 7 (`pwsh`)** to verify, preview, and run scripts. If you don't have it yet:
 > ```powershell
 > winget install Microsoft.PowerShell
 > ```
+
+---
+
+## 📸 Screenshots
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/01-home.png" alt="Guided Home Dashboard" /><br />
+      <sub><strong>Guided Home</strong> — Pick a goal, preview every step, create a restore point</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/02-advanced.png" alt="Advanced Mode 100-Script Catalog" /><br />
+      <sub><strong>Advanced Mode</strong> — 100 scripts, 5 smart presets, live AST & source editor</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/03-commands.png" alt="Command Reference" /><br />
+      <sub><strong>Command Reference</strong> — Plain-English PowerShell, winget & cmd cheat sheet</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/04-history.png" alt="Run History Log" /><br />
+      <sub><strong>Run History</strong> — Every verify, preview, apply, and revert logged locally</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 

@@ -2,6 +2,22 @@
 
 A native Windows `.NET 10` WPF Desktop Application designed to control, optimize, and diagnose a **Developer, Local AI/LLM, and Personal Windows Workstation** through **100 built-in, production-grade PowerShell scripts**.
 
+## Download & Install (Microsoft Store)
+
+[![Get it from Microsoft](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9NR9XH6B2ZCZ)
+
+- **Web link:** [WinPulse Studio on Microsoft Store](https://apps.microsoft.com/detail/9NR9XH6B2ZCZ)
+- **Windows Store app:** `ms-windows-store://pdp/?ProductId=9NR9XH6B2ZCZ`
+- **Winget (PowerShell / Terminal):**
+  ```powershell
+  winget install 9NR9XH6B2ZCZ
+  ```
+
+> **Note:** WinPulse Studio invokes **PowerShell 7 (`pwsh`)** for script verification, dry-run previews, and execution. If `pwsh` is not already installed on your PC, install it with:
+> ```powershell
+> winget install Microsoft.PowerShell
+> ```
+
 ---
 
 ## Key Features
@@ -33,9 +49,9 @@ A native Windows `.NET 10` WPF Desktop Application designed to control, optimize
 - **.NET 10 SDK** only for building from source. The single-file exe and MSIX package are self-contained.
 - **Administrator rights** for scripts whose manifest entry says `Requires Admin`. The app warns when the current session is not elevated.
 
-## Quick Start
+## Quick Start (Build from Source)
 
-### 0. Get the Standalone `.exe` (Recommended for Download & Share)
+### 0. Build the Standalone `.exe` (Portable Download & Share)
 Build **one self-contained** `dist\WinPulseStudio.exe` — the full app, the .NET runtime, and all **100 built-in scripts bundled inside**. No .NET install or repo checkout needed on the target PC, but PowerShell 7 (`pwsh`) must be installed:
 ```powershell
 pwsh -File .\Build-SingleExe.ps1
